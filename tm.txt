@@ -1,0 +1,17 @@
+lshw -class disk -class storage
+(GUID: 0174D743-7CEC-2E49-BB3A-390A4AAC752D).
+
+# /sbin/blkid /dev/sda1 -o export
+Created symlink /etc/systemd/system/multi-user.target.wants/mnt-pve-sda480gb.mount -> /etc/systemd/system/mnt-pve-sda480gb.mount.
+TASK OK
+
+40 -> net1 -> lan
+50 -> net0 -> wan
+
+
+ turnkey-install-security-updates 
+ Web shell:  https://192.168.20.2:12320                   │  
+            │ Webmin:     https://192.168.20.2:12321                   │  
+            │ SSH/SFTP:   root@192.168.20.2 (port 22)
+
+fmTJGDea
