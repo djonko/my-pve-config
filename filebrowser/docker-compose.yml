@@ -6,8 +6,6 @@ services:
     container_name: filebrowser
     ports:
       - "8010:8080"
-    #environment:
-      #- FB_BASEURL:/filebrowser
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
@@ -16,4 +14,5 @@ services:
       - "/opt/data-docker/volumes/filebrowser/config/settings.json:/config/settings.json"
       - "/opt/data-docker/volumes/filebrowser/config:/config"
       - "/home:/data/home/"
+
 
