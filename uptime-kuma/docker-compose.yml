@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "8080:3001"
+    volumes:
+      - "/opt/data-docker/volumes/uptime-kuma:/app/data"
+
