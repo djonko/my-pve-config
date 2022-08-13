@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "8200:8000"
+      - "9200:9443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/opt/data-adm-docker/volumes/portainer:/data"
+      - "/opt/data-adm-docker/volumes/portainer/ssl-certs:/certs"
+    command:
+      --ssl
+      --sslcert /certs/portainer.crt
+      --sslkey /certs/portainer.key
