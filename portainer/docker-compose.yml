@@ -12,6 +12,5 @@ services:
       - "/opt/data-adm-docker/volumes/portainer:/data"
       - "/opt/data-adm-docker/volumes/portainer/ssl-certs:/certs"
     command:
-      --ssl
       --sslcert /certs/portainer.crt
       --sslkey /certs/portainer.key
