@@ -3,7 +3,6 @@ services:
   uptime-kuma:
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
-    #user: "1000:1000"
     restart: unless-stopped
     ports:
       - "8080:3001"
