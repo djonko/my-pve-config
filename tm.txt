@@ -15,3 +15,8 @@ TASK OK
             │ SSH/SFTP:   root@192.168.20.2 (port 22)
 
 fmTJGDea
+
+https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Template/portainer-v2.json
+
+official
+https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json
