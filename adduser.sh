@@ -1,2 +1,1 @@
-adduser bobdi
-usermod -aG sudo bobdi
+adduser bobdi && usermod -aG sudo bobdi
