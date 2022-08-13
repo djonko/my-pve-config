@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  yacht:
+    image: selfhostedpro/yacht
+    container_name: yacht
+    ports:
+      - "8200:8000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/opt/data-docker/volumes/yacht/config:/config"
+
