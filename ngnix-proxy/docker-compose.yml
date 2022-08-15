@@ -1,0 +1,58 @@
+version: '3'
+services:
+  ngnix_proxy:
+    container_name: ngnix_proxy
+    restart: always
+    image: 'jc21/nginx-proxy-manager:latest'
+    ports:
+      - '8100:80'
+      - '8101:81'
+      - '443:443'
+    environment:
+      DB_MYSQL_HOST: "db_ngnix"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "npm"
+      DB_MYSQL_NAME: "npm"
+    depends_on:
+      - db_ngnix
+    networks:
+      - br0_dev_back
+    volumes:
+      - data_ngnix_proxy:/data:rw
+      - data_ngnix_encrypt:/etc/letsencrypt:rw
+
+  db_ngnix:
+    image: 'jc21/mariadb-aria:latest'
+    container_name: db_ngnix
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'npm'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: 'npm'
+    volumes:
+      - data_ngnix_mysql:/var/lib/mysql:rw
+    networks:
+      - br0_dev_back
+volumes:
+  data_ngnix_proxy:
+    driver_opts:
+      type: "nfs"
+      o: "addr=127.0.0.1,rw,vers=4,dev"
+      device: ":/Data/Docker/NgnixProxy"
+  data_ngnix_mysql:
+    driver_opts:
+      type: "nfs"
+      o: "addr=127.0.0.1,rw,vers=4,dev"
+      device: ":/Data/Docker/MysqlNgnixProxy"
+  data_ngnix_encrypt:
+    driver_opts:
+      type: "nfs"
+      o: "addr=127.0.0.1,rw,vers=4,dev"
+      device: ":/Data/Docker/NgnixProxyEncrypt"
+networks:
+  br0_dev_front:
+    external: true
+  br0_dev_back:
+    external: true

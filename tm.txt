@@ -20,3 +20,11 @@ https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Temp
 
 official
 https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json
+
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub username@server.dreamhost.com
+
+
+
+set login ssh without password
+https://help.dreamhost.com/hc/en-us/articles/216499537-How-to-configure-passwordless-login-in-Mac-OS-X-and-Linux
