@@ -13,3 +13,7 @@ Configs of my local stuff
 with `ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375`
 3) `systemctl daemon-reload`
 4) ```sudo service docker restart```
+
+# How to generate a random password in linux 
+-> 32 : represent the password size  
+```date +%s | sha256sum | base64 | head -c 32 ; echo```
