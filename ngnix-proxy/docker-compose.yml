@@ -27,6 +27,7 @@ services:
     volumes:
       - "/opt/data-adm-docker/volumes/ngnix_proxy:/data"
       - "/opt/data-adm-docker/volumes/ngnix_letsencrypt:/etc/letsencrypt"
+      - "/opt/data-etc/ngnix/db_pwd.secret.txt:/var/run/s6/container_environment/DB_MYSQL_PASSWORD__FILE"
     secrets:
       - DB_MYSQL_PWD
 
