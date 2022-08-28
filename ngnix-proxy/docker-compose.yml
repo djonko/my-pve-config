@@ -20,7 +20,7 @@ services:
       DB_MYSQL_HOST: "db_ngnix"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "${NG_USER}"
-      DB_MYSQL_PASSWORD__FILE: run/secrets/DB_MYSQL_PWD
+      DB_MYSQL_PASSWORD_FILE: run/secrets/DB_MYSQL_PWD
       DB_MYSQL_NAME: "${NG_DB}"
       DISABLE_IPV6: 'true'
     depends_on:
