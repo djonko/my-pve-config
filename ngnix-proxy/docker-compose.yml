@@ -22,6 +22,7 @@ services:
       DB_MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
       DB_MYSQL_NAME: "${NG_DB}"
       DISABLE_IPV6: 'true'
+      TZ: America/Montreal
     depends_on:
       - db_ngnix
     volumes:
