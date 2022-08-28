@@ -44,6 +44,9 @@ services:
       MYSQL_PASSWORD_FILE: run/secrets/DB_MYSQL_PWD
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
+    secrets:
+      - DB_MYSQL_PWD
+      - DB_ROOT_PWD
   adminer:
     image: adminer:latest
     container_name: adminer
@@ -52,6 +55,8 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db_ngnix
       MYSQL_ROOT_PASSWORD_FILE: run/secrets/DB_ROOT_PWD
+    secrets:
+      - DB_ROOT_PWD
     restart: unless-stopped
     ports:
       - "8100:8080"
