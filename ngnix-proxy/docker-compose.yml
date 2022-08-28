@@ -22,7 +22,7 @@ services:
       DB_MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
       DB_MYSQL_NAME: "${NG_DB}"
       DISABLE_IPV6: 'true'
-      TZ: America/Montreal
+      TZ: "America/Montreal"
     depends_on:
       - db_ngnix
     volumes:
@@ -40,6 +40,7 @@ services:
       MYSQL_DATABASE: "${NG_DB}"
       MYSQL_USER: "${NG_USER}"
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
+      TZ: "America/Montreal"
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
     secrets:
@@ -54,6 +55,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db_ngnix
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
+      TZ: "America/Montreal"
     secrets:
       - DB_ROOT_PWD
     restart: unless-stopped
