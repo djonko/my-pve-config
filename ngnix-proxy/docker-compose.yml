@@ -41,6 +41,8 @@ services:
       MYSQL_USER: "${NG_USER}"
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
       TZ: "America/Montreal"
+      time_zone: "America/Montreal"
+      default_time_zone: "America/Montreal"
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
     secrets:
