@@ -44,6 +44,8 @@ services:
       TZ: "America/Montreal"
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     secrets:
       - MYSQL_PWD
       - DB_ROOT_PWD
