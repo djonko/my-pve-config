@@ -5,3 +5,11 @@ Configs of my local stuff
 ### [Official template](https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json)
 ### [SelfHostedPro template v2](https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Template/portainer-v2.json)
 ### [My template(merge of both)](./portainer/template.json)
+
+
+# How to enable docker remote connexion ?
+1) Open file `nano /lib/systemd/system/docker.service`
+2) Edit it by replacing line `ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock`
+with `ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375`
+3) `systemctl daemon-reload`
+4) ```sudo service docker restart```
