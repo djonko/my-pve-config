@@ -1,58 +1,57 @@
-version: '3'
+version: '3.9'
+secrets:
+  DB_ROOT_PWD:
+    file: /opt/data-etc/ngnix/db_root_pwd.secret.txt
+  DB_MYSQL_PWD:
+    file: /opt/data-etc/ngnix/db_pwd.secret.txt
+
 services:
   ngnix_proxy:
     container_name: ngnix_proxy
-    restart: always
+    restart: unless-stopped
     image: 'jc21/nginx-proxy-manager:latest'
+    env_file:
+      - /opt/data-etc/ngnix/config.env
     ports:
-      - '8100:80'
-      - '8101:81'
-      - '443:443'
+      - '8200:80'
+      - '8201:81'
+      - '9200:443'
     environment:
       DB_MYSQL_HOST: "db_ngnix"
       DB_MYSQL_PORT: 3306
-      DB_MYSQL_USER: "npm"
-      DB_MYSQL_PASSWORD: "npm"
-      DB_MYSQL_NAME: "npm"
+      DB_MYSQL_USER: "${NG_USER}"
+      DB_MYSQL_PASSWORD_FILE: run/secrets/DB_MYSQL_PWD
+      DB_MYSQL_NAME: "${NG_DB}"
+      DISABLE_IPV6: 'true'
     depends_on:
       - db_ngnix
-    networks:
-      - br0_dev_back
     volumes:
-      - data_ngnix_proxy:/data:rw
-      - data_ngnix_encrypt:/etc/letsencrypt:rw
+      - "/opt/data-adm-docker/volumes/ngnix_proxy:/data"
+      - "/opt/data-adm-docker/volumes/ngnix_letsencrypt:/etc/letsencrypt"
+    secrets:
+      - DB_MYSQL_PWD
 
   db_ngnix:
     image: 'jc21/mariadb-aria:latest'
+    env_file:
+      - /opt/data-etc/ngnix/config.env
     container_name: db_ngnix
-    restart: always
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 'npm'
-      MYSQL_DATABASE: 'npm'
-      MYSQL_USER: 'npm'
-      MYSQL_PASSWORD: 'npm'
+      MYSQL_ROOT_PASSWORD_FILE: run/secrets/DB_ROOT_PWD
+      MYSQL_DATABASE: "${NG_DB}"
+      MYSQL_USER: "${NG_USER}"
+      MYSQL_PASSWORD_FILE: run/secrets/DB_MYSQL_PWD
     volumes:
-      - data_ngnix_mysql:/var/lib/mysql:rw
-    networks:
-      - br0_dev_back
-volumes:
-  data_ngnix_proxy:
-    driver_opts:
-      type: "nfs"
-      o: "addr=127.0.0.1,rw,vers=4,dev"
-      device: ":/Data/Docker/NgnixProxy"
-  data_ngnix_mysql:
-    driver_opts:
-      type: "nfs"
-      o: "addr=127.0.0.1,rw,vers=4,dev"
-      device: ":/Data/Docker/MysqlNgnixProxy"
-  data_ngnix_encrypt:
-    driver_opts:
-      type: "nfs"
-      o: "addr=127.0.0.1,rw,vers=4,dev"
-      device: ":/Data/Docker/NgnixProxyEncrypt"
-networks:
-  br0_dev_front:
-    external: true
-  br0_dev_back:
-    external: true
+      - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    depends_on:
+      - db_ngnix
+    environment:
+      ADMINER_DEFAULT_SERVER: db_ngnix
+      MYSQL_ROOT_PASSWORD_FILE: run/secrets/DB_ROOT_PWD
+    restart: unless-stopped
+    ports:
+      - "8100:8080"
