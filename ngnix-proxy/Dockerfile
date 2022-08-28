@@ -1,2 +1,2 @@
 FROM jc21/mariadb-aria:latest
-COPY my.cnf /etc/my.cnf
+COPY my.cnf /etc/
