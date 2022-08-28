@@ -3,14 +3,14 @@ version: '3.7'
 secrets:
   DB_ROOT_PWD:
     file: /opt/data-etc/ngnix/db_root_pwd.secret.txt
-  DB_MYSQL_PWD:
+  MYSQL_PWD:
     file: /opt/data-etc/ngnix/db_pwd.secret.txt
 
 services:
   ngnix_proxy:
     container_name: ngnix_proxy
     restart: unless-stopped
-    image: 'jc21/nginx-proxy-manager:2.9.18'
+    image: 'jc21/nginx-proxy-manager:latest'
     ports:
       - '8200:80'
       - '8201:81'
@@ -19,7 +19,7 @@ services:
       DB_MYSQL_HOST: "db_ngnix"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "${NG_USER}"
-      DB_MYSQL_PASSWORD__FILE: run/secrets/DB_MYSQL_PWD
+      DB_MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
       DB_MYSQL_NAME: "${NG_DB}"
       DISABLE_IPV6: 'true'
     depends_on:
@@ -27,9 +27,8 @@ services:
     volumes:
       - "/opt/data-adm-docker/volumes/ngnix_proxy:/data"
       - "/opt/data-adm-docker/volumes/ngnix_letsencrypt:/etc/letsencrypt"
-      - "/opt/data-etc/ngnix/db_pwd.secret.txt:/var/run/s6/container_environment/DB_MYSQL_PASSWORD__FILE"
     secrets:
-      - DB_MYSQL_PWD
+      - MYSQL_PWD
 
   db_ngnix:
     image: 'jc21/mariadb-aria:latest'
@@ -39,11 +38,11 @@ services:
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
       MYSQL_DATABASE: "${NG_DB}"
       MYSQL_USER: "${NG_USER}"
-      MYSQL_PASSWORD__FILE: run/secrets/DB_MYSQL_PWD
+      MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
     secrets:
-      - DB_MYSQL_PWD
+      - MYSQL_PWD
       - DB_ROOT_PWD
 
   adminer:
