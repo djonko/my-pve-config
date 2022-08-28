@@ -11,8 +11,6 @@ services:
     container_name: ngnix_proxy
     restart: unless-stopped
     image: 'jc21/nginx-proxy-manager:latest'
-    env_file:
-      - /opt/data-etc/ngnix/config.env
     ports:
       - '8200:80'
       - '8201:81'
@@ -34,8 +32,6 @@ services:
 
   db_ngnix:
     image: 'jc21/mariadb-aria:latest'
-    env_file:
-      - /opt/data-etc/ngnix/config.env
     container_name: db_ngnix
     restart: unless-stopped
     environment:
@@ -48,6 +44,7 @@ services:
     secrets:
       - DB_MYSQL_PWD
       - DB_ROOT_PWD
+
   adminer:
     image: adminer:latest
     container_name: adminer
