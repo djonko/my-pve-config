@@ -10,7 +10,7 @@ services:
   ngnix_proxy:
     container_name: ngnix_proxy
     restart: unless-stopped
-    image: 'jc21/nginx-proxy-manager'
+    image: 'jc21/nginx-proxy-manager:2.9.18'
     ports:
       - '8200:80'
       - '8201:81'
