@@ -32,7 +32,8 @@ services:
       - MYSQL_PWD
 
   db_ngnix:
-    image: 'jc21/mariadb-aria:latest'
+    build:
+      context: .
     container_name: db_ngnix
     restart: unless-stopped
     environment:
@@ -41,10 +42,9 @@ services:
       MYSQL_USER: "${NG_USER}"
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
       TZ: "America/Montreal"
-      time_zone: "America/Montreal"
-      default_time_zone: "America/Montreal"
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
+      - ""
     secrets:
       - MYSQL_PWD
       - DB_ROOT_PWD
