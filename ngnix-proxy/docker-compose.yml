@@ -10,7 +10,7 @@ services:
   ngnix_proxy:
     container_name: ngnix_proxy
     restart: unless-stopped
-    image: 'jc21/nginx-proxy-manager:latest'
+    image: 'jlesage/nginx-proxy-manager'
     ports:
       - '8200:80'
       - '8201:81'
