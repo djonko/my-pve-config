@@ -1,0 +1,2 @@
+[mysqld]
+default_time_zone='America/New_York'
