@@ -51,7 +51,9 @@ services:
       - DB_ROOT_PWD
 
   adminer:
-    image: adminer:latest
+    build:
+      context: .
+      dockerfile: adminer.dockerfile
     container_name: adminer
     depends_on:
       - db_ngnix
