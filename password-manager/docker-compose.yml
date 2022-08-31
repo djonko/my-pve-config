@@ -1,0 +1,53 @@
+#docker pull vaultwarden/server:latest
+#docker run -d --name vaultwarden -v /vw-data/:/data/ -p 80:80 vaultwarden/server:latest
+
+version: '3.9'
+
+secrets:
+  SMTP_USERNAME:
+    file: /opt/data-etc/password-manager/smtp_user.secret.txt
+  SMTP_PASSWORD:
+    file: /opt/data-etc/password-manager/smtp_pwd.secret.txt
+  ADMIN_TOKEN:
+    file: /opt/data-etc/password-manager/admin_token.secret.txt
+
+services:
+  vaultwarden:
+    restart: always
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    volumes:
+      - "/opt/data-adm-docker/volumes/password_manager:/data"
+    ports:
+      - "8100:80"
+    environment:
+      SMTP_HOST: smtp-relay.sendinblue.com
+      SMTP_FROM: pwd-manager@ui24.mywire.com
+      SMTP_FROM_NAME: Password Vault
+      SMTP_SECURITY: starttls
+      SMTP_PORT: 587
+      SMTP_USERNAME_FILE: /run/secrets/SMTP_USERNAME
+      SMTP_PASSWORD_FILE: /run/secrets/SMTP_PASSWORD
+      SMTP_TIMEOUT: 30
+      SMTP_AUTH_MECHANISM: "TLS"
+      LOGIN_RATELIMIT_MAX_BURST: 10
+      LOGIN_RATELIMIT_SECONDS: 60
+      DOMAIN: https://vaults.webnestify.uk #change this to your URL
+      INVITATION_ORG_NAME: Webnestify #change this to your company name
+      INVITATIONS_ALLOWED: false
+      ADMIN_TOKEN_FILE: /run/secrets/ADMIN_TOKEN #generate your own admin token
+      SIGNUPS_ALLOWED: true
+      SIGNUPS_VERIFY: true
+      SIGNUPS_VERIFY_RESEND_TIME: 3600
+      SIGNUPS_VERIFY_RESEND_LIMIT: 6
+      EMERGENCY_ACCESS_ALLOWED: true
+      SENDS_ALLOWED: true
+      WEB_VAULT_ENABLED: true
+      TIME_ZONE: "America/Montreal" #change this to your timezone
+      TZ: "America/Montreal"
+    secrets:
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
+      - ADMIN_TOKEN
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true" #watchtower auto-update
