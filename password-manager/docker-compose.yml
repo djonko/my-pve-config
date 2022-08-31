@@ -33,7 +33,7 @@ services:
       LOGIN_RATELIMIT_MAX_BURST: 10
       LOGIN_RATELIMIT_SECONDS: 60
       DOMAIN: https://vaults.webnestify.uk #change this to your URL
-      INVITATION_ORG_NAME: Webnestify #change this to your company name
+      INVITATION_ORG_NAME: HomePwd-Mg #change this to your company name
       INVITATIONS_ALLOWED: false
       ADMIN_TOKEN_FILE: /run/secrets/ADMIN_TOKEN #generate your own admin token
       SIGNUPS_ALLOWED: true
