@@ -8,7 +8,8 @@ Configs of my local stuff
 
 
 # How to enable docker remote connexion ?
-1) Open file `nano /lib/systemd/system/docker.service`
+1) Open file
+  ``` nano /lib/systemd/system/docker.service```
 2) Edit it by replacing line `ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock`
 with `ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375`
 3) `systemctl daemon-reload`
