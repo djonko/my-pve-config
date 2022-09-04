@@ -1,0 +1,32 @@
+version: "3.9"
+
+secrets:
+  APP_KEY:
+    file: /opt/data-etc/firefly/app_key.secret.txt
+
+services:
+  firefly:
+    image: fireflyiii/core:latest
+    restart: unless-stopped
+    ports:
+      - "7801:80"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: false
+      DEFAULT_LANGUAGE: en_US
+      DEFAULT_LOCALE: equal
+      TZ: "America/Montreal"
+      TRUSTED_PROXIES: "**"
+      APP_LOG_LEVEL: notice
+      AUDIT_LOG_LEVEL: info
+
+
+
+      APP_KEY_FILE: /run/secrets/APP_KEY
+
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: secret_firefly_password
