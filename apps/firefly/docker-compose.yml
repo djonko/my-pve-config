@@ -26,9 +26,9 @@ services:
   firefly-db:
     image: mariadb:latest
     restart: unless-stopped
-    hostname: firefly-db
+    container_name: firefly-db
     ports:
-      - "3306:3306"
+      - "3306"
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'no'
       MARIADB_ROOT_HOST: firefly-db
@@ -37,8 +37,6 @@ services:
       MARIADB_USER_FILE: /run/secrets/MYSQL_USER
       MARIADB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       TZ: "America/Montreal"
-      #PUID: 1000
-      #PGID: 1000
     volumes:
       - "/opt/data-docker/volumes/mariadb:/var/lib/mysql"
     secrets:
@@ -50,20 +48,20 @@ services:
 
   redis:
     image: redis:7.0.4-alpine
-    hostname: redis
+    container_name: redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
     volumes:
       - cache:/data
     ports:
-      - '6379:6379'
+      - '6379'
     networks:
       - firefly_net
 
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
-    hostname: firefly
+    container_name: firefly
     depends_on:
       - firefly-db
       - redis
@@ -122,7 +120,7 @@ services:
       - MAIL_PASSWORD
   adminer:
     image: adminer:latest
-    hostname: adminer
+    container_name: adminer
     depends_on:
       - firefly-db
     environment:
