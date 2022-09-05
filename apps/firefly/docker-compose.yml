@@ -110,6 +110,8 @@ services:
       AUTHENTICATION_GUARD: web
       PUID: 1000
       PGID: 1000
+    networks:
+      - firefly_net
     secrets:
       - APP_KEY
       - MYSQL_USER
