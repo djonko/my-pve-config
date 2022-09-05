@@ -26,7 +26,7 @@ services:
   firefly-db:
     image: mariadb:latest
     restart: unless-stopped
-    container_name: firefly-db
+    hostname: firefly-db
     ports:
       - "3306:3306"
     environment:
@@ -50,7 +50,7 @@ services:
 
   redis:
     image: redis:7.0.4-alpine
-    container_name: redis
+    hostname: redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
     volumes:
@@ -63,7 +63,7 @@ services:
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
-    container_name: firefly
+    hostname: firefly
     depends_on:
       - firefly-db
       - redis
@@ -120,7 +120,7 @@ services:
       - MAIL_PASSWORD
   adminer:
     image: adminer:latest
-    container_name: adminer
+    hostname: adminer
     depends_on:
       - firefly-db
     environment:
