@@ -3,13 +3,61 @@ version: "3.9"
 secrets:
   APP_KEY:
     file: /opt/data-etc/firefly/app_key.secret.txt
+  MAIL_USERNAME:
+    file: /opt/data-etc/firefly/mail_username.secret.txt
+  MAIL_PASSWORD:
+    file: /opt/data-etc/firefly/mail_password.secret.txt
+  DB_USERNAME:
+    file: /opt/data-etc/firefly/db_username.secret.txt
+  DB_PASSWORD:
+    file: /opt/data-etc/firefly/db_password.secret.txt
+  MYSQL_ROOT_PASSWORD:
+    file: /opt/data-etc/firefly/db_root_password.secret.txt
+  MYSQL_USER:
+    file: /opt/data-etc/firefly/db_username.secret.txt
+  MYSQL_PASSWORD:
+    file: /opt/data-etc/firefly/db_password.secret.txt
 
 services:
+  db:
+    image: linuxserver/mariadb
+    restart: unless-stopped
+    ports:
+      - "3306"
+    environment:
+      FILE__MYSQL_ROOT_PASSWORD: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: firefly
+      FILE__MYSQL_USER: /run/secrets/MYSQL_USER
+      FILE__MYSQL_PASSWORD: /run/secrets/MYSQL_PASSWORD
+      TZ: "America/Montreal"
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - "/opt/data-docker/volumes/mariadb:/config"
+    secrets:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
+  redis:
+    image: redis:7.0.4-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
+    volumes:
+      - cache:/data
+    ports:
+      - '6379'
+
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
+    depends_on:
+      - db
+      - redis
     ports:
       - "7801:80"
+    volumes:
+      - "/opt/data-docker/volumes/firefly:/var/www/html/storage/upload"
     environment:
       APP_ENV: local
       APP_DEBUG: false
@@ -19,14 +67,41 @@ services:
       TRUSTED_PROXIES: "**"
       APP_LOG_LEVEL: notice
       AUDIT_LOG_LEVEL: info
-
-
-
-      APP_KEY_FILE: /run/secrets/APP_KEY
-
+      APP_KEY__FILE: /run/secrets/APP_KEY
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
       DB_DATABASE: firefly
-      DB_USERNAME: firefly
-      DB_PASSWORD: secret_firefly_password
+      DB_USERNAME__FILE: /run/secrets/DB_USERNAME
+      DB_PASSWORD__FILE: /run/secrets/DB_PASSWORD
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
+      # to check
+      REDIS_DB: "0"
+      REDIS_CACHE_DB: "1"
+      MAIL_MAILER: log
+      MAIL_HOST: smtp.mailgun.org
+      MAIL_PORT: 587
+      MAIL_FROM: notreply@firefly.ui24.mywire.com
+      MAIL_USERNAME__FILE: /run/secrets/MAIL_USERNAME
+      MAIL_PASSWORD__FILE: /run/secrets/MAIL_PASSWORD
+      MAIL_ENCRYPTION: tls
+      SEND_REGISTRATION_MAIL: true
+      SEND_ERROR_MESSAGE: true
+      SEND_LOGIN_NEW_IP_WARNING: true
+      # These messages contain (sensitive) transaction information:
+      SEND_REPORT_JOURNALS: true
+      AUTHENTICATION_GUARD: web
+    secrets:
+      - APP_KEY
+      - DB_USERNAME
+      - DB_PASSWORD
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
+
+volumes:
+  cache:
+    driver: local
