@@ -45,6 +45,8 @@ services:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_USER
       - MYSQL_PASSWORD
+    networks:
+      - firefly_net
 
   redis:
     image: redis:7.0.4-alpine
@@ -55,6 +57,8 @@ services:
       - cache:/data
     ports:
       - '6379'
+    networks:
+      - firefly_net
 
   firefly:
     image: fireflyiii/core:latest
@@ -128,7 +132,12 @@ services:
     restart: unless-stopped
     ports:
       - "7802:8080"
+    networks:
+      - firefly_net
 
 volumes:
   cache:
     driver: local
+
+networks:
+  firefly_net:
