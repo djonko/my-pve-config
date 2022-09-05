@@ -24,21 +24,23 @@ secrets:
 
 services:
   firefly-db:
-    image: linuxserver/mariadb
+    image: mariadb:latest
     restart: unless-stopped
     container_name: firefly-db
     ports:
       - "3306"
     environment:
-      FILE__MYSQL_ROOT_PASSWORD: /run/secrets/MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: firefly-db
-      FILE__MYSQL_USER: /run/secrets/MYSQL_USER
-      FILE__MYSQL_PASSWORD: /run/secrets/MYSQL_PASSWORD
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: no
+      MARIADB_ROOT_HOST: firefly-db
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+      MARIADB_DATABASE: firefly-db
+      MARIADB_USER_FILE: /run/secrets/MYSQL_USER
+      MARIADB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       TZ: "America/Montreal"
       #PUID: 1000
       #PGID: 1000
     volumes:
-      - "/opt/data-docker/volumes/mariadb:/config"
+      - "/opt/data-docker/volumes/mariadb:/var/lib/mysql"
     secrets:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_USER
@@ -104,6 +106,8 @@ services:
       # These messages contain (sensitive) transaction information:
       SEND_REPORT_JOURNALS: true
       AUTHENTICATION_GUARD: web
+      PUID: 1000
+      PGID: 1000
     secrets:
       - APP_KEY
       - DB_USERNAME
