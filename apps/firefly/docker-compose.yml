@@ -59,6 +59,7 @@ services:
     volumes:
       - "/opt/data-docker/volumes/firefly:/var/www/html/storage/upload"
     environment:
+      APP_KEY_FILE: /run/secrets/APP_KEY
       APP_ENV: local
       APP_DEBUG: false
       DEFAULT_LANGUAGE: en_US
@@ -67,7 +68,6 @@ services:
       TRUSTED_PROXIES: "**"
       APP_LOG_LEVEL: notice
       AUDIT_LOG_LEVEL: info
-      APP_KEY_FILE: /run/secrets/APP_KEY
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
