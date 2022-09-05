@@ -11,6 +11,10 @@ secrets:
     file: /opt/data-etc/firefly/db_username.secret.txt
   DB_PASSWORD:
     file: /opt/data-etc/firefly/db_password.secret.txt
+  DB_HOST:
+    file: /opt/data-etc/firefly/db_host.secret.txt
+  DB_DATABASE:
+    file: /opt/data-etc/firefly/db_database.secret.txt
   MYSQL_ROOT_PASSWORD:
     file: /opt/data-etc/firefly/db_root_password.secret.txt
   MYSQL_USER:
@@ -22,11 +26,12 @@ services:
   firefly-db:
     image: linuxserver/mariadb
     restart: unless-stopped
+    container_name: firefly-db
     ports:
       - "3306"
     environment:
       FILE__MYSQL_ROOT_PASSWORD: /run/secrets/MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: firefly
+      MYSQL_DATABASE: firefly-db
       FILE__MYSQL_USER: /run/secrets/MYSQL_USER
       FILE__MYSQL_PASSWORD: /run/secrets/MYSQL_PASSWORD
       TZ: "America/Montreal"
@@ -41,6 +46,7 @@ services:
 
   redis:
     image: redis:7.0.4-alpine
+    container_name: redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
     volumes:
@@ -51,6 +57,7 @@ services:
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
+    container_name: firefly
     depends_on:
       - firefly-db
       - redis
@@ -70,9 +77,9 @@ services:
       APP_LOG_LEVEL: debug
       AUDIT_LOG_LEVEL: info
       DB_CONNECTION: mysql
-      DB_HOST: "firefly-db"
+      DB_HOST_FILE: /run/secrets/DB_HOST
       DB_PORT: 3306
-      DB_DATABASE: firefly
+      DB_DATABASE_FILE: /run/secrets/DB_DATABASE
       DB_USERNAME_FILE: /run/secrets/DB_USERNAME
       DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       CACHE_DRIVER: redis
@@ -101,8 +108,25 @@ services:
       - APP_KEY
       - DB_USERNAME
       - DB_PASSWORD
+      - DB_HOST_FILE
+      - DB_DATABASE_FILE
       - MAIL_USERNAME
       - MAIL_PASSWORD
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    depends_on:
+      - firefly-db
+    environment:
+      ADMINER_DEFAULT_SERVER: firefly-db
+      MYSQL_ROOT_PASSWORD__FILE: run/secrets/MYSQL_ROOT_PASSWORD
+      TZ: "America/Montreal"
+    secrets:
+      - MYSQL_ROOT_PASSWORD
+    restart: unless-stopped
+    ports:
+      - "7802:8080"
+
 
 volumes:
   cache:
