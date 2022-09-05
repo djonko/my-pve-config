@@ -27,8 +27,8 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     container_name: firefly-db
-    ports:
-      - "3306"
+   # ports:
+      #- "3306"
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: no
       MARIADB_ROOT_HOST: firefly-db
@@ -53,8 +53,8 @@ services:
     command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
     volumes:
       - cache:/data
-    ports:
-      - '6379'
+    #ports:
+      #- '6379'
 
   firefly:
     image: fireflyiii/core:latest
@@ -89,7 +89,6 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
-      # to check
       REDIS_SCHEME: tcp
       REDIS_DB: "0"
       REDIS_CACHE_DB: "1"
@@ -101,9 +100,8 @@ services:
       MAIL_PASSWORD_FILE: /run/secrets/MAIL_PASSWORD
       MAIL_ENCRYPTION: tls
       SEND_REGISTRATION_MAIL: true
-      SEND_ERROR_MESSAGE: true
+      SEND_ERROR_MESSAGE: "true"
       SEND_LOGIN_NEW_IP_WARNING: true
-      # These messages contain (sensitive) transaction information:
       SEND_REPORT_JOURNALS: true
       AUTHENTICATION_GUARD: web
       PUID: 1000
@@ -130,7 +128,6 @@ services:
     restart: unless-stopped
     ports:
       - "7802:8080"
-
 
 volumes:
   cache:
