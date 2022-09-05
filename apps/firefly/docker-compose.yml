@@ -67,13 +67,13 @@ services:
       TRUSTED_PROXIES: "**"
       APP_LOG_LEVEL: notice
       AUDIT_LOG_LEVEL: info
-      APP_KEY__FILE: /run/secrets/APP_KEY
+      APP_KEY_FILE: /run/secrets/APP_KEY
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
       DB_DATABASE: firefly
-      DB_USERNAME__FILE: /run/secrets/DB_USERNAME
-      DB_PASSWORD__FILE: /run/secrets/DB_PASSWORD
+      DB_USERNAME_FILE: /run/secrets/DB_USERNAME
+      DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       REDIS_HOST: redis
@@ -86,8 +86,8 @@ services:
       MAIL_HOST: smtp.mailgun.org
       MAIL_PORT: 587
       MAIL_FROM: notreply@firefly.ui24.mywire.com
-      MAIL_USERNAME__FILE: /run/secrets/MAIL_USERNAME
-      MAIL_PASSWORD__FILE: /run/secrets/MAIL_PASSWORD
+      MAIL_USERNAME_FILE: /run/secrets/MAIL_USERNAME
+      MAIL_PASSWORD_FILE: /run/secrets/MAIL_PASSWORD
       MAIL_ENCRYPTION: tls
       SEND_REGISTRATION_MAIL: true
       SEND_ERROR_MESSAGE: true
