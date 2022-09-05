@@ -112,8 +112,8 @@ services:
       - APP_KEY
       - MYSQL_USER
       - MYSQL_PASSWORD
-      - DB_HOST_FILE
-      - DB_DATABASE_FILE
+      - DB_HOST
+      - DB_DATABASE
       - MAIL_USERNAME
       - MAIL_PASSWORD
   adminer:
