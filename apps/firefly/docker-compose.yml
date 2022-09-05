@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
     container_name: firefly-db
     ports:
-      - "3306"
+      - "3306:3306"
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'no'
       MARIADB_ROOT_HOST: firefly-db
@@ -56,7 +56,7 @@ services:
     volumes:
       - cache:/data
     ports:
-      - '6379'
+      - '6379:6379'
     networks:
       - firefly_net
 
