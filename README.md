@@ -18,3 +18,8 @@ with `ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375`
 # How to generate a random password in linux 
 -> 32 : represent the password size  
 ```date +%s | sha256sum | base64 | head -c 32 ; echo```
+
+# How to set docker swarm
+init swarm
+1) `docker swarm init`
+2) `docker swarm join --token dfdjdjfd addrip:2377`
