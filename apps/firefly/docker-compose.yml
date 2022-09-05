@@ -19,7 +19,7 @@ secrets:
     file: /opt/data-etc/firefly/db_password.secret.txt
 
 services:
-  db:
+  firefly-db:
     image: linuxserver/mariadb
     restart: unless-stopped
     ports:
@@ -51,9 +51,8 @@ services:
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
-
     depends_on:
-      - db
+      - firefly-db
       - redis
     ports:
       - "7801:8080"
@@ -62,16 +61,16 @@ services:
     environment:
       APP_KEY_FILE: /run/secrets/APP_KEY
       APP_ENV: local
-      APP_DEBUG: false
+      APP_DEBUG: true
       DEFAULT_LANGUAGE: en_US
       DEFAULT_LOCALE: equal
       SITE_OWNER: admin@firefly.ui24.mywire.com
       TZ: "America/Montreal"
       TRUSTED_PROXIES: "**"
-      APP_LOG_LEVEL: notice
+      APP_LOG_LEVEL: debug
       AUDIT_LOG_LEVEL: info
       DB_CONNECTION: mysql
-      DB_HOST: "db"
+      DB_HOST: "firefly-db"
       DB_PORT: 3306
       DB_DATABASE: firefly
       DB_USERNAME_FILE: /run/secrets/DB_USERNAME
