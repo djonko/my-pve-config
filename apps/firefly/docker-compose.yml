@@ -56,7 +56,7 @@ services:
       - db
       - redis
     ports:
-      - "7801:80"
+      - "7801:8080"
     volumes:
       - "/opt/data-docker/volumes/firefly:/var/www/html/storage/upload"
     environment:
