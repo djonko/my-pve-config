@@ -82,8 +82,8 @@ services:
       DB_HOST_FILE: /run/secrets/DB_HOST
       DB_PORT: 3306
       DB_DATABASE_FILE: /run/secrets/DB_DATABASE
-      DB_USERNAME_FILE: /run/secrets/DB_USERNAME
-      DB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+      DB_USERNAME_FILE: /run/secrets/MYSQL_USER
+      DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       REDIS_HOST: redis
@@ -110,8 +110,8 @@ services:
       PGID: 1000
     secrets:
       - APP_KEY
-      - DB_USERNAME
-      - DB_PASSWORD
+      - MYSQL_USER
+      - MYSQL_PASSWORD
       - DB_HOST_FILE
       - DB_DATABASE_FILE
       - MAIL_USERNAME
