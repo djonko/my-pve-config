@@ -30,7 +30,7 @@ services:
    # ports:
       #- "3306"
     environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: no
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'no'
       MARIADB_ROOT_HOST: firefly-db
       MARIADB_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
       MARIADB_DATABASE: firefly-db
@@ -70,7 +70,7 @@ services:
     environment:
       APP_KEY_FILE: /run/secrets/APP_KEY
       APP_ENV: local
-      APP_DEBUG: false
+      APP_DEBUG: 'false'
       DEFAULT_LANGUAGE: en_US
       DEFAULT_LOCALE: equal
       SITE_OWNER: admin@firefly.ui24.mywire.com
@@ -99,10 +99,10 @@ services:
       MAIL_USERNAME_FILE: /run/secrets/MAIL_USERNAME
       MAIL_PASSWORD_FILE: /run/secrets/MAIL_PASSWORD
       MAIL_ENCRYPTION: tls
-      SEND_REGISTRATION_MAIL: true
+      SEND_REGISTRATION_MAIL: 'true'
       SEND_ERROR_MESSAGE: "true"
-      SEND_LOGIN_NEW_IP_WARNING: true
-      SEND_REPORT_JOURNALS: true
+      SEND_LOGIN_NEW_IP_WARNING: 'true'
+      SEND_REPORT_JOURNALS: 'true'
       AUTHENTICATION_GUARD: web
       PUID: 1000
       PGID: 1000
