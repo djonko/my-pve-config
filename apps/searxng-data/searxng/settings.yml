@@ -20,7 +20,7 @@ redis:
   url: redis://redis:6379/0
 general:
   instance_name: "My-Search"
-  debug: true
+  debug: false
   enable_metrics: true
   contact_url: false
 
