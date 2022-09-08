@@ -8,6 +8,12 @@ server:
   method: "GET"
 search:
   autocomplete: "duckduckgo"
+  default_lang: ""
+  formats:
+    - html
+    - json
+    - csv
+    - rss
 ui:
   static_use_hash: true
 redis:
