@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  focalboard:
+    image: mattermost/focalboard
+    user: "1000:1000"
+    container_name: focalboard
+    ports:
+      - "7803:8000"
+    restart: unless-stopped
+    volumes:
+      - "/opt/data-docker/volumes/focalboard:/opt/focalboard"
+
+
