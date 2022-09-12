@@ -8,4 +8,4 @@ services:
       - "7803:8000"
     restart: unless-stopped
     volumes:
-      - "/opt/data-docker/volumes/focalboard/data:/data:rw"
+      - "/opt/data-docker/volumes/focalboard:/data:rw"
