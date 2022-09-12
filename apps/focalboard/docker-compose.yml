@@ -9,4 +9,4 @@ services:
     restart: unless-stopped
     volumes:
       - "/opt/data-docker/volumes/focalboard/data:/data"
-      - "/opt/data-docker/volumes/focalboard/data-opt:/opt/focalboard"
+      - "/opt/data-docker/volumes/focalboard/data-opt/config.json:/opt/focalboard/config.json"
