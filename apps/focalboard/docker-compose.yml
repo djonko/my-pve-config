@@ -1,4 +1,13 @@
 version: "3.9"
+
+secrets:
+  POSTGRES_DB:
+    file: /opt/data-etc/focalboard/db.secret.txt
+  POSTGRES_USER:
+    file: /opt/data-etc/focalboard/db_user.secret.txt
+  POSTGRES_PASSWORD:
+    file: /opt/data-etc/focalboard/db_pwd.secret.txt
+
 services:
   focalboard:
     image: mattermost/focalboard
@@ -10,3 +19,28 @@ services:
     volumes:
       - "/opt/data-docker/volumes/focalboard/data:/data"
       - "/opt/data-docker/volumes/focalboard/data-opt/config.json:/opt/focalboard/config.json"
+    environment:
+      TZ: "America/Montreal"
+    networks:
+      - focal-net
+
+  focalboard-db:
+    image: postgres:latest
+    container_name: focalboard-postgres
+    restart: unless-stopped
+    volumes:
+      - "/opt/data-docker/volumes/focalboard/postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB  #boards
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER #boardsuser
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD #boardsuser-password
+      TZ: "America/Montreal"
+    secrets:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    networks:
+      - focal-net
+
+networks:
+  focal-net:
