@@ -11,7 +11,6 @@ secrets:
 services:
   focalboard:
     image: mattermost/focalboard
-    #user: "1000:1000"
     container_name: focalboard
     ports:
       - "7803:8000"
@@ -29,7 +28,7 @@ services:
     container_name: focalboard-postgres
     restart: unless-stopped
     volumes:
-      - "/opt/data-docker/volumes/focalboard/postgres:/var/lib/postgresql/data"
+      - "/opt/data-docker/volumes/focalboard/postgresql:/var/lib/postgresql/data"
     environment:
       POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB  #boards
       POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER #boardsuser
