@@ -14,6 +14,7 @@ services:
     container_name: focalboard
     ports:
       - "7803:8000"
+      - "7902:9092"
     depends_on:
       - focalboard-db
     restart: unless-stopped
