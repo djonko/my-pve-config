@@ -1,0 +1,18 @@
+- hosts: "vms_with_docker"
+  become: true
+  become_exe: sudo
+  tasks:
+    - name: "configure remote access to docker service"
+      lineinfile:
+        path: /lib/systemd/system/docker.service
+        regexp: ^{{old_exec_start}}$
+        line: "{{new_exec_start}}"
+        state: present
+    - name: "reload Daemond"
+      systemd:
+        name: docker.service
+        daemon_reload: yes
+        state: restarted
+  vars:
+    old_exec_start: ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+    new_exec_start: ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375
