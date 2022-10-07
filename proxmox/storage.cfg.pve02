@@ -1,0 +1,25 @@
+dir: local
+        path /var/lib/vz
+        content images,backup,snippets,vztmpl,rootdir,iso
+        shared 0
+
+dir: sda480gb
+        path /mnt/pve/sda480gb
+        content vztmpl,snippets,backup,images,rootdir,iso
+        is_mountpoint 1
+        nodes pve01
+
+zfspool: zfsa
+        pool zfsa
+        content rootdir,images
+        mountpoint /zfsa
+        nodes pve02
+
+dir: zfsa_mp
+        path /mnt/ZFSA
+        content vztmpl,snippets,backup,images,rootdir,iso
+        prune-backups keep-all=1
+        shared 0
+        is_mountpoint 1
+        mkdir 0
+        nodes pve02
