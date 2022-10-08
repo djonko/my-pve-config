@@ -8,7 +8,7 @@ IMG_NAME="jammy-cloudimg-amd64.qcow2"
 echo "Step $NXT"
 mkdir -p $WORK_DIR
 cd $WORK_DIR
-wget -O $IMG_NAME $SRC_IMG
+wget -O $IMG_NAME $DOWNLOAD_URL
 
 ## Step 2: Add QEMU Guest Agent
 NXT=$((NXT+1))
