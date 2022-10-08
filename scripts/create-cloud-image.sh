@@ -7,10 +7,10 @@ DOWNLOAD_URL="https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudim
 IMG_NAME="jammy-cloudimg-amd64.qcow2"
 ## Step 1: Download the image
 echo "Step $NXT"
-mkdir -p $WORK_DIR
-cd $WORK_DIR
+mkdir -p "$WORK_DIR"
+cd "$WORK_DIR" || exit
 # If file not exist then download it
-if[!-f"$IMG_NAME"];then
+if [ ! -f "$IMG_NAME" ]; then
 wget -O $IMG_NAME $DOWNLOAD_URL
 fi
 
