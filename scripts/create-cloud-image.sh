@@ -5,19 +5,19 @@ WORK_DIR="~/tmp/cloudImage"
 DOWNLOAD_URL="https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
 IMG_NAME="jammy-cloudimg-amd64.qcow2"
 ## Step 1: Download the image
-echo 'Step $NXT'
+echo "Step $NXT"
 mkdir -p $WORK_DIR
 cd $WORK_DIR
 wget -O $IMG_NAME $SRC_IMG
 
 ## Step 2: Add QEMU Guest Agent
 NXT=$((NXT+1))
-echo 'Step $NXT'
+echo "Step $NXT"
 apt update
 apt install -y libguestfs-tools
 virt-customize --install qemu-guest-agent -a $IMG_NAME
 NXT=$((NXT+1))
-echo 'Step $NXT'
+echo "Step $NXT"
 
 ## Step 3: Create a VM in Proxmox with required settings and convert to template 
 TEMPL_NAME="ubuntu2204-cloud"
@@ -42,4 +42,4 @@ qm template $VMID
 rm $IMG_NAME
 
 NXT=$((NXT+1))
-echo 'Step $NXT:  END'
+echo "Step $NXT:  END"
