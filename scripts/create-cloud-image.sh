@@ -26,7 +26,7 @@ MEM="512"
 DISK_SIZE="3G"
 DISK_STOR="local"
 NET_BRIDGE="vmbr0"
-SSH_PUB="~/.ssh/id_rsa.pub"
+SSH_PUB="~/.ssh/id_ed25519.pub"
 
 qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE
 qm importdisk $VMID $IMG_NAME $DISK_STOR
