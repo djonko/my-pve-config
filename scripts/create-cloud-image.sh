@@ -45,7 +45,7 @@ qm set $VMID --sshkey "$SSH_PUB"
 qm set $VMID --agent enabled=1
 qm resize $VMID scsi1 "$DISK_SIZE"
 qm template $VMID
-rm $IMG_NAME
+#rm $IMG_NAME
 
 NXT=$((NXT+1))
 echo "Step $NXT:  END"
