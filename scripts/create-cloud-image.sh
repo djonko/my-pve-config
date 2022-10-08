@@ -1,6 +1,7 @@
 #!/bin/bash
 NXT=$((0+1))
-HOME_USER="/home/$USER"
+USER_HOME_NAME=$1
+HOME_USER="/home/$USER_HOME_NAME"
 WORK_DIR="$HOME_USER/tmp/cloudImage"
 DOWNLOAD_URL="https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
 IMG_NAME="jammy-cloudimg-amd64.qcow2"
@@ -8,7 +9,10 @@ IMG_NAME="jammy-cloudimg-amd64.qcow2"
 echo "Step $NXT"
 mkdir -p $WORK_DIR
 cd $WORK_DIR
+# If file not exist then download it
+if[!-f"$IMG_NAME"];then
 wget -O $IMG_NAME $DOWNLOAD_URL
+fi
 
 ## Step 2: Add QEMU Guest Agent
 NXT=$((NXT+1))
