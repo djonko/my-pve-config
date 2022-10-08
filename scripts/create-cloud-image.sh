@@ -31,7 +31,7 @@ DISK_SIZE=5G
 DISK_STOR="zfsa"
 NET_BRIDGE="vmbr0"
 SSH_PUB="$HOME_USER/.ssh/id_ed25519.pub"
-MY_DNS="pihole.ui24.mywire.com"
+MY_DNS="192.168.20.2"
 MY_DOMAIN="ui24.mywire.com"
 
 qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true --nameserver $MY_DNS --searchdomain $MY_DOMAIN
