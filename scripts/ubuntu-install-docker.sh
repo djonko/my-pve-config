@@ -21,4 +21,4 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plu
 sudo groupadd docker
 sudo usermod -aG docker $USER
 
-docker -version
+docker --version
