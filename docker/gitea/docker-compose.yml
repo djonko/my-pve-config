@@ -18,9 +18,9 @@ services:
     container_name: db-gitea
     restart: unless-stopped
     environment:
-      POSTGRES_USER__FILE: /run/secrets/POSTGRES_USER
-      POSTGRES_PASSWORD__FILE: /run/secrets/POSTGRES_PWD
-      POSTGRES_DB__FILE: /run/secrets/POSTGRES_DB
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PWD
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
       TZ: "${TIME_ZONE}"
     secrets:
       - POSTGRES_PWD
