@@ -1,4 +1,12 @@
-version: "3"
+version: "3.9"
+
+secrets:
+  POSTGRES_PWD:
+    file: /opt/data-etc/gitea/db_pwd.secret.txt
+  POSTGRES_USER:
+    file: /opt/data-etc/gitea/db_user.secret.txt
+  POSTGRES_DB:
+    file: /opt/data-etc/gitea/db_name.secret.txt
 
 networks:
   gitea:
@@ -10,10 +18,14 @@ services:
     container_name: db-gitea
     restart: unless-stopped
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER__FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD__FILE: /run/secrets/POSTGRES_PWD
+      POSTGRES_DB__FILE: /run/secrets/POSTGRES_DB
       TZ: "${TIME_ZONE}"
+    secrets:
+      - POSTGRES_PWD
+      - POSTGRES_USER
+      - POSTGRES_DB
     networks:
       - gitea
     volumes:
@@ -25,6 +37,8 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+    env_file:
+      - /opt/data-etc/gitea/config.env
     environment:
       - USER_UID=1001
       - USER_GID=1001
@@ -36,10 +50,10 @@ services:
     networks:
       - gitea
     volumes:
-      - /opt/data-adm-docker/volumes/gitea/gitea-data:/data
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /home/git/.ssh/:/data/git/.ssh
+      - "/opt/data-adm-docker/volumes/gitea/gitea-data:/data"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/home/git/.ssh/:/data/git/.ssh"
     ports:
       - "3000:3000"
       - "127.0.0.1:2222:22"
