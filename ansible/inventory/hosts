@@ -35,3 +35,4 @@ srv100
 [vm_from_template_ubuntu]
 srv200
 gitea
+nfs01
