@@ -1,4 +1,4 @@
-- hosts: "vms_with_docker"
+- hosts: "tmp_vm"
   become: true
   become_exe: sudo
   tasks:

@@ -36,3 +36,7 @@ srv100
 srv200
 gitea
 nfs01
+
+[tmp_vm]
+srv200
+gitea
