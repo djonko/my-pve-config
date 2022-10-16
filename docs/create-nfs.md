@@ -27,7 +27,7 @@ sudo chown -R nobody:nogroup /srv/nfs04T01/pve
 sudo nano /etc/exports
 ```
 add those lines:
-```shell
+```text
 /srv/nfs04T01/pve/server_01 192.168.20.0/24(rw,sync,no_subtree_check)
 /srv/nfs04T01/pve/server_02 192.168.20.0/24(rw,sync,no_subtree_check)
 ```
