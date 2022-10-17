@@ -57,3 +57,16 @@ services:
     ports:
       - "8100:3000"
       - "127.0.0.1:2222:22"
+  hurlenko-file:
+    image: hurlenko/filebrowser
+    user: "1001:1001"
+    container_name: filebrowser
+    ports:
+      - "8101:8080"
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - gitea-net
+    volumes:
+      - "/home/git:/data"
