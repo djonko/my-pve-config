@@ -70,3 +70,15 @@ services:
       - gitea-net
     volumes:
       - "/home/git:/data"
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db_ngnix
+    networks:
+      - gitea-net
+    restart: unless-stopped
+    ports:
+      - "8102:8080"
