@@ -55,5 +55,5 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/home/git/.ssh/:/data/git/.ssh"
     ports:
-      - "3000:3000"
+      - "8100:3000"
       - "127.0.0.1:2222:22"
