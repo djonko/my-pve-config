@@ -76,7 +76,7 @@ services:
     depends_on:
       - db
     environment:
-      ADMINER_DEFAULT_SERVER: db_ngnix
+      ADMINER_DEFAULT_SERVER: db-gitea
     networks:
       - gitea-net
     restart: unless-stopped
