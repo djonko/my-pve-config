@@ -54,6 +54,7 @@ services:
       - GITEA__mailer__IS_TLS_ENABLED=${GITEA__mailer__TLS}
       - GITEA__mailer__USER=${GITEA__mailer__USER:-apikey}
       - GITEA__mailer__PASSWD="""${GITEA__mailer__PASSWD:?GITEA__mailer__PASSWD not set}"""
+      - GITEA__service__ENABLE_NOTIFY_MAIL=true
     networks:
       - gitea-net
     volumes:
