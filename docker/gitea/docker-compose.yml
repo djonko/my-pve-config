@@ -55,6 +55,8 @@ services:
       - GITEA__mailer__USER=${GITEA__mailer__USER:-apikey}
       - GITEA__mailer__PASSWD="""${GITEA__mailer__PASSWD:?GITEA__mailer__PASSWD not set}"""
       - GITEA__service__ENABLE_NOTIFY_MAIL=true
+      - GITEA__service__REGISTER_EMAIL_CONFIRM=true
+      - GITEA__service__NO_REPLY_ADDRESS=no-reply
     networks:
       - gitea-net
     volumes:
