@@ -14,5 +14,14 @@ services:
       - "/opt/data-docker/volumes/filebrowser/config/settings.json:/config/settings.json"
       - "/opt/data-docker/volumes/filebrowser/config:/config"
       - "/home:/data/home/"
+      - "nfs01_mydata:/data/nfs01/my_data"
+
+volumes:
+  nfs01_mydata:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.20.41,rw,nfsvers=4
+      device: /srv/nfs04T01/my_data
 
 
