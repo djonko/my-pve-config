@@ -43,9 +43,9 @@ services:
       - POSTGRES_PASSWORD
     networks:
       - focal-net
-  adminer:
+  adminer_focal:
     image: adminer:latest
-    container_name: adminer
+    container_name: adminer_focal
     depends_on:
       - focalboard-db
     environment:
