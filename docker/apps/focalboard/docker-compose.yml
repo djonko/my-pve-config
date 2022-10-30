@@ -43,6 +43,18 @@ services:
       - POSTGRES_PASSWORD
     networks:
       - focal-net
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    depends_on:
+      - focalboard-db
+    environment:
+      ADMINER_DEFAULT_SERVER: focalboard-db
+    networks:
+      - focal-net
+    restart: unless-stopped
+    ports:
+      - "7804:8080"
 
 networks:
   focal-net:
