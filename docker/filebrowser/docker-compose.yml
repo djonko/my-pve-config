@@ -23,5 +23,6 @@ volumes:
       type: "nfs"
       o: addr=192.168.20.41,rw,nfsvers=4
       device: ":/srv/nfs04T01/my_data"
+      dst: /srv/nfs04T01/my_data
 
 
