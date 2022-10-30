@@ -21,7 +21,7 @@ volumes:
     driver: "local"
     driver_opts:
       type: "nfs"
-      o: addr=192.168.20.41,rw,sync,no_subtree_check,insecure
+      o: addr=192.168.20.41
       device: ":/srv/nfs04T01/my_data"
 
 
