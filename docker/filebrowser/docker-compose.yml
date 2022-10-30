@@ -18,6 +18,7 @@ services:
 
 volumes:
   nfs01_mydata:
+    driver: "local"
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.41,nolock,soft,rw,nfsvers=4"
