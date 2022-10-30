@@ -19,6 +19,8 @@ services:
 
 volumes:
   nfs01_mydata:
-    driver: nfs
+    driver: local
     driver_opts:
-      share: 192.168.20.41:/srv/nfs04T01/my_data
+      type: nfs
+      o: addr=192.168.20.41
+      device: ":/srv/nfs04T01/my_data"
