@@ -22,6 +22,6 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.41,nolock,soft,rw,nfsvers=4"
-      device: ":/srv/nfs04T01/my_data"
+      device: "/srv/bobdi/nfs04T01/my_data:/srv/nfs04T01/my_data"
 
 
