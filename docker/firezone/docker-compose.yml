@@ -31,8 +31,10 @@ services:
 
         https:// {
           log
-          reverse_proxy * 172.25.0.100:13000 --internal-certs
-          ${TLS_OPTS:-}
+          reverse_proxy * 172.25.0.100:13000
+          tls internal {
+            on_demand
+          }
         }
         EOF
     network_mode: "host"
