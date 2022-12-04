@@ -31,7 +31,7 @@ services:
 
         https:// {
           log
-          reverse_proxy * 172.25.0.100:13000
+          reverse_proxy * 172.25.0.100:13000 --internal-certs
           ${TLS_OPTS:-}
         }
         EOF
