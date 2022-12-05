@@ -21,6 +21,8 @@ services:
     image: caddy:2
     volumes:
       - ${FZ_INSTALL_DIR:-.}/caddy:/data/caddy
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     # See Caddy's documentation for customizing this line
     # https://caddyserver.com/docs/quick-starts/reverse-proxy
     command:
