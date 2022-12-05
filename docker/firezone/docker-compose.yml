@@ -65,6 +65,8 @@ services:
       - net.ipv6.conf.all.forwarding=1
     depends_on:
       - postgres
+    environment:
+      TZ: "${TIME_ZONE}"
     networks:
       firezone-network:
         ipv4_address: 172.25.0.100
@@ -80,6 +82,7 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      TZ: "${TIME_ZONE}"
     networks:
       - firezone-network
     deploy:
