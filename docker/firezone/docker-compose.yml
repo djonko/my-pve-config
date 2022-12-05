@@ -44,7 +44,7 @@ services:
   firezone:
     image: firezone/firezone
     ports:
-      - 51820:51820/udp
+      - "44837:51820/udp"
     env_file:
       # This should contain a list of env vars for configuring Firezone.
       # See https://docs.firezone.dev/reference/env-vars for more info.
