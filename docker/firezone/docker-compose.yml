@@ -95,6 +95,18 @@ services:
       <<: *default-deploy
       update_config:
         order: stop-first
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    depends_on:
+      - postgres
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    networks:
+      - firezone-network
+    restart: unless-stopped
+    ports:
+      - "8102:8080"
 
 # Postgres needs a named volume to prevent perms issues on non-linux platforms
 volumes:
