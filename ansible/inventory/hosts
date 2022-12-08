@@ -31,6 +31,7 @@ pwd-manager
 search
 pod-01
 srv100
+firezone
 
 [vm_from_template_ubuntu]
 srv200
