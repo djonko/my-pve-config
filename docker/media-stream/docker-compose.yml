@@ -123,4 +123,4 @@ services:
       - media-net
 networks:
   media-net:
-    external: false
+    external: true
