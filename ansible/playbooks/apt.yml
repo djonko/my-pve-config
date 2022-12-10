@@ -1,4 +1,4 @@
-- hosts: "pve-vms"
+- hosts: "lcx_vms"
   become: true
   tasks:
     - name: apt
