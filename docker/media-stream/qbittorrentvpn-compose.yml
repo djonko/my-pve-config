@@ -20,7 +20,7 @@ services:
       - PGID=1000
       - LAN_NETWORK=172.27.0.0/24
       - NAME_SERVERS=9.9.9.9,149.112.112.112
-      #- ENABLE_SSL=no
+      - ENABLE_SSL=yes
       - WEBUI_PORT_ENV=8080
       - INSTALL_PYTHON3=yes
     networks:
