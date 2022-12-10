@@ -18,20 +18,6 @@ services:
       - "9117:9117"
     networks:
       - media-net
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:develop
-    container_name: prowlarr
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Montreal
-    volumes:
-      - /opt/data-docker/media_stream/prowlarr/config:/config
-    ports:
-      - "9696:9696"
-    networks:
-      - media-net
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -121,7 +107,20 @@ services:
       - "1900:1900/udp" #optional
     networks:
       - media-net
-
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Montreal
+    volumes:
+      - /opt/data-docker/media_stream/prowlarr/config:/config
+    ports:
+      - "9696:9696"
+    networks:
+      - media-net
 networks:
   media-net:
     external: false
