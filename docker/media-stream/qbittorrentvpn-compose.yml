@@ -27,7 +27,7 @@ services:
       - qbit-network
     volumes:
       - /opt/data-docker/media_stream/qbittorrentvpn/config:/config
-      - /nfs/stream_data/downloads:/downloads
+      - /nfs/stream_data:/downloads
 
 
 networks:
