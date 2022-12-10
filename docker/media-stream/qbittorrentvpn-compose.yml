@@ -22,6 +22,7 @@ services:
       - NAME_SERVERS=1.1.1.1,1.0.0.1
       - ENABLE_SSL=yes
       - WEBUI_PORT_ENV=8080
+      - INSTALL_PYTHON3=yes
     networks:
       - qbit-network
     volumes:
