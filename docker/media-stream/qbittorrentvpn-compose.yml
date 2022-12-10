@@ -18,6 +18,8 @@ services:
       - VPN_TYPE=wireguard
       - PUID=1000
       - PGID=1000
+      - UMASK=0022
+      -
       - LAN_NETWORK=192.168.20.0/24,172.27.0.0/24
       - NAME_SERVERS=9.9.9.9,149.112.112.112
       - ENABLE_SSL=yes
