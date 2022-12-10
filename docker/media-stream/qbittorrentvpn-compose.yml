@@ -11,7 +11,7 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     ports:
       - "8999:8999/udp"
-      - "9080:8080"
+      - "8080:8080"
     environment:
       - TZ=America/Montreal
       - VPN_ENABLED=yes
@@ -20,7 +20,7 @@ services:
       - PGID=1000
       - LAN_NETWORK=192.168.20.0/24,172.27.0.0/24
       - NAME_SERVERS=1.1.1.1,1.0.0.1
-      - ENABLE_SSL=no
+      - ENABLE_SSL=yes
       - WEBUI_PORT_ENV=8080
     networks:
       - qbit-network
