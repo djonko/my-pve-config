@@ -13,7 +13,7 @@ services:
       #- RUN_OPTS=<run options here> #optional
     volumes:
       - /opt/data-docker/media_stream/jackett/config:/config
-      - /srv/media_home/downloads:/downloads
+      - /nfs/stream_data/downloads:/downloads
     ports:
       - "9117:9117"
     networks:
@@ -29,8 +29,8 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/radarr/config:/config
-      - /srv/media_home/movies:/movies
-      - /srv/media_home/downloads:/downloads
+      - /nfs/stream_data/movies:/movies
+      - /nfs/stream_data/downloads:/downloads
     ports:
       - "7878:7878"
     networks:
@@ -46,8 +46,8 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/sonarr/config:/config
-      - /srv/media_home/tvseries:/tv #optional
-      - /srv/media_home/downloads:/downloads #optional
+      - /nfs/stream_data/tvseries:/tv #optional
+      - /nfs/stream_data/downloads:/downloads #optional
     ports:
       - "8989:8989"
     networks:
@@ -64,8 +64,8 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/bazarr/config:/config
-      - /srv/media_home/movies:/movies #optional
-      - /srv/media_home/tvseries:/tv #optional
+      - /nfs/stream_data/movies:/movies #optional
+      - /nfs/stream_data/tvseries:/tv #optional
     ports:
       - "6767:6767"
     networks:
@@ -80,9 +80,9 @@ services:
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - /path/to/appdata/config:/config
-      - /path/to/music:/music #optional
-      - /path/to/downloads:/downloads #optional
+      - /opt/data-docker/media_stream/lidarr/config:/config
+      - /nfs/stream_data/music:/music #optional
+      - /nfs/stream_data/downloads:/downloads #optional
     ports:
       - "8686:8686"
     networks:
@@ -97,9 +97,9 @@ services:
       - TZ=America/Montreal
       - JELLYFIN_PublishedServerUrl=media #optional
     volumes:
-      - /path/to/library:/config
-      - /path/to/tvseries:/data/tvshows
-      - /path/to/movies:/data/movies
+      - /opt/data-docker/media_stream/jellyfin/config:/config
+      - /nfs/stream_data/tvseries:/data/tvshows
+      - /nfs/stream_data/movies:/data/movies
     ports:
       - "8096:8096"
       - "8920:8920" #optional
