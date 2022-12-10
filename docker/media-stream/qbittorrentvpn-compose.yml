@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  qbittorrentvpn:
+    image: dyonr/qbittorrentvpn
+    container_name: qbittorrentvpn
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    ports:
+      - "8999:8999/udp"
+      - "7080:8080"
+    environment:
+      - TZ=America/Montreal
+      - VPN_ENABLED=yes
+      - VPN_TYPE=wireguard
+      - PUID=1000
+      - PGID=1000
+      - LAN_NETWORK=192.168.20.0/24,172.27.0.0/24
+      - ENABLE_SSL=yes
+      - INSTALL_PYTHON3=yes
+    networks:
+      - qbit-network
+    volumes:
+      - /opt/data-docker/media_stream/qbittorrentvpn/config:/config
+      - /nfs/stream_data/downloads:/downloads
+
+
+networks:
+  qbit-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.0.0/24
