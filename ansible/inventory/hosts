@@ -22,7 +22,6 @@ ngnix
 pwd-manager
 search
 pod-01
-srv100
 
 [vms_with_docker]
 dashboard
@@ -32,6 +31,7 @@ search
 pod-01
 srv100
 firezone
+media
 
 [vm_from_template_ubuntu]
 srv200
@@ -41,3 +41,5 @@ nfs01
 [tmp_vm]
 srv200
 gitea
+[new_vm]
+media

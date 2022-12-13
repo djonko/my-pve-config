@@ -1,5 +1,5 @@
 - name: Set timezone and configure timesyncd
-  hosts: "vm_from_template_ubuntu"
+  hosts: "new_vm"
   become: yes
   tasks:
     - name: set timezone
