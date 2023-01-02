@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  pingvin-share:
+    image: stonith404/pingvin-share
+    restart: unless-stopped
+    ports:
+      - "7805:3000"
+    volumes:
+      - "${BASE_PATH}/nfs-data:/opt/app/backend/data"
