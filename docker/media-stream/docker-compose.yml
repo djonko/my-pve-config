@@ -91,6 +91,9 @@ services:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     restart: unless-stopped
+    group_add:
+      - "44"
+    user: 1000:1000
     environment:
       - PUID=1000
       - PGID=1000
