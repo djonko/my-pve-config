@@ -101,6 +101,8 @@ services:
       - /nfs/stream_data/tvseries:/data/tvshows
       - /nfs/stream_data/movies:/data/movies
       - /nfs/stream_data/xxx-adts:/data/xxx
+    devices:
+      - /dev/dri:/dev/dri
     ports:
       - "8096:8096"
       - "7359:7359/udp" #optional
