@@ -107,6 +107,14 @@ services:
       - "1900:1900/udp" #optional
     networks:
       - media-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
