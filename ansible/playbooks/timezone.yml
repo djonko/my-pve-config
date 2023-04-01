@@ -1,5 +1,5 @@
 - name: Set timezone and configure timesyncd
-  hosts: "new_vm"
+  hosts: "*"
   become: yes
   tasks:
     - name: set timezone

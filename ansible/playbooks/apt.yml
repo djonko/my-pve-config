@@ -1,4 +1,4 @@
-- hosts: "lcx_vms"
+- hosts: "*"
   become: true
   tasks:
     - name: apt
