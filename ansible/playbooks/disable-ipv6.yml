@@ -1,4 +1,4 @@
-- hosts: "new_vm"
+- hosts: "*"
   become: true
   tasks:
     - name: Disable IPv6 with sysctl
