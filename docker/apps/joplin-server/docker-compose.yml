@@ -52,6 +52,3 @@ services:
       - MAILER_AUTH_PASSWORD=${PASSWORD_MAIL}
       - MAILER_NOREPLY_NAME=Joplin
       - MAILER_NOREPLY_EMAIL=${MAIL_FROM}
-
-volumes:
-  joplindb:
