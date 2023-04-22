@@ -16,9 +16,9 @@ services:
       - /opt/data-docker/volumes/joplin/postgresql:/var/lib/postgresql/data
     restart: unless-stopped
     environment:
-      - POSTGRES_PASSWORD_FILE=${POSTGRES_PWD}
-      - POSTGRES_USER_FILE=${POSTGRES_USER}
-      - POSTGRES_DB_FILE=${POSTGRES_DB}
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PWD
+      - POSTGRES_USER_FILE=/run/secrets/POSTGRES_USER
+      - POSTGRES_DB_FILE=/run/secrets/POSTGRES_DB
       - TZ=${TIME_ZONE}
     secrets:
       - POSTGRES_PWD
