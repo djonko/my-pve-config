@@ -54,3 +54,14 @@ services:
       - MAILER_NOREPLY_EMAIL=${MAIL_FROM}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+
+  adminer:
+    image: adminer:latest
+    container_name: joplin_db_viewer
+    depends_on:
+      - joplin_db
+    environment:
+      ADMINER_DEFAULT_SERVER: joplin_db
+    restart: unless-stopped
+    ports:
+      - "6806:8080"
