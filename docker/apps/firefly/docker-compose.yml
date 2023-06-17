@@ -122,7 +122,7 @@ services:
     image: fireflyiii/data-importer:latest
     container_name: firefly-importer
     networks:
-      - firefly_iii
+      - firefly_net
     restart: unless-stopped
     ports:
       - '7808:8080'
