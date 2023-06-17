@@ -10,7 +10,7 @@ services:
       - PASSWORD=${LSP_PASSWORD}
       - IPINFO_APIKEY=${LSP_PASSWORD_TOKEN}
     volumes:
-      - /opt/data-docker/libre_speed/config:/config
+      - "/opt/data-docker/volumes/libre_speed/config:/config"
     ports:
       - "7807:80"
     restart: unless-stopped
