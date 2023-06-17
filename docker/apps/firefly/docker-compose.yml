@@ -130,7 +130,7 @@ services:
       - firefly
     environment:
       FIREFLY_III_URL: http://firefly:8080
-      FIREFLY_III_ACCESS_TOKEN: "test"
+      FIREFLY_III_ACCESS_TOKEN: ${IMPORT_TOKEN}
 
   adminer:
     image: adminer:latest
