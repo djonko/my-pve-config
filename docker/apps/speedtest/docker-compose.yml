@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  librespeed:
+    image: lscr.io/linuxserver/librespeed:latest
+    container_name: libre_speed
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Montreal
+      - PASSWORD=${LSP_PASSWORD}
+      - IPINFO_APIKEY=${LSP_PASSWORD_TOKEN}
+    volumes:
+      - /opt/data-docker/libre_speed/config:/config
+    ports:
+      - "7807:80"
+    restart: unless-stopped
