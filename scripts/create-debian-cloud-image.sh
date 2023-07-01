@@ -23,6 +23,7 @@ fi
 NXT=$((NXT+1))
 echo "Step $NXT"
 apt update
+apt dist upgrade
 apt install -y libguestfs-tools
 virt-customize --install qemu-guest-agent -a $IMG_NAME
 NXT=$((NXT+1))
