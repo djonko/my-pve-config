@@ -8,7 +8,7 @@ USER_HOME_NAME=$1
 MEM=$3
 HOME_USER="/home/$USER_HOME_NAME"
 WORK_DIR="$HOME_USER/tmp/cloudImage"
-DOWNLOAD_URL="https://cdimage.debian.org/cdimage/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+DOWNLOAD_URL="https://cdimage.debian.org/cdimage/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
 IMG_NAME="debian-12-generic-amd64.qcow2"
 ## Step 1: Download the image
 echo "Step $NXT"
