@@ -1,0 +1,67 @@
+version: "3.9"
+
+secrets:
+  POSTGRES_PWD:
+    file: /opt/data-etc/joplin/db_pwd.secret.txt
+  POSTGRES_USER:
+    file: /opt/data-etc/joplin/db_user.secret.txt
+  POSTGRES_DB:
+    file: /opt/data-etc/joplin/db_name.secret.txt
+
+services:
+  joplin_db:
+    image: postgres:15.2
+    container_name: joplin_db
+    volumes:
+      - /opt/data-docker/volumes/joplin/postgresql:/var/lib/postgresql/data
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PWD
+      - POSTGRES_USER_FILE=/run/secrets/POSTGRES_USER
+      - POSTGRES_DB_FILE=/run/secrets/POSTGRES_DB
+      - TZ=${TIME_ZONE}
+    secrets:
+      - POSTGRES_PWD
+      - POSTGRES_USER
+      - POSTGRES_DB
+
+  joplin:
+    image: joplin/server:latest
+    container_name: joplin
+    env_file:
+      - /opt/data-etc/joplin/config.env
+    depends_on:
+      - joplin_db
+    ports:
+      - "7806:22300"
+    restart: unless-stopped
+    environment:
+      - APP_PORT=${PORT}
+      - APP_BASE_URL=${APP_BASE_URL}
+      - DB_CLIENT=pg
+      - POSTGRES_PASSWORD=${PG_PWD}
+      - POSTGRES_DATABASE=${PG_DBNAME}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=joplin_db
+      - MAILER_ENABLED=1
+      - MAILER_HOST=${MAIL_HOST}
+      - MAILER_PORT=${MAIL_PORT}
+      - MAILER_SECURE=${MAIL_ENABLE_SSL}
+      - MAILER_AUTH_USER=${USER_MAIL}
+      - MAILER_AUTH_PASSWORD=${PASSWORD_MAIL}
+      - MAILER_NOREPLY_NAME=Joplin
+      - MAILER_NOREPLY_EMAIL=${MAIL_FROM}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+
+  adminer:
+    image: adminer:latest
+    container_name: joplin_db_viewer
+    depends_on:
+      - joplin_db
+    environment:
+      ADMINER_DEFAULT_SERVER: joplin_db
+    restart: unless-stopped
+    ports:
+      - "6806:8080"
