@@ -1,0 +1,26 @@
+# wiki: https://github.com/qdm12/gluetun-wiki
+version: '3.9'
+services:
+  socks5:
+    image: serjs/go-socks5-proxy
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=America/Montreal
+    network_mode: "service:gluetun"
+
+  gluetun:
+    image: "qmcgaw/gluetun"
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "8888:8888/tcp" #proxy
+      - "8000:8000/tcp"
+      - "8488:1080" #socks5 proxy
+    env_file: .env
+    environment:
+      - TZ=America/Montreal
+
+
+
