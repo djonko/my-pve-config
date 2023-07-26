@@ -1,3 +1,4 @@
+# for debian 12: https://computingforgeeks.com/how-to-install-docker-on-debian-12-bookworm/?expand_article=1
 sudo apt-get update
 sudo apt-get install -y git
 
