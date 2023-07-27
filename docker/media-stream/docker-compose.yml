@@ -146,6 +146,23 @@ services:
       - "6969:6969"
     networks:
       - media-net
+  readarr:
+    image: cr.hotio.dev/hotio/readarr
+    container_name: readarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=0022
+      - TZ=America/Montreal
+    volumes:
+      - /opt/data-docker/media_stream/readarr/config:/config
+      - /nfs/stream_data/books:/books
+      - /nfs/stream_data/downloads:/downloads #optional
+    ports:
+      - "8787:8787"
+    networks:
+      - media-net
 networks:
   media-net:
     external: true
