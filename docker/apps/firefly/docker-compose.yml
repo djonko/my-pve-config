@@ -118,6 +118,20 @@ services:
       - DB_DATABASE
       - MAIL_USERNAME
       - MAIL_PASSWORD
+  firefly-importer:
+    image: fireflyiii/data-importer:latest
+    container_name: firefly-importer
+    networks:
+      - firefly_net
+    restart: unless-stopped
+    ports:
+      - '7808:8080'
+    depends_on:
+      - firefly
+    environment:
+      FIREFLY_III_URL: http://firefly:8080
+      FIREFLY_III_ACCESS_TOKEN: ${IMPORT_TOKEN}
+
   adminer:
     image: adminer:latest
     container_name: adminer
