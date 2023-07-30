@@ -5,17 +5,17 @@ services:
     container_name: torrserver-plus
     restart: unless-stopped
     environment:
-      - TZ=America/Montreal
-      - OS_UPDATE=true
-      - FFPROBE_UPDATE=true
-      - UPDATE_TASK="20 4 * * *"
-      - QBT_ENABLED=true
-      - QBT_DOWNLOAD_THRESHOLD=10
-      - QBT_ADD_PAUSED=true
-      - QBT_ADD_MORE_TRACKERS=true
-      - QBT_RESUME_HOUR=02
-      - QBT_CHECKS_TIMER=3
-      - QBT_WEBUI_PORT=8666
+      TZ: "America/Montreal"
+      OS_UPDATE: true
+      FFPROBE_UPDATE: true
+      UPDATE_TASK: "20 4 * * *"
+      QBT_ENABLED: true
+      QBT_DOWNLOAD_THRESHOLD: 02
+      QBT_ADD_PAUSED: true
+      QBT_ADD_MORE_TRACKERS: true
+      QBT_RESUME_HOUR: 22
+      QBT_CHECKS_TIMER: 3
+      QBT_WEBUI_PORT: 8666
     volumes:
       - /opt/data-docker/media_stream/torrserver-plus/config:/TS/db
       - /nfs/stream_data/downloads:/TS/db/torrents
