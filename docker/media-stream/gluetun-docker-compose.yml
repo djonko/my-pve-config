@@ -3,6 +3,7 @@ version: '3.9'
 services:
   socks5:
     image: serjs/go-socks5-proxy
+    container_name: serjs-socks5
     depends_on:
       - gluetun
     environment:
