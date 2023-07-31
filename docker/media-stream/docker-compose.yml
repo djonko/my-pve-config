@@ -195,21 +195,6 @@ services:
     volumes:
       - /opt/data-docker/media_stream/qbittorrent/config:/config
       - /nfs/stream_data/downloads:/downloads #optional
-  navidrome:
-    image: deluan/navidrome:latest
-    user: 1000:1000 # should be owner of volumes
-    ports:
-      - "8533:4533"
-    restart: unless-stopped
-    environment:
-      # Optional: put your config options customization here. Examples:
-      ND_SCANSCHEDULE: 1h
-      ND_LOGLEVEL: info
-      ND_SESSIONTIMEOUT: 24h
-      ND_BASEURL: ""
-    volumes:
-      - "/opt/data-docker/media_stream/navidrome:/data"
-      - "/nfs/stream_data/music:/music:ro"
 networks:
   media-net:
     external: true
