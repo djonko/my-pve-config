@@ -184,7 +184,7 @@ services:
     container_name: qbittorrent
     image: cr.hotio.dev/hotio/qbittorrent
     ports:
-      - "8080:8080"
+      - "8280:8080"
     networks:
       - media-net
     environment:
