@@ -14,6 +14,7 @@ services:
     volumes:
       - /opt/data-docker/media_stream/jackett/config:/config
       - /nfs/stream_data/downloads:/downloads
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "9117:9117"
     networks:
@@ -31,6 +32,7 @@ services:
       - /opt/data-docker/media_stream/radarr/config:/config
       - /nfs/stream_data/movies:/movies
       - /nfs/stream_data/downloads:/downloads
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "7878:7878"
     networks:
@@ -48,6 +50,7 @@ services:
       - /opt/data-docker/media_stream/sonarr/config:/config
       - /nfs/stream_data/tvseries:/tv #optional
       - /nfs/stream_data/downloads:/downloads #optional
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "8989:8989"
     networks:
@@ -66,6 +69,7 @@ services:
       - /opt/data-docker/media_stream/bazarr/config:/config
       - /nfs/stream_data/movies:/movies #optional
       - /nfs/stream_data/tvseries:/tv #optional
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "6767:6767"
     networks:
@@ -83,6 +87,7 @@ services:
       - /opt/data-docker/media_stream/lidarr/config:/config
       - /nfs/stream_data/music:/music #optional
       - /nfs/stream_data/downloads:/downloads #optional
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "8686:8686"
     networks:
@@ -142,6 +147,7 @@ services:
       - /opt/data-docker/media_stream/whisparr/config:/config
       - /nfs/stream_data/xxx-adts:/xxx
       - /nfs/stream_data/downloads:/downloads #optional
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "6969:6969"
     networks:
@@ -159,6 +165,7 @@ services:
       - /opt/data-docker/media_stream/readarr/config:/config
       - /nfs/stream_data/books:/books
       - /nfs/stream_data/downloads:/downloads #optional
+      - /nfs/stream_data/downloads:/TS/db/torrents
     ports:
       - "8787:8787"
     networks:
