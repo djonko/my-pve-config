@@ -18,7 +18,7 @@ services:
       - "8888:8888/tcp" #proxy
       - "8000:8000/tcp"
       - "8488:1080" #socks5 proxy
-    env_file: .env
+    env_file: .gluetun.env
     environment:
       - TZ=America/Montreal
 
