@@ -183,6 +183,7 @@ services:
   qbittorrent:
     container_name: qbittorrent
     image: cr.hotio.dev/hotio/qbittorrent
+    restart: unless-stopped
     ports:
       - "8280:8080"
     networks:
