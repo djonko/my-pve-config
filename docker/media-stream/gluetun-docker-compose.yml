@@ -4,6 +4,7 @@ services:
   socks5:
     image: serjs/go-socks5-proxy
     container_name: serjs-socks5
+    restart: unless-stopped
     depends_on:
       - gluetun
     environment:
@@ -13,6 +14,7 @@ services:
   gluetun:
     image: "qmcgaw/gluetun"
     container_name: gluetun
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     ports:
