@@ -15,8 +15,6 @@ services:
     container_name: qbittorrent
     image: cr.hotio.dev/hotio/qbittorrent
     restart: unless-stopped
-    networks:
-      - media-net
     environment:
       - PUID=1000
       - PGID=1000
