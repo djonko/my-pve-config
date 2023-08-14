@@ -3,6 +3,7 @@ services:
   qbittorrentvpnhotio:
     container_name: qbittorrentvpnhotio
     image: cr.hotio.dev/hotio/qbittorrent
+    privileged: true
     ports:
       - "8380:8080"
       - "8118:8118"
