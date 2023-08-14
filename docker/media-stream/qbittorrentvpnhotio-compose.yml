@@ -20,7 +20,7 @@ services:
       - media-net
     volumes:
       - /opt/data-docker/media_stream/qbittorrent/config:/config
-      - /opt/data-docker/media_stream/wireguard/wg0.conf:/config/wireguard/wg0.conf:ro
+      - /opt/data-docker/media_stream/wireguard/wg0.conf:/config/wireguard/wg0.conf
       - /nfs/stream_data/downloads:/downloads #optional
     cap_add:
       - NET_ADMIN
