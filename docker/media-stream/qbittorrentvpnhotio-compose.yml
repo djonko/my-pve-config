@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  qbittorrentvpnhotio:
+    container_name: qbittorrentvpnhotio
+    image: cr.hotio.dev/hotio/qbittorrent
+    ports:
+      - "8380:8080"
+      - "8118:8118"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Montreal
+      - VPN_ENABLED=true
+      - VPN_LAN_NETWORK=172.27.0.0/24
+      - VPN_CONF=wg0
+      - VPN_ADDITIONAL_PORTS
+      - PRIVOXY_ENABLED=false
+    networks:
+      - media-net
+    volumes:
+      - /opt/data-docker/media_stream/qbittorrent/config:/config
+      - /opt/data-docker/media_stream/wireguard/wg0.conf:/config/wireguard/wg0.conf:ro
+      - /nfs/stream_data/downloads:/downloads #optional
+    cap_add:
+      - NET_ADMIN
+    dns:
+      - 1.1.1.1
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0
+networks:
+  media-net:
+    external: true
