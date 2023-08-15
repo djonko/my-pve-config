@@ -146,6 +146,39 @@ services:
       - "6969:6969"
     networks:
       - media-net
+  readarr:
+    image: cr.hotio.dev/hotio/readarr
+    container_name: readarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=0022
+      - TZ=America/Montreal
+    volumes:
+      - /opt/data-docker/media_stream/readarr/config:/config
+      - /nfs/stream_data/books:/books
+      - /nfs/stream_data/downloads:/downloads #optional
+    ports:
+      - "8787:8787"
+    networks:
+      - media-net
+  torrserver:
+    image: ghcr.io/yourok/torrserver:latest
+    container_name: torrserver
+    restart: unless-stopped
+    ports:
+      - "8890:8090"
+    networks:
+      - media-net
+    environment:
+      - TZ=America/Montreal
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /nfs/stream_data/downloads/torrents:/opt/ts/torrents
+      - /opt/data-docker/media_stream/torrserver/config:/opt/ts/config
+      - /opt/data-docker/media_stream/torrserver/log:/opt/ts/log
 networks:
   media-net:
     external: true

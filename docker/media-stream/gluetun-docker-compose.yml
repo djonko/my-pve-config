@@ -1,0 +1,44 @@
+# wiki: https://github.com/qdm12/gluetun-wiki
+version: '3.9'
+services:
+  socks5:
+    image: serjs/go-socks5-proxy
+    container_name: serjs-socks5
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=America/Montreal
+    network_mode: "service:gluetun"
+
+  qbittorrent:
+    container_name: qbittorrent
+    image: cr.hotio.dev/hotio/qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=022
+      - TZ=America/Montreal
+    network_mode: "service:gluetun"
+    volumes:
+      - /opt/data-docker/media_stream/qbittorrent/config:/config
+      - /nfs/stream_data/downloads:/downloads #optional
+
+  gluetun:
+    image: "qmcgaw/gluetun"
+    container_name: gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "8888:8888/tcp" #proxy
+      - "8000:8000/tcp"
+      - "8488:1080" #socks5 proxy
+      - "8280:8080" #qbittorrents
+    env_file: /opt/data-etc/media_stream/.gluetun.env
+    environment:
+      - TZ=America/Montreal
+
+
+
