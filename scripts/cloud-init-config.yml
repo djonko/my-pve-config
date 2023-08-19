@@ -1,0 +1,13 @@
+users:
+  - name: athena
+    lock_passwd: false
+    pass
+
+timezone: "America/Montreal"
+disable_root: true
+
+package_update: true
+package_upgrade: true
+packages:
+  - git
+  - htop
