@@ -241,7 +241,7 @@ qm cloudinit dump $VMID user
 printf "\n-------------  Network ---------------\n"
 qm cloudinit dump $VMID network
 
-# convert the vm into a template (TODO make this optional)
+# convert the vm into a template (TODO  make this optional)
 qm template $VMID
 
 printf "\n** Removing previously downloaded image file\n\n"
