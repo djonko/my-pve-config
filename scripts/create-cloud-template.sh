@@ -50,8 +50,9 @@ BRIDGE=vmbr0
 USERCONFIG_DEFAULT=none # cloud-init-config.yml
 CITYPE=nocloud
 SNIPPETSPATH=/var/lib/vz/snippets
+SYSTEM_OS=$1
 SSHKEY=~/.ssh/2019_id_rsa.pub # ~/.ssh/id_rsa.pub
-NOTE=""
+NOTE="generated for $SYSTEM_OS "
 
 case $OSNR in
 
