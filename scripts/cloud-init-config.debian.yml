@@ -1,11 +1,37 @@
+timezone: "America/Montreal"
+
+package_update: true
+package_upgrade: true
+packages:
+  - git
+  - htop
+
 # The top level settings are used as module
-# and system configuration.
+# and base configuration.
 # A set of users which may be applied and/or used by various modules
 # when a 'default' entry is found it will reference the 'default_user'
 # from the distro configuration specified below
 users:
-  - default
-
+  - name: athena
+    lock_passwd: False
+    passwd: $6$7Y/GenEpggFTX0k$ywMQDFt2sVXyvaFi5f4ROJXKnodeFwf9KFwfDjCjpcgTEt8rELeyNzy.KbYEDqbCgMGsTdjWWGa3eopRO9Opf/
+    gecos: Athena
+    groups: [ athena ]
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMc9HCPSkZPTKJrGXa1bn/o1kMHOZQtm62TjBZ78hSjV bobdi@pve02
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB01BZ9pKo4LP+qg0ys8b5nEokM8eYtxqHzBiORW3K5c sabadam@pop-os
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJjv918T58A/Y5x1Jh7QyFU1RHAlnSKYqPAVfyH1T27H bobdi@mail.com
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDnCA+0/upEyMGFWGweNibmsbtOmkA7E3XH4CYZsNtPj pod3-800
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGzUYSFlpn4y8sCLVAnw3iHEMTI1hjb3qpOx2e92Q3Ql macbook-mi2012@yopmail.com
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLPSiBVls0oTzqv15u/yZRmLeYsrHAh9stlhTG/3V7Y bobdi@zorin.os
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKafuX8+w6Gej7XYQ77P0U5Th8+ptoTrZ19ujtQGx2gM dell7415@yopmail.com
+  - name: artemis
+    lock_passwd: False
+    passwd: $6$yxNkzoJEO5gnoGH$K6Xq7A4YxqmGqBhZXm6q/6wWvqQzKpByQ62yEXS.eMjPrfOKPRIlpEs3BYWtDQpVgofdZRm/Lt0kglHLW/e3u.
+    gecos: Artemis root
+    groups: [ adm, audio, cdrom, dialout, dip, floppy, lxd, netdev, plugdev, sudo, video ]
+    sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+    shell: /bin/bash
 
 # If this is set, 'root' will not be able to ssh in and they
 # will get a message to login instead as the default $user
@@ -97,13 +123,13 @@ system_info:
   # This will affect which distro class gets used
   distro: debian
   # Default user name + that default users groups (if added/used)
-  default_user:
-    name: debian
-    lock_passwd: True
-    gecos: Debian
-    groups: [adm, audio, cdrom, dialout, dip, floppy, netdev, plugdev, sudo, video]
-    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
-    shell: /bin/bash
+  #default_user:
+  #  name: debian
+  #  lock_passwd: True
+  #  gecos: Debian
+  #  groups: [adm, audio, cdrom, dialout, dip, floppy, netdev, plugdev, sudo, video]
+  #  sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+  #  shell: /bin/bash
   # Other config here will be given to the distro class and/or path classes
   paths:
     cloud_dir: /var/lib/cloud/

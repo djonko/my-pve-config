@@ -13,9 +13,25 @@ packages:
 # from the distro configuration specified below
 users:
   - name: athena
-    lock_passwd: false
-    pass
-
+    lock_passwd: False
+    passwd: $6$7Y/GenEpggFTX0k$ywMQDFt2sVXyvaFi5f4ROJXKnodeFwf9KFwfDjCjpcgTEt8rELeyNzy.KbYEDqbCgMGsTdjWWGa3eopRO9Opf/
+    gecos: Athena
+    groups: [ athena ]
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMc9HCPSkZPTKJrGXa1bn/o1kMHOZQtm62TjBZ78hSjV bobdi@pve02
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB01BZ9pKo4LP+qg0ys8b5nEokM8eYtxqHzBiORW3K5c sabadam@pop-os
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJjv918T58A/Y5x1Jh7QyFU1RHAlnSKYqPAVfyH1T27H bobdi@mail.com
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDnCA+0/upEyMGFWGweNibmsbtOmkA7E3XH4CYZsNtPj pod3-800
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGzUYSFlpn4y8sCLVAnw3iHEMTI1hjb3qpOx2e92Q3Ql macbook-mi2012@yopmail.com
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLPSiBVls0oTzqv15u/yZRmLeYsrHAh9stlhTG/3V7Y bobdi@zorin.os
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKafuX8+w6Gej7XYQ77P0U5Th8+ptoTrZ19ujtQGx2gM dell7415@yopmail.com
+  - name: artemis
+    lock_passwd: False
+    passwd: $6$yxNkzoJEO5gnoGH$K6Xq7A4YxqmGqBhZXm6q/6wWvqQzKpByQ62yEXS.eMjPrfOKPRIlpEs3BYWtDQpVgofdZRm/Lt0kglHLW/e3u.
+    gecos: Artemis root
+    groups: [ adm, audio, cdrom, dialout, dip, floppy, lxd, netdev, plugdev, sudo, video ]
+    sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+    shell: /bin/bash
 
 # If this is set, 'root' will not be able to ssh in and they
 # will get a message to login instead as the default $user
@@ -107,13 +123,13 @@ system_info:
   # This will affect which distro class gets used
   distro: ubuntu
   # Default user name + that default users groups (if added/used)
-  default_user:
-    name: ubuntu
-    lock_passwd: True
-    gecos: Ubuntu
-    groups: [adm, audio, cdrom, dialout, dip, floppy, lxd, netdev, plugdev, sudo, video]
-    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
-    shell: /bin/bash
+  #default_user:
+  #  name: artemis
+  #  lock_passwd: True
+  #  gecos: Artemis root
+  #  groups: [adm, audio, cdrom, dialout, dip, floppy, lxd, netdev, plugdev, sudo, video]
+  #  sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+  #  shell: /bin/bash
   network:
     renderers: ['netplan', 'eni', 'sysconfig']
     activators: ['netplan', 'eni', 'network-manager', 'networkd']
