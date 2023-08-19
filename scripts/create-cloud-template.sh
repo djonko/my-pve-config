@@ -40,7 +40,7 @@ printf "\n*** This script will download a cloud image and create a Proxmox VM te
 ## TODO
 ## - verify authenticity of downloaded images using hash or GPG
 
-printf "* Available templates to generate:\n 2) Debian 9\n 3) Debian 10\n 4) Ubuntu 18.04\n 5) Centos 7\n 6) CoreOS/Flatcar\n 7) Arch\n 8) Alpine 3.11\n 9) RancherOS 1.5.5\n\n"
+printf "* Available templates to generate:\n 2) Debian 12\n 3) Debian 10\n 4) Ubuntu 18.04\n 5) Centos 7\n 6) CoreOS/Flatcar\n 7) Arch\n 8) Alpine 3.11\n 9) RancherOS 1.5.5\n\n"
 read -p "* Enter number of distro to use: " OSNR
 
 # defaults which are used for most templates
