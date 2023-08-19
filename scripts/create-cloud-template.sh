@@ -44,7 +44,7 @@ printf "* Available templates to generate:\n 2) Debian 12\n 3) Debian 10\n 4) Ub
 read -p "* Enter number of distro to use: " OSNR
 
 # defaults which are used for most templates
-RESIZE=+30G
+RESIZE=+15G
 MEMORY=2048
 BRIDGE=vmbr0
 USERCONFIG_DEFAULT=cloud-init-config.debian.yml # cloud-init-config.yml
@@ -53,6 +53,7 @@ SNIPPETSPATH=/var/lib/vz/snippets
 SYSTEM_OS=$1
 SSHKEY=~/.ssh/2019_id_rsa.pub # ~/.ssh/id_rsa.pub
 NOTE="generated for $SYSTEM_OS "
+STORAGE_BASE="zfs-vms"
 
 case $OSNR in
 
@@ -184,10 +185,10 @@ printf "\n** Creating a VM with $MEMORY MB using network bridge $BRIDGE\n"
 qm create $VMID --name $OSNAME-cloud --memory $MEMORY --net0 virtio,bridge=$BRIDGE
 
 printf "\n** Importing the disk in qcow2 format (as 'Unused Disk 0')\n"
-qm importdisk $VMID /tmp/$VMIMAGE local -format qcow2
+qm importdisk $VMID /tmp/$VMIMAGE $STORAGE_BASE -format qcow2
 
 printf "\n** Attaching the disk to the vm using VirtIO SCSI\n"
-qm set $VMID --scsihw virtio-scsi-pci --scsi0 /var/lib/vz/images/$VMID/vm-$VMID-disk-0.qcow2
+qm set $VMID --scsihw virtio-scsi-pci --scsi0 $STORAGE_BASE:vm-$VMID-disk-0.qcow2
 
 printf "\n** Setting boot and display settings with serial console\n"
 qm set $VMID --boot c --bootdisk scsi0 --serial0 socket --vga serial0
@@ -198,7 +199,7 @@ qm set $VMID --ipconfig0 ip=dhcp
 #qm set $VMID --ipconfig0 ip=10.10.10.222/24,gw=10.10.10.1
 
 printf "\n** Creating a cloudinit drive managed by Proxmox\n"
-qm set $VMID --ide2 local:cloudinit
+qm set $VMID --ide2 $STORAGE_BASE:$SYSTEM_OS_cloudinit
 
 printf "\n** Specifying the cloud-init configuration format\n"
 qm set $VMID --citype $CITYPE
