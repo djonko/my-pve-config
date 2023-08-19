@@ -47,7 +47,7 @@ read -p "* Enter number of distro to use: " OSNR
 RESIZE=+30G
 MEMORY=2048
 BRIDGE=vmbr0
-USERCONFIG_DEFAULT=none # cloud-init-config.yml
+USERCONFIG_DEFAULT=cloud-init-config.debian.yml # cloud-init-config.yml
 CITYPE=nocloud
 SNIPPETSPATH=/var/lib/vz/snippets
 SYSTEM_OS=$1
