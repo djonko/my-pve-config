@@ -186,7 +186,7 @@ qm create $VMID --name $OSNAME-cloud --memory $MEMORY --net0 virtio,bridge=$BRID
 
 printf "\n** Importing the disk in qcow2 format (as 'Unused Disk 0')\n"
 #qm importdisk $VMID /tmp/$VMIMAGE $STORAGE_BASE -format qcow2
-qm importdisk $VMID $VMIMAGE $STORAGE_BASE -format qcow2
+qm importdisk $VMID /tmp/$VMIMAGE $STORAGE_BASE -format qcow2
 
 printf "\n** Attaching the disk to the vm using VirtIO SCSI\n"
 qm set $VMID --scsihw virtio-scsi-pci --scsi0 $STORAGE_BASE:vm-$VMID-disk-0.qcow2
