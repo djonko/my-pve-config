@@ -24,7 +24,10 @@ NXT=$((NXT+1))
 echo "Step $NXT"
 apt update
 apt install -y libguestfs-tools
-virt-customize --install qemu-guest-agent -a $IMG_NAME
+virt-customize -a $IMG_NAME --update
+virt-customize --install qemu-guest-agent,git,htop -a $IMG_NAME
+virt-customize -a $IMG_NAME --timezone "America/Montreal"
+
 NXT=$((NXT+1))
 echo "Step $NXT"
 
@@ -50,7 +53,7 @@ qm set $VMID --ipconfig0 ip=dhcp
 qm set $VMID --agent enabled=1
 qm resize $VMID scsi0 "$DISK_SIZE"
 qm template $VMID
-#rm $IMG_NAME
+rm $IMG_NAME
 
 NXT=$((NXT+1))
 echo "Step $NXT:  END"
