@@ -54,6 +54,7 @@ SYSTEM_OS=$1
 SSHKEY=~/.ssh/2019_id_rsa.pub # ~/.ssh/id_rsa.pub
 NOTE="generated for $SYSTEM_OS "
 STORAGE_BASE="pve-vms"
+ENABLE_AGENT=$2
 
 case $OSNR in
 
@@ -66,6 +67,9 @@ case $OSNR in
     NOTE="\n## Default user is 'debian'\n## NOTE: Setting a password via cloud-config does not work.\n"
     printf "$NOTE\n"
     wget -P /tmp -N https://cloud.debian.org/images/cloud/bookworm/latest/$VMIMAGE
+    apt update
+    apt install -y libguestfs-tools
+    virt-customize --install qemu-guest-agent -a $VMIMAGE
     ;;
 
   3)
@@ -201,6 +205,11 @@ qm set $VMID --ipconfig0 ip=dhcp
 
 printf "\n** Creating a cloudinit drive managed by Proxmox\n"
 qm set $VMID --ide2 ${STORAGE_BASE}:cloudinit
+
+if [ $ENABLE_AGENT=1 ]; then
+  printf "\n** Enable qemu-guest-agent \n"
+  qm set $VMID --agent enabled=1
+fi
 
 printf "\n** Specifying the cloud-init configuration format\n"
 qm set $VMID --citype $CITYPE
