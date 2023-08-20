@@ -41,7 +41,7 @@ MY_DOMAIN="sp1.theworkpc.com"
 
 qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true --nameserver $MY_DNS --searchdomain $MY_DOMAIN
 qm importdisk $VMID $IMG_NAME $DISK_STOR -format qcow2
-qm set $VMID --scsihw virtio-scsi-pci --scsi0 ${DISK_STOR}:${VMID}/vm-${VMID}-disk-0
+qm set $VMID --scsihw virtio-scsi-pci --scsi0 ${DISK_STOR}:vm-${VMID}-disk-0.qcow2
 qm set $VMID --ide2 $DISK_STOR:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0
 qm set $VMID --citype $CITYPE
 
