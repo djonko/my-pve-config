@@ -4,7 +4,7 @@
 
 NXT=$((0+1))
 HD_SIZE=$1
-MEM=$3
+MEM=$2
 HOME_USER="/tmp"
 WORK_DIR="$HOME_USER/cloudImage"
 DOWNLOAD_URL="https://cdimage.debian.org/cdimage/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
