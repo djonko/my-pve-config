@@ -205,7 +205,7 @@ qm set $VMID --ide2 ${STORAGE_BASE}:cloudinit
 printf "\n** Specifying the cloud-init configuration format\n"
 qm set $VMID --citype $CITYPE
 
-printf "#** Made with create-cloud-template.sh - https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466\n" >> /etc/pve/nodes/proxmox/qemu-server/$VMID.conf
+printf "#** Made with create-cloud-template.sh - https://gist.github.com/chriswayg/43fbea910e024cbe608d7dcb12cb8466\n" >> /etc/pve/qemu-server/$VMID.conf
 
 ## TODO: Also ask for a network configuration. Or create a config with routing for a static IP
 printf "\n*** The script can add a cloud-init configuration with users and SSH keys from a file in the current directory.\n"
@@ -217,7 +217,7 @@ then
     printf "\n** Adding user configuration\n"
     cp -v $PWD/$USERCONFIG $SNIPPETSPATH/$VMID-$OSNAME-$USERCONFIG
     qm set $VMID --cicustom "user=local:snippets/$VMID-$OSNAME-$USERCONFIG"
-    printf "#* cloud-config: $VMID-$OSNAME-$USERCONFIG\n" >> /etc/pve/nodes/proxmox/qemu-server/$VMID.conf
+    printf "#* cloud-config: $VMID-$OSNAME-$USERCONFIG\n" >> /etc/pve/qemu-server/$VMID.conf
 else
     # The SSH key should be supplied either in the cloud-init config file or here
     printf "\n** Skipping config file, as none was found\n\n** Adding SSH key\n"
@@ -227,12 +227,12 @@ else
     [ ! -z "$PASSWORD" ] \
         && printf "\n** Adding the password to the config\n" \
         && qm set $VMID --cipassword $PASSWORD \
-        && printf "#* a password has been set for the default user\n" >> /etc/pve/nodes/proxmox/qemu-server/$VMID.conf
-    printf "#- cloud-config used: via Proxmox\n" >> /etc/pve/nodes/proxmox/qemu-server/$VMID.conf
+        && printf "#* a password has been set for the default user\n" >> /etc/pve/qemu-server/$VMID.conf
+    printf "#- cloud-config used: via Proxmox\n" >> /etc/pve/qemu-server/$VMID.conf
 fi
 
 # The NOTE is added to the Summary section of the VM (TODO there seems to be no 'qm' command for this)
-printf "#$NOTE\n" >> /etc/pve/nodes/proxmox/qemu-server/$VMID.conf
+printf "#$NOTE\n" >> /etc/pve/qemu-server/$VMID.conf
 
 printf "\n** Increasing the disk size\n"
 qm resize $VMID scsi0 $RESIZE
