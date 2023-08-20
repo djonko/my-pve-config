@@ -1,6 +1,6 @@
 #!/bin/bash
 ## How to run it
-## > ./create-debian-cloud-image.sh bobdi 10G 2048
+## > ./create-debian-cloud-image.sh  10G 2048
 
 NXT=$((0+1))
 HD_SIZE=$1
@@ -45,7 +45,7 @@ MY_DOMAIN="sp1.theworkpc.com"
 
 qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true --nameserver $MY_DNS --searchdomain $MY_DOMAIN
 qm importdisk $VMID $IMG_NAME $DISK_STOR
-qm set $VMID --scsihw virtio-scsi-pci --scsi0 ${DISK_STOR}:${VMID}/vm-${VMID}-disk-0
+qm set $VMID --scsihw virtio-scsi-pci --scsi0 ${DISK_STOR}:${VMID}/vm-${VMID}-disk-0.qcow2
 qm set $VMID --ide2 ${DISK_STOR}:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0
 qm set $VMID --ipconfig0 ip=dhcp
 #qm set $VMID --sshkey "$SSH_PUB"
