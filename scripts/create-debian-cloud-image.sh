@@ -1,12 +1,11 @@
 #!/bin/bash
 ## How to run it
-## > ./create-debian-cloud-image.sh bobdi 10G 2048
+## > ./create-debian-cloud-image.sh 10G 2048
 
 NXT=$((0+1))
-HD_SIZE=$2
-USER_HOME_NAME=$1
+HD_SIZE=$1
 MEM=$3
-HOME_USER="/home/$USER_HOME_NAME"
+HOME_USER="/tmp"
 WORK_DIR="$HOME_USER/tmp/cloudImage"
 DOWNLOAD_URL="https://cdimage.debian.org/cdimage/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
 IMG_NAME="debian-12-generic-amd64.qcow2"
@@ -34,7 +33,7 @@ TEMPL_NAME="debian12-cloud"
 VMID="9901"
 
 DISK_SIZE=$HD_SIZE
-DISK_STOR="zfsa-vms"
+DISK_STOR="pve-vms"
 NET_BRIDGE="vmbr0"
 SSH_PUB="$HOME_USER/.ssh/id_ed25519.pub"
 MY_DNS="192.168.30.1"
