@@ -69,7 +69,7 @@ case $OSNR in
     wget -P /tmp -N https://cloud.debian.org/images/cloud/bookworm/latest/$VMIMAGE
     apt update
     apt install -y libguestfs-tools
-    virt-customize --install qemu-guest-agent -a $VMIMAGE
+    virt-customize --install qemu-guest-agent -a /tmp/$VMIMAGE
     ;;
 
   3)
