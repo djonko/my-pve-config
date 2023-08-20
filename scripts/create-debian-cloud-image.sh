@@ -34,11 +34,11 @@ TEMPL_NAME="debian12-cloud"
 VMID="9901"
 
 DISK_SIZE=$HD_SIZE
-DISK_STOR="zfsa"
+DISK_STOR="zfsa-vms"
 NET_BRIDGE="vmbr0"
 SSH_PUB="$HOME_USER/.ssh/id_ed25519.pub"
-MY_DNS="192.168.20.2"
-MY_DOMAIN="ui24.mywire.com"
+MY_DNS="192.168.30.1"
+MY_DOMAIN="sp1.theworkpc.com"
 
 qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true --nameserver $MY_DNS --searchdomain $MY_DOMAIN
 qm importdisk $VMID $IMG_NAME $DISK_STOR -format qcow2
@@ -47,7 +47,7 @@ qm set $VMID --ide2 $DISK_STOR:cloudinit --boot c --bootdisk scsi0 --serial0 soc
 qm set $VMID --citype $CITYPE
 
 qm set $VMID --ipconfig0 ip=dhcp
-qm set $VMID --sshkey "$SSH_PUB"
+#qm set $VMID --sshkey "$SSH_PUB"
 qm set $VMID --agent enabled=1
 qm resize $VMID scsi0 "$DISK_SIZE"
 qm template $VMID

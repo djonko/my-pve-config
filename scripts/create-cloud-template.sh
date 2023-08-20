@@ -53,7 +53,7 @@ SNIPPETSPATH=/var/lib/vz/snippets
 SYSTEM_OS=$1
 SSHKEY=~/.ssh/2019_id_rsa.pub # ~/.ssh/id_rsa.pub
 NOTE="generated for $SYSTEM_OS "
-STORAGE_BASE="zfs-vms"
+STORAGE_BASE="pve-vms"
 
 case $OSNR in
 
