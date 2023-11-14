@@ -1,0 +1,41 @@
+version: "3.3"
+secrets:
+  WEB_PASSWORD_SECRET:
+    file: /opt/data-docker-etc/pihole/pwd.secret.txt
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8082:80/tcp" # this is for your dashboard
+    environment:
+      - TZ=America/Montreal # change this to your timezone
+      - WEBPASSWORD_FILE=/run/secrets/WEB_PASSWORD_SECRET
+      - DNSSEC=true
+      - PIHOLE_DNS_=172.20.0.3
+    volumes:
+      - '/opt/data-docker/pihole/etc/pihole:/etc/pihole'
+      - '/opt/data-docker/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
+      - '/opt/data-docker/pihole/etc/resolv.conf:/etc/resolv.conf'
+    restart: unless-stopped
+    networks:
+      pihole_local_network:
+        ipv4_address: 172.20.0.2
+
+  stubby:
+    container_name: stubby
+    image: carterfields/stubby
+    restart: unless-stopped
+    volumes:
+      - /opt/data-docker/stubby/stubby.yml:/usr/local/etc/stubby/stubby.yml
+    networks:
+      pihole_local_network:
+        ipv4_address: 172.20.0.3 #this will be your upstream DNS server in Pi-Hole
+
+networks:
+  pihole_local_network:
+    external: true
+
