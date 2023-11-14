@@ -16,6 +16,7 @@ services:
       - WEBPASSWORD_FILE=/run/secrets/WEB_PASSWORD_SECRET
       - DNSSEC=true
       - PIHOLE_DNS_=172.20.0.3
+      - VIRTUAL_HOST=${HOSTNAME}
     volumes:
       - '/opt/data-docker/pihole/etc/pihole:/etc/pihole'
       - '/opt/data-docker/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
