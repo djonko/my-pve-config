@@ -10,7 +10,7 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
-      - "8082:80/tcp" # this is for your dashboard
+      - "8200:80/tcp" # this is for your dashboard
     environment:
       - TZ=America/Montreal # change this to your timezone
       - WEBPASSWORD_FILE=/run/secrets/WEB_PASSWORD_SECRET
