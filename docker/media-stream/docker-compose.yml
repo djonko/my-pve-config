@@ -18,11 +18,15 @@ services:
       - "9117:9117"
     networks:
       - media-net
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -40,6 +44,8 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -58,6 +64,8 @@ services:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -75,6 +83,8 @@ services:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -87,38 +97,13 @@ services:
       - "8686:8686"
     networks:
       - media-net
-  #jellyfin:
-    #image: lscr.io/linuxserver/jellyfin:latest
-    #container_name: jellyfin
-    #restart: unless-stopped
-    #environment:
-    #  - PUID=1000
-    #  - PGID=1000
-    #  - TZ=America/Montreal
-    #  - JELLYFIN_PublishedServerUrl=192.168.20.45 #optional
-    #volumes:
-    #  - /opt/data-docker/media_stream/jellyfin/config:/config
-    #  - /nfs/stream_data/tvseries:/data/tvshows
-    #  - /nfs/stream_data/movies:/data/movies
-    #  - /nfs/stream_data/xxx-adts:/data/xxx
-    #ports:
-    #  - "8096:8096"
-    #  - "7359:7359/udp" #optional
-    #  - "1900:1900/udp" #optional
-    #networks:
-    #  - media-net
-    #deploy:
-      #resources:
-        #reservations:
-          #devices:
-            #- driver: nvidia
-              #count: 1
-              #capabilities: [ gpu ]
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -133,6 +118,8 @@ services:
     image: cr.hotio.dev/hotio/whisparr
     container_name: whisparr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -150,6 +137,8 @@ services:
     image: cr.hotio.dev/hotio/readarr
     container_name: readarr
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - PUID=1000
       - PGID=1000
@@ -167,6 +156,8 @@ services:
     image: ghcr.io/yourok/torrserver:latest
     container_name: torrserver
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     ports:
       - "8890:8090"
     networks:
