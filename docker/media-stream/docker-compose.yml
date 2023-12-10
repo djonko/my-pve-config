@@ -170,6 +170,22 @@ services:
       - /nfs/stream_data/downloads/torrtorrents:/opt/ts/torrents
       - /opt/data-docker/media_stream/torrserver/config:/opt/ts/config
       - /opt/data-docker/media_stream/torrserver/log:/opt/ts/log
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Montreal
+      - LOG_LEVEL=info
+    ports:
+      - "8191:8191"
+    networks:
+      - media-net
 networks:
   media-net:
     external: true
