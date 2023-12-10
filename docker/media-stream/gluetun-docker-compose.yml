@@ -30,6 +30,22 @@ services:
       - /opt/data-docker/media_stream/qbittorrent/config:/config
       - /nfs/stream_data/downloads:/downloads #optional
 
+  torrserver:
+    image: ghcr.io/yourok/torrserver:latest
+    container_name: torrserver
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    network_mode: "service:gluetun"
+    environment:
+      - TZ=America/Montreal
+      - PUID=1000
+      - PGID=1000
+      - UMASK=022
+    volumes:
+      - /nfs/stream_data/downloads/torrtorrents:/opt/ts/torrents
+      - /opt/data-docker/media_stream/torrserver/config:/opt/ts/config
+      - /opt/data-docker/media_stream/torrserver/log:/opt/ts/log
   gluetun:
     image: "qmcgaw/gluetun"
     container_name: gluetun
