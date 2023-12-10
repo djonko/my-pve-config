@@ -33,7 +33,7 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/radarr/config:/config
-      - /nfs/stream_data/movies:/movies
+      - /nfs/stream_data/videos/movies:/movies
       - /nfs/stream_data/downloads:/downloads
     ports:
       - "7878:7878"
@@ -52,7 +52,7 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/sonarr/config:/config
-      - /nfs/stream_data/tvseries:/tv #optional
+      - /nfs/stream_data/videos/tvshows:/tv #optional
       - /nfs/stream_data/downloads:/downloads #optional
     ports:
       - "8989:8989"
@@ -72,8 +72,8 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/bazarr/config:/config
-      - /nfs/stream_data/movies:/movies #optional
-      - /nfs/stream_data/tvseries:/tv #optional
+      - /nfs/stream_data/videos/movies:/movies #optional
+      - /nfs/stream_data/videos/tvshows:/tv #optional
     ports:
       - "6767:6767"
     networks:
@@ -91,7 +91,7 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/lidarr/config:/config
-      - /nfs/stream_data/music:/music #optional
+      - /nfs/stream_data/audios/music:/music #optional
       - /nfs/stream_data/downloads:/downloads #optional
     ports:
       - "8686:8686"
@@ -127,7 +127,7 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/whisparr/config:/config
-      - /nfs/stream_data/xxx-adts:/xxx
+      - /nfs/stream_data/videos/xxx-adts:/xxx
       - /nfs/stream_data/downloads:/downloads #optional
     ports:
       - "6969:6969"
@@ -167,7 +167,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /nfs/stream_data/downloads/torrents:/opt/ts/torrents
+      - /nfs/stream_data/downloads/torrtorrents:/opt/ts/torrents
       - /opt/data-docker/media_stream/torrserver/config:/opt/ts/config
       - /opt/data-docker/media_stream/torrserver/log:/opt/ts/log
 networks:
