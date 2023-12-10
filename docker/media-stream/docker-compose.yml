@@ -99,7 +99,7 @@ services:
       - media-net
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:master
+    image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
     labels:
