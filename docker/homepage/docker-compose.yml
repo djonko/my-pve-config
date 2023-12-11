@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  homepage:
+    image: ghcr.io/benphelps/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    ports:
+      - "8101:3000"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Montreal
+    volumes:
+      - "/opt/data-docker/volumes/homepage/config:/app/config"
