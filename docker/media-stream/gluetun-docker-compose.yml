@@ -28,7 +28,7 @@ services:
     network_mode: "service:gluetun"
     volumes:
       - /opt/data-docker/media_stream/qbittorrent/config:/config
-      - /nfs/stream_data/downloads:/downloads #optional
+      - /nfs/stream_data/downloads:/data/downloads #optional
 
   torrserver:
     image: ghcr.io/yourok/torrserver:latest
