@@ -33,7 +33,7 @@ services:
       - TZ=America/Montreal
     volumes:
       - /opt/data-docker/media_stream/radarr/config:/config
-      - /nfs/stream_data/videos/movies:/data/movies
+      - /nfs/stream_data/videos/movies:/data/medialibrary/movies
       - /nfs/stream_data/downloads:/data/downloads
     ports:
       - "7878:7878"
