@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser:latest
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Montreal
+    ports:
+      - "8100:80"
+    volumes:
+      - "/opt/data-docker/filebrowser/config/settings.json:/.filebrowser.json"
+      - "/opt/data-docker/filebrowser/database/filebrowser.db:/database.db"
+      - "/nfs/stream_data:/srv"
