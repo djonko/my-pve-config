@@ -11,7 +11,7 @@ services:
       - GDRIVE_CLIENT_ID=<gdrive_client>
       - GDRIVE_CLIENT_SECRET=<gdrive_secret>
       - DROPBOX_CLIENT_ID=<dropbox_key>
-      - ONLYOFFICE_URL=http://onlyoffice
+      #- ONLYOFFICE_URL=http://onlyoffice
       - PUID=1000
       - PGID=1000
       - TZ=America/Montreal
@@ -20,15 +20,15 @@ services:
     volumes:
       - /opt/data-docker/filestash:/app/data/state/
 
-  onlyoffice:
-    container_name: filestash_oods
-    image: onlyoffice/documentserver
-    restart: unless-stopped
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-    security_opt:
-      - seccomp:unconfined
-      - PUID=1000
-      - PGID=1000
-      - UMASK=0022
-      - TZ=America/Montreal
+#  onlyoffice:
+#    container_name: filestash_oods
+#    image: onlyoffice/documentserver
+#    restart: unless-stopped
+#    labels:
+#      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+#    security_opt:
+#      - seccomp:unconfined
+#      - PUID=1000
+#      - PGID=1000
+#      - UMASK=0022
+#      - TZ=America/Montreal
