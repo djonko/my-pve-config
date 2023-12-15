@@ -5,7 +5,7 @@ services:
     container_name: navidrome
     user: 1000:1000 # should be owner of volumes
     ports:
-      - "8533:4533"
+      - "8102:4533"
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
