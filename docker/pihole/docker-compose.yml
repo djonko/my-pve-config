@@ -14,7 +14,7 @@ services:
     environment:
       - TZ=America/Montreal # change this to your timezone
       - WEBPASSWORD_FILE=/run/secrets/WEB_PASSWORD_SECRET
-      - DNSSEC=true
+      #- DNSSEC=true
       - PIHOLE_DNS_=172.20.0.3
       - VIRTUAL_HOST=${HOSTNAME}
     volumes:
