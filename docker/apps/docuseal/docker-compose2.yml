@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  docuseal:
+    container_name: docuseal2
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: docuseal/docuseal:latest
+    ports:
+      - 3002:3000
+    volumes:
+      - /opt/data-docker/docuseal2:/data
+    environment:
+      - FORCE_SSL=${HOST}
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - HOST=${HOST}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_ADDRESS=${SMTP_ADDRESS}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_DOMAIN=${SMTP_DOMAIN}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_AUTHENTICATION=${SMTP_AUTHENTICATION}
+      - SMTP_FROM=${SMTP_USERNAME}
+      - SMTP_ENABLE_STARTTLS_AUTO=${SMTP_ENABLE_STARTTLS_AUTO}
+
+  postgres:
+    image: postgres:15
+    container_name: postgres2
+    restart: unless-stopped
+    volumes:
+      - '/opt/data-docker/postgres-docuseal2:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: docuseal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
