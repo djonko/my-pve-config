@@ -13,6 +13,6 @@ services:
     ports:
       - "8100:80"
     volumes:
-      - "/opt/data-docker/filebrowser/config/settings.json:/.filebrowser.json"
+      #- "/opt/data-docker/filebrowser/config/settings.json:/.filebrowser.json"
       - "/opt/data-docker/filebrowser/database/filebrowser.db:/database.db"
       - "/nfs/stream_data:/srv"
