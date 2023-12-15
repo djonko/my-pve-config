@@ -3,6 +3,7 @@ version: '3'
 services:
   docuseal:
     container_name: docuseal
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -12,21 +13,23 @@ services:
     volumes:
       - /opt/data-docker/docuseal:/data
     environment:
-      #- FORCE_SSL=${HOST}
+      - FORCE_SSL=${HOST}
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
-      #- HOST=
+      - HOST=${HOST}
       - SMTP_USERNAME=${SMTP_USERNAME}
-      - SMTP_ADDRESS=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_DOMAIN=smtp.gmail.com
+      - SMTP_ADDRESS=${SMTP_ADDRESS}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_DOMAIN=${SMTP_DOMAIN}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - SMTP_AUTHENTICATION=login
+      - SMTP_AUTHENTICATION=${SMTP_AUTHENTICATION}
       - SMTP_FROM=${SMTP_USERNAME}
+      - SMTP_ENABLE_STARTTLS_AUTO=${SMTP_ENABLE_STARTTLS_AUTO}
 
   postgres:
     image: postgres:15
     container_name: postgres
+    restart: unless-stopped
     volumes:
       - '/opt/data-docker/postgres-docuseal:/var/lib/postgresql/data'
     environment:
