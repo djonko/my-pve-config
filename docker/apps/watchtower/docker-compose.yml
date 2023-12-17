@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      - TZ=America/Montreal
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_TRACE=true
+      - WATCHTOWER_LOG_LEVEL=warn
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_POLL_INTERVAL=18000
+      - WATCHTOWER_SCOPE=toUpdateScope
+      #- WATCHTOWER_NOTIFICATIONS=email
+      #- WATCHTOWER_NOTIFICATION_EMAIL_FROM=
+      #- WATCHTOWER_NOTIFICATION_EMAIL_TO=
+      #- WATCHTOWER_NOTIFICATION_EMAIL_SERVER=
+      #- WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
