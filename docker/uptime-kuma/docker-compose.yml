@@ -4,6 +4,8 @@ services:
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     ports:
       - "8080:3001"
     volumes:
