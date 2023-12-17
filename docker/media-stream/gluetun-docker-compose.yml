@@ -50,6 +50,8 @@ services:
     image: "qmcgaw/gluetun"
     container_name: gluetun
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     cap_add:
       - NET_ADMIN
     ports:
