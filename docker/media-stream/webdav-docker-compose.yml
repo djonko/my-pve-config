@@ -7,7 +7,7 @@ services:
     ports:
       - "8101:80"
     environment:
-      - AUTH_TYPE=Basic
+      - AUTH_TYPE=Digest
       - USERNAME=test
       - PASSWORD=test
     volumes:
