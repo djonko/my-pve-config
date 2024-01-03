@@ -1,16 +1,16 @@
 version: '3.9'
 services:
   webdav:
-    image: bytemark/webdav
+    image: loganmarchione/docker-webdav-nginx:latest
     container_name: music-webdav
     restart: unless-stopped
     ports:
       - "8101:80"
     environment:
-      - AUTH_TYPE=Digest
-      - USERNAME=test
-      - PASSWORD=test
+      - WEBDAV_USER=user
+      - WEBDAV_PASS=password1
+      - NGINX_CLIENT_MAX_BODY_SIZE=500M
     volumes:
-      #- "/opt/data-docker/media_stream/webdav/data:/var/lib/dav"
-      - "/nfs/stream_data/music:/var/lib/dav"
+      - "/opt/data-docker/media_stream/webdav/data:/var/www/webdav"
+      #- "/nfs/stream_data/music:/var/lib/dav"
       #- "/opt/data-docker/media_stream/webdav/etc/user.passwd:/user.passwd:ro"
