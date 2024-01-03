@@ -7,5 +7,5 @@ services:
     ports:
       - "8101:80"
     volumes:
-      - "/nfs/stream_data/music:/music:ro"
+      - "/nfs/stream_data/music:/var/lib/dav:ro"
       - "/opt/data-docker/media_stream/webdav/etc/user.passwd:/user.passwd:ro"
