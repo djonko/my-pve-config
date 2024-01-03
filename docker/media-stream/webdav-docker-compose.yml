@@ -11,6 +11,7 @@ services:
       - WEBDAV_PASS=password1
       - NGINX_CLIENT_MAX_BODY_SIZE=500M
     volumes:
-      - "/opt/data-docker/media_stream/webdav/data:/var/www/webdav"
+      - "/opt/data-docker/media_stream/webdav/lib:/var/www/webdav"
+      - "/nfs/stream_data/music:/var/www/webdav/music:ro"
       #- "/nfs/stream_data/music:/var/lib/dav"
       #- "/opt/data-docker/media_stream/webdav/etc/user.passwd:/user.passwd:ro"
