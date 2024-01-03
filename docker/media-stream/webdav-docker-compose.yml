@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  webdav:
+    image: bytemark/webdav
+    restart: unless-stopped
+    ports:
+      - "8101:80"
+    volumes:
+      - "/nfs/stream_data/music:/music:ro"
+      - "/opt/data-docker/media_stream/webdav/etc/user.passwd:/user.passwd:ro"
