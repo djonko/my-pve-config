@@ -8,5 +8,5 @@ services:
       - "8101:80"
     volumes:
       - "/opt/data-docker/media_stream/webdav/data:/var/lib/dav"
-      - "/nfs/stream_data/music:/var/lib/dav/music:ro"
+      - "/nfs/stream_data/music:/var/lib/dav/music"
       - "/opt/data-docker/media_stream/webdav/etc/user.passwd:/user.passwd:ro"
