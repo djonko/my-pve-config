@@ -2,6 +2,7 @@ version: '3.9'
 services:
   webdav:
     image: bytemark/webdav
+    container_name: music-webdav
     restart: unless-stopped
     ports:
       - "8101:80"
