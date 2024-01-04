@@ -48,8 +48,6 @@ services:
     depends_on:
       pihole:
         condition: service_healthy
-      stubby:
-        condition: service_healthy
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     env_file:
