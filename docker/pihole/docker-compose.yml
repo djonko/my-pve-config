@@ -45,6 +45,7 @@ services:
   orbital-sync:
     image: mattwebbio/orbital-sync:latest
     container_name: orbital-sync
+    restart: unless-stopped
     depends_on:
       pihole:
         condition: service_healthy
