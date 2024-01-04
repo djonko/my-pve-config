@@ -15,3 +15,5 @@ Error response from daemon: driver failed programming external connectivity on e
 sudo systemctl disable systemd-resolved.service
 sudo systemctl stop systemd-resolved
 ```
+
+[Pi-hole port 53 “address already in use” (Portainer/Docker)](https://aaronfisher.net/2022/04/pi-hole-port-53-address-already-in-use-portainer-docker/)
