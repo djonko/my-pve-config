@@ -53,7 +53,7 @@ services:
       TZ: America/Montreal
     networks:
       pihole_local_network:
-        ipv4_address: 172.20.0.3
+        ipv4_address: 172.20.0.4
 
 networks:
   pihole_local_network:
