@@ -6,6 +6,8 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -32,6 +34,8 @@ services:
     container_name: stubby
     image: carterfields/stubby
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     volumes:
       - /opt/data-docker/stubby/stubby.yml:/usr/local/etc/stubby/stubby.yml
     networks:
