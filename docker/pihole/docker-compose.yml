@@ -43,12 +43,12 @@ services:
         ipv4_address: 172.20.0.3 #this will be your upstream DNS server in Pi-Hole
 
   orbital-sync:
-    env_file:
-      - /opt/data-docker-etc/pihole/orbital-sync.env
     image: mattwebbio/orbital-sync:latest
     container_name: orbital-sync
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    env_file:
+      - /opt/data-docker-etc/pihole/orbital-sync.env
     environment:
       TZ: America/Montreal
     networks:
