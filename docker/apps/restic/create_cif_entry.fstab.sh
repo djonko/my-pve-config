@@ -21,7 +21,7 @@ echo " copy & paste this for next command"
 echo "${SERVER_NAS}:${NAS_DIR_BKP}               ${LOCAL_NFS_PATH}     nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0"
 read -n 1 -s -r -p "Press any key to continue"
 sudo nano /etc/fstab
-sudo mount -a
+sudo mount $LOCAL_NFS_PATH
 sudo df -ah
 echo "Press 'y' to continue or 'n' to exit."
 # Wait for the user to press a key
