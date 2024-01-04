@@ -51,6 +51,9 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       TZ: America/Montreal
+    networks:
+      pihole_local_network:
+        ipv4_address: 172.20.0.3
 
 networks:
   pihole_local_network:
