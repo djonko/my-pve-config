@@ -18,7 +18,7 @@ touch  $HOME/.restric/restic.env
 sudo mkdir -p $LOCAL_NFS_PATH
 sudo chown -R "$USER_RUNNER":"$USER_RUNNER" $LOCAL_NFS_PATH
 echo " copy & paste this for next command"
-ech0 "${SERVER_NAS}:${NAS_DIR_BKP}               ${LOCAL_NFS_PATH}     nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0"
+echo "${SERVER_NAS}:${NAS_DIR_BKP}               ${LOCAL_NFS_PATH}     nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0"
 read -n 1 -s -r -p "Press any key to continue"
 sudo nano /etc/fstab
 sudo mount -a
