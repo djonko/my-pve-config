@@ -40,4 +40,3 @@ case $key in
 esac
 mkdir -p $LOCAL_NFS_PATH/"$HOST_IDNAME"/backups
 mkdir -p $LOCAL_NFS_PATH/"$HOST_IDNAME"/restore-dir
-
