@@ -45,6 +45,9 @@ services:
   orbital-sync:
     image: mattwebbio/orbital-sync:latest
     container_name: orbital-sync
+    depends_on:
+      - pihole
+      - stubby
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     env_file:
