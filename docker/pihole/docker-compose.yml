@@ -42,6 +42,14 @@ services:
       pihole_local_network:
         ipv4_address: 172.20.0.3 #this will be your upstream DNS server in Pi-Hole
 
+  orbital-sync:
+    image: mattwebbio/orbital-sync:latest
+    container_name: orbital-sync
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    environment:
+      TZ: America/Montreal
+
 networks:
   pihole_local_network:
     external: true
