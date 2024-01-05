@@ -4,6 +4,7 @@ services:
     image: mazzolino/restic
     container_name: restic
     hostname: ${RESTIC_HOSTNAME}
+    restart: unless-stopped
     env_file:
       - $HOME/.restric/restic.env
     labels:
@@ -35,6 +36,7 @@ services:
   prune:
     image: mazzolino/restic
     container_name: restic-prune
+    restart: unless-stopped
     hostname: ${RESTIC_HOSTNAME}
     env_file:
       - $HOME/.restric/restic.env
@@ -53,6 +55,7 @@ services:
     image: mazzolino/restic
     container_name: restic-check
     hostname: ${RESTIC_HOSTNAME}
+    restart: unless-stopped
     env_file:
       - $HOME/.restric/restic.env
     labels:
