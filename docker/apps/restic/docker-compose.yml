@@ -11,7 +11,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       RUN_ON_STARTUP: ${RESTIC_RUN_ON_STARTUP}
-      BACKUP_CRON: ${BACKUP_CRON}
+      BACKUP_CRON: "${BACKUP_CRON}"
       RESTIC_REPOSITORY: /restic
       RESTIC_PASSWORD: ${RESTIC_PASSWORD}
       RESTIC_BACKUP_SOURCES: /mnt/volumes
@@ -44,7 +44,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       RUN_ON_STARTUP: ${RESTIC_RUN_ON_STARTUP}
-      PRUNE_CRON: ${RESTIC_PRUNE_CRON}
+      PRUNE_CRON: "${RESTIC_PRUNE_CRON}"
       RESTIC_REPOSITORY: /restic
       RESTIC_PASSWORD: ${RESTIC_PASSWORD}
       TZ: America/Montreal
@@ -62,7 +62,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       RUN_ON_STARTUP: "false"
-      CHECK_CRON: ${RESTIC_CHECK_CRON}
+      CHECK_CRON: "${RESTIC_CHECK_CRON}"
       RESTIC_CHECK_ARGS: >-
         --read-data-subset=10%
       RESTIC_REPOSITORY: /restic
