@@ -7,7 +7,7 @@ USER_RUNNER=$1
 SERVER_NAS=$2
 HOST_IDNAME=$3
 NAS_DIR_BKP=/mnt/zfsa/disks/docker-disk/restic-backups
-LOCAL_NFS_PATH=/mnt/nfs/restic
+LOCAL_NFS_PATH=/mnt/cifs/restic
 
 echo "create an entry inside fstab"
 sudo apt install nfs-common
