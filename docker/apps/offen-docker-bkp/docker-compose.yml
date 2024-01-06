@@ -15,6 +15,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${OFS_BACKUP_SRC_APPS_FOLDER}:/backup/apps:ro
       - ${OFS_BACKUP_SRC_ETC_FOLDER}:/backup/etc:ro
+      - ${OFS_BACKUP_DEST}:/archive
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
