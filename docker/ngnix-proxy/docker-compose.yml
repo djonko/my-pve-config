@@ -49,7 +49,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-      - docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/mysql/backup-nginx$(date +\%Y\%m\%d).sql'
+      - docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/allsqldump/backup-nginx$(date +\%Y\%m\%d).sql'
 
     environment:
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
@@ -61,6 +61,7 @@ services:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/data-adm-docker/volumes/dump_dir:/var/lib/allsqldump"
     secrets:
       - MYSQL_PWD
       - DB_ROOT_PWD
