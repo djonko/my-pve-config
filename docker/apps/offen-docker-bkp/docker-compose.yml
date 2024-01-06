@@ -11,7 +11,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${HOME}/offen-config:/etc/dockervolumebackup/conf.d
+      - ${HOME}/.offen/offen-config:/etc/dockervolumebackup/conf.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${OFS_BACKUP_SRC_APPS_FOLDER}:/backup/apps:ro
       - ${OFS_BACKUP_SRC_ETC_FOLDER}:/backup/etc:ro
