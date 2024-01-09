@@ -26,6 +26,8 @@ services:
       - '/opt/data-docker/pihole/etc/resolv.conf:/etc/resolv.conf'
       - '/opt/data-docker/pihole/var:/var/log/pihole'
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     networks:
       pihole_local_network:
         ipv4_address: 172.20.0.2
@@ -41,10 +43,15 @@ services:
     networks:
       pihole_local_network:
         ipv4_address: 172.20.0.3 #this will be your upstream DNS server in Pi-Hole
+    security_opt:
+      - no-new-privileges:true
 
   orbital-sync:
     image: mattwebbio/orbital-sync:latest
     container_name: orbital-sync
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       pihole:
         condition: service_healthy
