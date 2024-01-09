@@ -1,0 +1,72 @@
+version: "3.9"
+services:
+  backup:
+    image: mazzolino/restic
+    container_name: restic
+    hostname: ${RESTIC_HOSTNAME}
+    restart: unless-stopped
+    env_file:
+      - $HOME/.restric/restic.env
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    environment:
+      RUN_ON_STARTUP: ${RESTIC_RUN_ON_STARTUP}
+      BACKUP_CRON: "${BACKUP_CRON}"
+      RESTIC_REPOSITORY: /restic
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      RESTIC_BACKUP_SOURCES: /mnt/volumes
+      RESTIC_COMPRESSION: auto
+      RESTIC_BACKUP_ARGS: >-
+        --tag restic-docker-folder
+        --verbose
+      RESTIC_FORGET_ARGS: >-
+        --keep-last 15
+        --keep-daily 3
+        --keep-weekly 5
+        --keep-monthly 2
+      TZ: America/Montreal
+    volumes:
+      - ${RESTIC_BACKUP_DEST_FOLDER}:/restic #change the left hand side to where you want to store the backups. As you can see I'm storing it on my NAS that is mounted to the host /home/truenas
+      - ${RESTIC_RESTORE_DESTINATION_FOLDER}:/tmp-for-restore #USE THIS FOLDER FOR RESTORE - CAN VIEW EACH CONTAINER
+      - ${RESTIC_BACKUP_SRC_APPS_FOLDER}:/mnt/volumes/apps:ro
+      - ${RESTIC_BACKUP_SRC_ETC_FOLDER}:/mnt/volumes/etc:ro
+    security_opt:
+      - no-new-privileges:true
+
+  prune:
+    image: mazzolino/restic
+    container_name: restic-prune
+    restart: unless-stopped
+    hostname: ${RESTIC_HOSTNAME}
+    env_file:
+      - $HOME/.restric/restic.env
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    environment:
+      RUN_ON_STARTUP: ${RESTIC_RUN_ON_STARTUP}
+      PRUNE_CRON: "${RESTIC_PRUNE_CRON}"
+      RESTIC_REPOSITORY: /restic
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      TZ: America/Montreal
+    security_opt:
+      - no-new-privileges:true
+
+  check:
+    image: mazzolino/restic
+    container_name: restic-check
+    hostname: ${RESTIC_HOSTNAME}
+    restart: unless-stopped
+    env_file:
+      - $HOME/.restric/restic.env
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    environment:
+      RUN_ON_STARTUP: "false"
+      CHECK_CRON: "${RESTIC_CHECK_CRON}"
+      RESTIC_CHECK_ARGS: >-
+        --read-data-subset=10%
+      RESTIC_REPOSITORY: /restic
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      TZ: America/Montreal
+    security_opt:
+      - no-new-privileges:true

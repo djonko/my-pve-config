@@ -35,6 +35,10 @@ services:
       options:
         max-size: "1m"
         max-file: "1"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 networks:
   searxng:
     ipam:
