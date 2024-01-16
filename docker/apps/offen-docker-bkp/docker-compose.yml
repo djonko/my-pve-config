@@ -8,6 +8,12 @@ services:
       - $HOME/.offen/offen.backup.env
     security_opt:
       - no-new-privileges:true
+    environment:
+      WEBDAV_URL: http:192.168.20.89:8102
+      WEBDAV_PATH: /
+      WEBDAV_USERNAME: webdav
+      WEBDAV_PASSWORD: webdav
+      WEBDAV_URL_INSECURE: true
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -16,6 +22,7 @@ services:
       - ${OFS_BACKUP_SRC_APPS_FOLDER}:/backup/apps:ro
       - ${OFS_BACKUP_SRC_ETC_FOLDER}:/backup/etc:ro
       - ${OFS_BACKUP_DEST}:/archive
+
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 

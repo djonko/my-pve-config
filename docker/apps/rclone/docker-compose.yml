@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  rclone:
+    image: rclone/rclone:latest
+    container_name: rclone
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    command: rcd --rc-web-gui --rc-addr 0.0.0.0:5572 --rc-web-fetch-url=https://api.github.com/repos/rclone/rclone-webui-react/releases/latest --rc-web-gui-update --rc-user user --rc-pass rclone -vv --checksum --transfers=4 --checkers=4 --contimeout=60s --timeout=300s --retries=3 --low-level-retries=10 --stats=1s --stats-file-name-length=0
+    ports:
+      - "5572:5572"
+    volumes:
+      - /opt/data-docker/rclone/config:/config/rclone #location of your rclone config file (i.e., where the remote and secrets are stored)
+      #- /home/ubuntu/docker/rclone-dashboard/sync_script:/sync_script #script to allow remote execution of backups (e.g., rclone copy --checksum --verbose --transfers 1 --checkers 4 --contimeout 60s --timeout 300s --retries 3 --low-level-retries 10 --stats 1s /YOUR_FOLDER YOUR_REMOTE:REMOTE_FOLDER/sync_script)
+      - /opt/data-docker/rclone/data:/data #this is my truenas SMB share - change to wherever you store the data you wish to upload
+    environment:
+      - PHP_TZ=America/Toronto
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
