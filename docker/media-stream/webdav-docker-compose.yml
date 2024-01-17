@@ -11,6 +11,7 @@ services:
     image: maltokyo/docker-nginx-webdav
     container_name: music-webdav
     restart: unless-stopped
+    entrypoint: [ '/bin/bash', '-c', 'export USERNAME=$$(cat /run/secrets/USERNAME_SC); export PASSWORD=$$(cat /run/secrets/PASSWORD_SC); /entrypoint.sh && nginx -g "daemon off;"' ]
     security_opt:
       - no-new-privileges:true
     ports:
