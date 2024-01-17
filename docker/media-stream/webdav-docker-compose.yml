@@ -1,17 +1,28 @@
-version: '3.9'
+version: "3.9"
+name: webdav
+
+secrets:
+  USERNAME_SC:
+    file: /opt/data-docker/media_stream/webdav-music/username.secret.txt
+  PASSWORD_SC:
+    file: /opt/data-docker/media_stream/webdav-music/password.secret.txt
 services:
-  webdav:
-    image: loganmarchione/docker-webdav-nginx:latest
+  docker-nginx-webdav:
+    image: maltokyo/docker-nginx-webdav
     container_name: music-webdav
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "8101:80"
-    environment:
-      - WEBDAV_USER=user
-      - WEBDAV_PASS=password1
-      - NGINX_CLIENT_MAX_BODY_SIZE=500M
     volumes:
-      - "/opt/data-docker/media_stream/webdav/lib:/var/www/webdav"
-      - "/nfs/stream_data/audios:/var/www/webdav/music:ro"
-      #- "/nfs/stream_data/music:/var/lib/dav"
-      #- "/opt/data-docker/media_stream/webdav/etc/user.passwd:/user.passwd:ro"
+      - "/nfs/stream_data/audios:/media/data:ro"
+    secrets:
+      - USERNAME_SC
+      - PASSWORD_SC
+    environment:
+      - TZ=America/Toronto
+      - USERNAME_FILE=/run/secrets/USERNAME_SC
+      - PASSWORD_FILE=/run/secrets/PASSWORD_SC
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
