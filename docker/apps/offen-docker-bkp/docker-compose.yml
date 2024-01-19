@@ -9,8 +9,8 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      WEBDAV_URL: http:192.168.20.89:8102
-      WEBDAV_PATH: /
+      WEBDAV_URL: ${OFS_WEBDAV_DEST_HOST}
+      WEBDAV_PATH: ${OFS_BACKUP_DEST}
       WEBDAV_USERNAME: webdav
       WEBDAV_PASSWORD: webdav
       WEBDAV_URL_INSECURE: true
