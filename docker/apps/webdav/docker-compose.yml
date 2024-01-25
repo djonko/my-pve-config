@@ -1,0 +1,28 @@
+version: "3.9"
+name: webdav
+
+secrets:
+  USERNAME_SC:
+    file: /opt/data-docker/webdav/username.secret.txt
+  PASSWORD_SC:
+    file: /opt/data-docker/webdav/password.secret.txt
+services:
+  docker-nginx-webdav:
+    image: djonko/docker-nginx-webdav
+    container_name: music-webdav
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "8101:80"
+    volumes:
+      - "/mnt/zfsa/disks/docker-disk/:/media/data"
+    secrets:
+      - USERNAME_SC
+      - PASSWORD_SC
+    environment:
+      - TZ=America/Toronto
+      - USERNAME_FILE=/run/secrets/USERNAME_SC
+      - PASSWORD_FILE=/run/secrets/PASSWORD_SC
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
