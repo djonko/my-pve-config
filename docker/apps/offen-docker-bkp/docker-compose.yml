@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 secrets:
   USERNAME_WEBDAV:
     file: $HOME/.offen/username-dav.secret.txt
