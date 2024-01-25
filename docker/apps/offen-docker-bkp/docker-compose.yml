@@ -1,14 +1,8 @@
 version: '3.9'
-secrets:
-  USERNAME_WEBDAV:
-    file: $HOME/.offen/username-dav.secret.txt
-  PASSWORD_WEBDAV:
-    file: $HOME/.offen/password-dav.secret.txt
 services:
   backup:
     image: offen/docker-volume-backup:v2
     container_name: backup
-    entrypoint: [ '/bin/sh', '-c', 'export WEBDAV_USERNAME=$(cat /run/secrets/USERNAME_WEBDAV); export WEBDAV_PASSWORD=$(cat /run/secrets/PASSWORD_WEBDAV); /root/entrypoint.sh;' ]
     restart: always
     env_file:
       - $HOME/.offen/offen.backup.env
@@ -17,12 +11,9 @@ services:
     environment:
       WEBDAV_URL: ${OFS_WEBDAV_DEST_HOST}
       WEBDAV_PATH: ${OFS_BACKUP_DEST}
-      WEBDAV_USERNAME_FILE: /run/secrets/USERNAME_WEBDAV
-      WEBDAV_PASSWORD_FILE: /run/secrets/PASSWORD_WEBDAV
+      WEBDAV_USERNAME: ${OFS_WEBDAV_USERNAME}
+      WEBDAV_PASSWORD: ${OFS_WEBDAV_PASSWORD}
       WEBDAV_URL_INSECURE: true
-    secrets:
-      - USERNAME_WEBDAV
-      - PASSWORD_WEBDAV
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
