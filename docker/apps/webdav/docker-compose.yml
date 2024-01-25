@@ -3,13 +3,13 @@ name: webdav
 
 secrets:
   USERNAME_SC:
-    file: /opt/data-docker/webdav/username.secret.txt
+    file: $HOME/webdav-data/username.secret.txt
   PASSWORD_SC:
-    file: /opt/data-docker/webdav/password.secret.txt
+    file: $HOME/webdav-data/password.secret.txt
 services:
   docker-nginx-webdav:
     image: djonko/docker-nginx-webdav
-    container_name: music-webdav
+    container_name: data-webdav
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
