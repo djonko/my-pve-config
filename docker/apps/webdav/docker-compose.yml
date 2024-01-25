@@ -8,8 +8,9 @@ secrets:
     file: $HOME/webdav-data/password.secret.txt
 services:
   docker-nginx-webdav:
-    image: djonko/nginx_webdav
+    image: maltokyo/docker-nginx-webdav
     container_name: data-webdav
+    entrypoint: [ '/bin/bash', '-c', 'export USERNAME=$$(cat /run/secrets/USERNAME_SC); export PASSWORD=$$(cat /run/secrets/PASSWORD_SC); /entrypoint.sh && nginx -g "daemon off;"' ]
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
