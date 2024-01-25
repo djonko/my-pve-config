@@ -17,7 +17,7 @@ services:
     ports:
       - "8101:80"
     volumes:
-      - "/mnt/zfsa/disks/docker-disk/:/media/data"
+      - "/mnt/zfsa/disks/docker-disk:/media/data:Z"
     secrets:
       - USERNAME_SC
       - PASSWORD_SC
