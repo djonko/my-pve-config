@@ -8,7 +8,7 @@ secrets:
     file: $HOME/webdav-data/password.secret.txt
 services:
   docker-nginx-webdav:
-    image: djonko/docker-nginx-webdav
+    image: djonko/nginx_webdav
     container_name: data-webdav
     restart: unless-stopped
     security_opt:
