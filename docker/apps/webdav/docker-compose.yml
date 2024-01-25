@@ -12,8 +12,8 @@ services:
     container_name: data-webdav
     entrypoint: [ '/bin/bash', '-c', 'export USERNAME=$$(cat /run/secrets/USERNAME_SC); export PASSWORD=$$(cat /run/secrets/PASSWORD_SC); /entrypoint.sh && nginx -g "daemon off;"' ]
     restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
+    #security_opt:
+    #  - no-new-privileges:true
     ports:
       - "8101:80"
     volumes:
