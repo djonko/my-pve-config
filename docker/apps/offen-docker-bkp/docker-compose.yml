@@ -8,7 +8,7 @@ services:
   backup:
     image: offen/docker-volume-backup:v2
     container_name: backup
-    entrypoint: [ '/bin/sh', '-c', 'export WEBDAV_USERNAME=$$(cat /run/secrets/USERNAME_WEBDAV); export WEBDAV_PASSWORD=$$(cat /run/secrets/PASSWORD_WEBDAV); /root/entrypoint.sh;"' ]
+    entrypoint: [ '/bin/sh', '-c', 'export WEBDAV_USERNAME=$$(cat /run/secrets/USERNAME_WEBDAV); export WEBDAV_PASSWORD=$$(cat /run/secrets/PASSWORD_WEBDAV); /root/entrypoint.sh;' ]
     restart: always
     env_file:
       - $HOME/.offen/offen.backup.env
