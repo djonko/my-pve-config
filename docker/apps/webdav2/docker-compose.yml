@@ -5,6 +5,7 @@ services:
     image: micromata/dave:latest
     container_name: data-webdav2
     restart: unless-stopped
+    user: 1000:1000
     #security_opt:
     #  - no-new-privileges:true
     ports:

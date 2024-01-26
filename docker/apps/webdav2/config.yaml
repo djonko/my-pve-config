@@ -1,7 +1,7 @@
 address: "127.0.0.1"    # the bind address
 port: "8000"            # the listening port
 dir: "/home/webdav"     # the provided base dir
-prefix: "/webdav"       # the url-prefix of the original url
+prefix: ""       # the url-prefix of the original url
 users:
   nginx-209:                 # with password 'foo' and jailed access to '/home/webdav/user'
     password: "$2a$12$4jWmgieooV9XJlRr/.F..OwWuGdH8gsRNfQvmVTRM"
