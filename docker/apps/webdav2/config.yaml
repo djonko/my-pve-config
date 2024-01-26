@@ -1,0 +1,16 @@
+address: "127.0.0.1"    # the bind address
+port: "8000"            # the listening port
+dir: "/home/webdav"     # the provided base dir
+prefix: "/webdav"       # the url-prefix of the original url
+users:
+  nginx-209:                 # with password 'foo' and jailed access to '/home/webdav/user'
+    password: "$2a$12$4jWmgieooV9XJlRr/.F..OwWuGdH8gsRNfQvmVTRM"
+    subdir: "/nginx-209"
+  admin:                # with password 'foo' and access to '/home/webdav'
+    password: "$2a$12$YGEQk9syq2q1IInaewRGhenAbnYLO8p/2CqzMCiOngj.WYZsaGiHe"
+log:
+  error: true
+  create: true
+  read: true
+  update: true
+  delete: true

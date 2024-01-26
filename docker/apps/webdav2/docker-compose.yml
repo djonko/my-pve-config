@@ -1,0 +1,18 @@
+version: "3.9"
+name: webdav2
+services:
+  docker-nginx-webdav:
+    image: micromata/dave:latest
+    container_name: data-webdav2
+    restart: unless-stopped
+    #security_opt:
+    #  - no-new-privileges:true
+    ports:
+      - "8102:8000"
+    volumes:
+      - "/mnt/zfsa/disks/docker-disk:/home/webdav:rw"
+      - "${HOME}/webdav-data/config.yaml:/config.yaml:ro"
+    environment:
+      - TZ=America/Toronto
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
