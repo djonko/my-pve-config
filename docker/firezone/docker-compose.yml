@@ -92,6 +92,7 @@ services:
       - no-new-privileges:true
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - /opt/data-docker/firezone/backups:/var/lib/firezone-backups/
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     environment:
@@ -119,6 +120,7 @@ services:
       - "8102:8080"
     labels:
       - "docker-volume-backup.stop-during-backup=true"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U db_user db_firezone > /var/lib/firezone-backups/bck_db_firezone$(date +\%Y\%m\%d-\%H\%M).sql'
 
 # Postgres needs a named volume to prevent perms issues on non-linux platforms
 volumes:
