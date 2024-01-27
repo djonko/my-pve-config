@@ -4,7 +4,7 @@ services:
     image: containrrr/watchtower
     container_name: watchtower
     environment:
-      - TZ=America/Montreal
+      - TZ=America/Toronto
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_TRACE=true
       - WATCHTOWER_LOG_LEVEL=warn
