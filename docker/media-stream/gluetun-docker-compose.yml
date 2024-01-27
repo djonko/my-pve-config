@@ -16,7 +16,7 @@ services:
 
   qbittorrent:
     container_name: qbittorrent
-    image: cr.hotio.dev/hotio/qbittorrent
+    image: ghcr.io/hotio/qbittorrent
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
