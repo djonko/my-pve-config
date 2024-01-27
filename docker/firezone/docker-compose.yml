@@ -19,6 +19,10 @@ version: '3.9'
 services:
   caddy:
     image: caddy:2
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - ${FZ_INSTALL_DIR:-.}/caddy:/data/caddy
       - "/etc/localtime:/etc/localtime:ro"
@@ -45,8 +49,12 @@ services:
 
   firezone:
     image: firezone/firezone
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "44837:51820/udp"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
     env_file:
       # This should contain a list of env vars for configuring Firezone.
       # See https://docs.firezone.dev/reference/env-vars for more info.
@@ -80,6 +88,8 @@ services:
   postgres:
     image: postgres:15
     container_name: postgres
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - "/etc/localtime:/etc/localtime:ro"
@@ -107,6 +117,8 @@ services:
     restart: unless-stopped
     ports:
       - "8102:8080"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
 
 # Postgres needs a named volume to prevent perms issues on non-linux platforms
 volumes:
