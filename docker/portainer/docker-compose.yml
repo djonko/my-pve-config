@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 services:
   portainer:
     image: portainer/portainer-ce:latest
@@ -14,3 +14,5 @@ services:
     command:
       --sslcert /certs/portainer.crt
       --sslkey /certs/portainer.key
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
