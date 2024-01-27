@@ -1,29 +1,19 @@
 version: "3.9"
 name: webdav
-
-secrets:
-  USERNAME_SC:
-    file: $HOME/webdav-data/username.secret.txt
-  PASSWORD_SC:
-    file: $HOME/webdav-data/password.secret.txt
 services:
-  docker-nginx-webdav:
-    image: maltokyo/docker-nginx-webdav
+  micromata-webdav:
+    image: micromata/dave:latest
     container_name: data-webdav
-    entrypoint: [ '/bin/bash', '-c', 'export USERNAME=$$(cat /run/secrets/USERNAME_SC); export PASSWORD=$$(cat /run/secrets/PASSWORD_SC); /entrypoint.sh && nginx -g "daemon off;"' ]
     restart: unless-stopped
-    #security_opt:
-    #  - no-new-privileges:true
+    user: 1000:1000
+    security_opt:
+      - no-new-privileges:true
     ports:
-      - "8101:80"
+      - "8102:8000"
     volumes:
-      - "/mnt/zfsa/disks/docker-disk:/media/data:Z"
-    secrets:
-      - USERNAME_SC
-      - PASSWORD_SC
+      - "/mnt/zfsa/disks/docker-disk:/home/webdav:rw"
+      - "${HOME}/webdav-data/config.yaml:/config.yaml:ro"
     environment:
       - TZ=America/Toronto
-      - USERNAME_FILE=/run/secrets/USERNAME_SC
-      - PASSWORD_FILE=/run/secrets/PASSWORD_SC
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
