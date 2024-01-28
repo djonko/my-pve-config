@@ -21,18 +21,18 @@ services:
     ports:
       - "8100:80"
     environment:
-      SMTP_HOST: smtp-relay.sendinblue.com
-      SMTP_FROM: pwd-manager@ui24.mywire.com
+      SMTP_HOST: ${PWD_SMTP_HOST}
+      SMTP_FROM: ${PWD_SMTP_FROM}
       SMTP_FROM_NAME: Password Vault
       SMTP_SECURITY: starttls
-      SMTP_PORT: 587
+      SMTP_PORT: ${PWD_SMTP_PORT}
       SMTP_USERNAME_FILE: /run/secrets/SMTP_USERNAME
       SMTP_PASSWORD_FILE: /run/secrets/SMTP_PASSWORD
       SMTP_TIMEOUT: 30
       SMTP_AUTH_MECHANISM: "TLS"
       LOGIN_RATELIMIT_MAX_BURST: 10
       LOGIN_RATELIMIT_SECONDS: 60
-      DOMAIN: https://pwd.ui24.mywire.org #change this to your URL
+      DOMAIN: ${PWD_DOMAIN} #change this to your URL
       INVITATION_ORG_NAME: HomePwd-Mg #change this to your company name
       INVITATIONS_ALLOWED: false
       ADMIN_TOKEN_FILE: /run/secrets/ADMIN_TOKEN #generate your own admin token
@@ -50,4 +50,5 @@ services:
       - SMTP_PASSWORD
       - ADMIN_TOKEN
     labels:
-      - "com.centurylinklabs.watchtower.enable=true" #watchtower auto-update
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
