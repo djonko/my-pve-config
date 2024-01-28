@@ -1,0 +1,16 @@
+address: "127.0.0.1"    # the bind address
+port: "8000"            # the listening port
+dir: "/home/webdav"     # the provided base dir
+prefix: ""       # the url-prefix of the original url
+users:
+  test:
+    password: "$2a$12$4jWmgieooV9XJlRr/.F..OwWuGdH8gsRNfQvmVTRM"
+    subdir: "/music"
+  admin:
+    password: "$2a$12$YGEQk9syq2q1IInaewRGhenAbnYLO8p/2CqzMCiOngj.WYZsaGiHe"
+log:
+  error: true
+  create: false
+  read: false
+  update: false
+  delete: false
