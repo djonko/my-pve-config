@@ -1,0 +1,20 @@
+version: "3.9"
+name: webdav2
+services:
+  micromata-webdav:
+    image: micromata/dave:latest
+    container_name: data-webdav2
+    restart: unless-stopped
+    user: 1000:1000
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "8102:8000"
+    volumes:
+      - "/nfs/stream_data/audios:/home/webdav/music:ro"
+      - "${HOME}/webdav-data/config.yaml:/config.yaml:ro"
+    environment:
+      - TZ=America/Toronto
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
