@@ -9,7 +9,7 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - "8102:8000"
+      - "8101:8000"
     volumes:
       - "/nfs/stream_data/audios:/home/webdav/music:ro"
       - "${HOME}/webdav-data/config.yaml:/config.yaml:ro"
