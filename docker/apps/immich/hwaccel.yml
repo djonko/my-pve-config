@@ -6,8 +6,8 @@ version: "3.8"
 
 services:
   hwaccel:
-    # devices:
-    #   - /dev/dri:/dev/dri  # If using Intel QuickSync or VAAPI
+    devices:
+      - /dev/dri:/dev/dri  # If using Intel QuickSync or VAAPI
     # volumes:
     #   - /usr/lib/wsl:/usr/lib/wsl # If using VAAPI in WSL2
     # environment:
