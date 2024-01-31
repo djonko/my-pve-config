@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 #
 # WARNING: Make sure to use the docker-compose.yml of the current release:
@@ -9,68 +9,79 @@ version: "3.8"
 #
 
 name: immich
-
 services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     command: [ "start.sh", "immich" ]
     volumes:
-      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+      - /opt/data-docker/immich/upload:/usr/src/app/upload
+      - ${EXTERNAL_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - .env
     ports:
-      - 2283:3001
+      - "2283:3001"
     depends_on:
       - redis
       - database
     restart: always
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
 
   immich-microservices:
     container_name: immich_microservices
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    # extends:
-    #   file: hwaccel.yml
-    #   service: hwaccel
+    extends:
+       file: hwaccel.yml
+       service: hwaccel
     command: [ "start.sh", "microservices" ]
     volumes:
-      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+      - /opt/data-docker/immich/upload:/usr/src/app/upload
+      - ${EXTERNAL_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - .env
     depends_on:
       - redis
       - database
     restart: always
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
 
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     volumes:
-      - model-cache:/cache
-    env_file:
-      - .env
+      - /opt/data-docker/immich/machine-learning:/cache
     restart: always
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
 
   redis:
     container_name: immich_redis
-    image: redis:6.2-alpine@sha256:c5a607fb6e1bb15d32bbcf14db22787d19e428d59e31a5da67511b49bb0f1ccc
+    image: redis:alpine
     restart: always
+    security_opt:
+      - no-new-privileges:true
+
 
   database:
     container_name: immich_postgres
-    image: tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:0335a1a22f8c5dd1b697f14f079934f5152eaaa216c09b61e293be285491f8ee
-    env_file:
-      - .env
+    image: tensorchord/pgvecto-rs:pg14-v0.1.13
+    security_opt:
+      - no-new-privileges:true
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - /opt/data-docker/immich/pgvecto-rs:/var/lib/postgresql/data
     restart: always
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${DB_USERNAME} ${DB_DATABASE_NAME} > /var/lib/postgresql/data/bck_db_firezone$(date +%Y%m%d-%H%M).sql'
 
-volumes:
-  pgdata:
-  model-cache:
+
