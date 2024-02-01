@@ -31,7 +31,7 @@ services:
 
   immich-microservices:
     container_name: immich_microservices
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:release
     extends:
        file: hwaccel.yml
        service: hwaccel
@@ -51,7 +51,7 @@ services:
 
   immich-machine-learning:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:main
     volumes:
       - /opt/data-docker/immich/machine-learning:/cache
     restart: always
