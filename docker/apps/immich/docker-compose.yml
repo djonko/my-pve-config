@@ -33,7 +33,7 @@ services:
     container_name: immich_microservices
     image: ghcr.io/immich-app/immich-server:release
     extends:
-       file: hwaccel.yml
+       file: /opt/data-docker/immich/config/hwaccel.yml
        service: hwaccel
     command: [ "start.sh", "microservices" ]
     volumes:
