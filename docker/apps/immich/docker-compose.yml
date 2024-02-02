@@ -28,6 +28,7 @@ services:
       - no-new-privileges:true
     labels:
       - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   immich-microservices:
     container_name: immich_microservices
@@ -48,6 +49,7 @@ services:
       - no-new-privileges:true
     labels:
       - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -59,6 +61,7 @@ services:
       - no-new-privileges:true
     labels:
       - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   redis:
     container_name: immich_redis
@@ -66,6 +69,8 @@ services:
     restart: always
     security_opt:
       - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
 
   database:
