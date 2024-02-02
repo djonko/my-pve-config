@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    container_name: syncthing
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
+    hostname: gerrard
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - TZ=America/Montreal
+    env_file:
+      - /opt/data-docker/immich/config/run.env
+    volumes:
+      - /opt/data-docker/syncthing/config:/config
+      - /opt/data-docker/immich/upload:/data/fast/upload
+      - ${EXTERNAL_PATH}:/data/external
+    ports:
+      - "8384:8384"
+      - "22000:22000"
+      - "21027:21027/udp"
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
