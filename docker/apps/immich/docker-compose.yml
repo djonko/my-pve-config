@@ -19,7 +19,7 @@ services:
       - ${EXTERNAL_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - "2283:3001"
+      - "8101:3001"
     depends_on:
       - redis
       - database
