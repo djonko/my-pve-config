@@ -90,9 +90,10 @@ services:
       POSTGRES_DB: ${DB_DATABASE_NAME}
     volumes:
       - /opt/data-docker/immich/pgvecto-rs:/var/lib/postgresql/data
+      - /opt/data-docker/immich/db-backups:/db-backups
     restart: always
     labels:
       - "docker-volume-backup.stop-during-backup=true"
-      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${DB_USERNAME} ${DB_DATABASE_NAME} > /var/lib/postgresql/data/bck_db_firezone$(date +%Y%m%d-%H%M).sql'
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${DB_USERNAME} ${DB_DATABASE_NAME} > /db-backups/bck_db_firezone$(date +%Y%m%d-%H%M).sql'
 
 
