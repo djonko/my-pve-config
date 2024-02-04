@@ -14,11 +14,14 @@ services:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:release
     command: [ "start.sh", "immich" ]
+    environment:
+      TZ: "America/Toronto"
     env_file:
       - /opt/data-docker/immich/config/run.env
     volumes:
       - /opt/data-docker/immich/upload:/usr/src/app/upload
       - ${EXTERNAL_PATH}:/data
+      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "8101:3001"
@@ -35,6 +38,8 @@ services:
   immich-microservices:
     container_name: immich_microservices
     image: ghcr.io/immich-app/immich-server:release
+    environment:
+      TZ: "America/Toronto"
     extends:
        file: /opt/data-docker/immich/config/hwaccel.yml
        service: hwaccel
@@ -44,6 +49,7 @@ services:
     volumes:
       - /opt/data-docker/immich/upload:/usr/src/app/upload
       - ${EXTERNAL_PATH}:/data
+      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - redis
@@ -58,8 +64,12 @@ services:
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:release
+    environment:
+      TZ: "America/Toronto"
     volumes:
       - /opt/data-docker/immich/machine-learning:/cache
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - /opt/data-docker/immich/config/run.env
     restart: always
@@ -88,9 +98,12 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
+      TZ: "America/Toronto"
     volumes:
       - /opt/data-docker/immich/pgvecto-rs:/var/lib/postgresql/data
       - /opt/data-docker/immich/db-backups:/db-backups
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     restart: always
     labels:
       - "docker-volume-backup.stop-during-backup=true"
