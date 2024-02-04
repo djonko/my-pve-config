@@ -102,7 +102,7 @@ services:
       TZ: "${TIME_ZONE}"
     labels:
       - "docker-volume-backup.stop-during-backup=true"
-      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U db_user db_firezone > /var/lib/firezone-backups/bck_db_firezone$(date +%Y%m%d-%H%M).sql'
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${DATABASE_USER} ${DATABASE_NAME} > /var/lib/firezone-backups/bck_db_firezone$(date +%Y%m%d-%H%M).sql'
     networks:
       - firezone-network
     deploy:
