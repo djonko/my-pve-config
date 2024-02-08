@@ -12,5 +12,5 @@ services:
     ports:
       - "8080:3001"
     volumes:
-      - "/opt/data-docker/volumes/uptime-kuma:/app/data"
+      - "/opt/data-docker/uptime-kuma:/app/data"
 

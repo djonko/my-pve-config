@@ -14,7 +14,7 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - "/opt/data-docker/volumes/heimdall/config:/config"
+      - "/opt/data-docker/heimdall/config:/config"
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
       - "docker-volume-backup.stop-during-backup=true"
