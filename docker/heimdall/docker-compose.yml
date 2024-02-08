@@ -10,6 +10,11 @@ services:
     environment:
       PUID: 1000
       PGID: 1000
-      TZ: America/Montreal
+      TZ: America/Toronto
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - "/opt/data-docker/volumes/heimdall/config:/config"
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
