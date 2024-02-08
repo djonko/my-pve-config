@@ -3,6 +3,10 @@ services:
   homeassistant:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
+    environment:
+      #- PUID=
+      #- PGID=
+      - TZ=America/Toronto
     volumes:
       - /home/bobdi/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
