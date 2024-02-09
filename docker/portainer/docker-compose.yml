@@ -9,10 +9,11 @@ services:
       - "9200:9443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/opt/data-adm-docker/volumes/portainer:/data"
-      - "/opt/data-adm-docker/volumes/portainer/ssl-certs:/certs"
+      - "/opt/data-docker/portainer:/data"
+      - "/opt/data-docker/portainer/ssl-certs:/certs"
     command:
       --sslcert /certs/portainer.crt
       --sslkey /certs/portainer.key
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
