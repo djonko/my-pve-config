@@ -2,10 +2,12 @@ version: '3.9'
 
 services:
   redis:
-    container_name: redis
+    container_name: searxng-redis
     image: "redis:alpine"
     command: redis-server --save "" --appendonly "no"
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     networks:
       - searxng
     tmpfs:
@@ -26,10 +28,10 @@ services:
     ports:
       - "8200:8080"
     volumes:
-      - "/opt/data-adm-docker/volumes/searxng/data:/etc/searxng"
+      - "/opt/data-docker/searxng/data:/etc/searxng"
     environment:
       - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-localhost}/
-      - TZ=America/Montreal
+      - TZ=America/Toronto
     logging:
       driver: "json-file"
       options:
@@ -39,6 +41,7 @@ services:
       - no-new-privileges:true
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
 networks:
   searxng:
     ipam:
