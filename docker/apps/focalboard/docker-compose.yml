@@ -21,10 +21,15 @@ services:
     volumes:
       - "/opt/data-docker/volumes/focalboard/data:/data"
       - "/opt/data-docker/volumes/focalboard/data-opt/config.json:/opt/focalboard/config.json"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     environment:
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
     networks:
       - focal-net
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   focalboard-db:
     image: postgres:14.5
@@ -32,17 +37,24 @@ services:
     restart: unless-stopped
     volumes:
       - "/opt/data-docker/volumes/focalboard/postgresql:/var/lib/postgresql/data"
+      - "/opt/data-docker/volumes/focalboard/backups:/var/lib/postgresql/focal-backups/"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     environment:
       POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB  #boards
       POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER #boardsuser
       POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD #boardsuser-password
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
     secrets:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     networks:
       - focal-net
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $(< $POSTGRES_USER_FILE) $(< $POSTGRES_DB_FILE) > /var/lib/postgresql/focal-backups/bck_db_focal$(date +%Y%m%d-%H%M).sql'
   adminer_focal:
     image: adminer:latest
     container_name: adminer_focal
