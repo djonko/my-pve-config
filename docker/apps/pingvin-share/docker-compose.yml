@@ -3,7 +3,14 @@ services:
   pingvin-share:
     image: stonith404/pingvin-share
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "7805:3000"
     volumes:
-      - "${BASE_PATH}/nfs-data:/opt/app/backend/data"
+      - "/opt/data-docker/volumes/pingvin-share/nfs-data:/opt/app/backend/data"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"

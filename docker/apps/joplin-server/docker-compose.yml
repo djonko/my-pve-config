@@ -13,7 +13,10 @@ services:
     image: postgres:15.2
     container_name: joplin_db
     volumes:
-      - /opt/data-docker/volumes/joplin/postgresql:/var/lib/postgresql/data
+      - "/opt/data-docker/volumes/joplin/postgresql:/var/lib/postgresql/data"
+      - "/opt/data-docker/volumes/joplin/backups:/var/lib/postgresql/joplin-backups"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PWD
@@ -24,6 +27,10 @@ services:
       - POSTGRES_PWD
       - POSTGRES_USER
       - POSTGRES_DB
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $(< $POSTGRES_USER_FILE) $(< $POSTGRES_DB_FILE) > /var/lib/postgresql/joplin-backups/bck_db_joplin$(date +%Y%m%d-%H%M).sql'
 
   joplin:
     image: joplin/server:latest
@@ -54,6 +61,14 @@ services:
       - MAILER_NOREPLY_EMAIL=${MAIL_FROM}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    security_opt:
+      - no-new-privileges:true
 
   adminer:
     image: adminer:latest

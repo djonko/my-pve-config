@@ -21,6 +21,8 @@ secrets:
     file: /opt/data-etc/firefly/db_username.secret.txt
   MYSQL_PASSWORD:
     file: /opt/data-etc/firefly/db_password.secret.txt
+  CONFIG_SQLPWD:
+    file: /opt/data-etc/firefly/firefly_mysql.sqlpwd
 
 services:
   firefly-db:
@@ -36,32 +38,49 @@ services:
       MARIADB_DATABASE: firefly-db
       MARIADB_USER_FILE: /run/secrets/MYSQL_USER
       MARIADB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
     volumes:
       - "/opt/data-docker/volumes/mariadb:/var/lib/mysql"
+      - "/opt/data-docker/volumes/dump_dir:/var/lib/allsqldump"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     secrets:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - CONFIG_SQLPWD
     networks:
       - firefly_net
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/allsqldump/backup-firefly$(date +\%Y\%m\%d).sql'
+
 
   redis:
     image: redis:7.0.4-alpine
-    container_name: redis
+    container_name: firefly-redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
+    environment:
+      TZ: "America/Toronto"
     volumes:
       - cache:/data
     ports:
       - '6379'
     networks:
       - firefly_net
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   firefly:
     image: fireflyiii/core:latest
     restart: unless-stopped
     container_name: firefly
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     depends_on:
       - firefly-db
       - redis
@@ -69,6 +88,8 @@ services:
       - "7801:8080"
     volumes:
       - "/opt/data-docker/volumes/firefly:/var/www/html/storage/upload"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     environment:
       APP_KEY_FILE: /run/secrets/APP_KEY
       APP_ENV: local
@@ -76,7 +97,7 @@ services:
       DEFAULT_LANGUAGE: en_US
       DEFAULT_LOCALE: equal
       SITE_OWNER: admin@firefly.ui24.mywire.com
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
       TRUSTED_PROXIES: "**"
       APP_LOG_LEVEL: notice
       AUDIT_LOG_LEVEL: info
@@ -88,7 +109,7 @@ services:
       DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
-      REDIS_HOST: redis
+      REDIS_HOST: firefly-redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
       REDIS_SCHEME: tcp
@@ -110,6 +131,8 @@ services:
       PGID: 1000
     networks:
       - firefly_net
+    security_opt:
+      - no-new-privileges:true
     secrets:
       - APP_KEY
       - MYSQL_USER
@@ -131,6 +154,9 @@ services:
     environment:
       FIREFLY_III_URL: http://firefly:8080
       FIREFLY_III_ACCESS_TOKEN: ${IMPORT_TOKEN}
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   adminer:
     image: adminer:latest
@@ -140,7 +166,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: firefly-db
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/MYSQL_ROOT_PASSWORD
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
     secrets:
       - MYSQL_ROOT_PASSWORD
     restart: unless-stopped
@@ -148,6 +174,9 @@ services:
       - "7802:8080"
     networks:
       - firefly_net
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
 volumes:
   cache:

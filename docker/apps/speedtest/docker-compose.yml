@@ -6,11 +6,18 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Montreal
+      - TZ=America/Toronto
       - PASSWORD=${LSP_PASSWORD}
       - IPINFO_APIKEY=${LSP_PASSWORD_TOKEN}
     volumes:
       - "/opt/data-docker/volumes/libre_speed/config:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     ports:
       - "7807:80"
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
