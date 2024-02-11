@@ -54,7 +54,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $(< $POSTGRES_USER_FILE) $(< $POSTGRES_DB_FILE) > /var/lib/postgresql/focal-backups/bck_db_focal$(date +%Y%m%d-%H%M).sql'
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $(< /run/secrets/POSTGRES_USER) $(< /run/secrets/POSTGRES_DB) > /var/lib/postgresql/focal-backups/bck_db_focal$(date +%Y%m%d-%H%M).sql'
   adminer_focal:
     image: adminer:latest
     container_name: adminer_focal
