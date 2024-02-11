@@ -54,7 +54,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-      - docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/allsqldump/backup-firefly$(date +\%Y\%m\%d).sql'
+      - docker-volume-backup.archive-pre=/bin/sh -c 'mariadb-dump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/allsqldump/backup-firefly$(date +%Y%m%d-%H%M).sql'
 
 
   redis:
