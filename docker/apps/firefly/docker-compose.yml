@@ -61,7 +61,7 @@ services:
     image: redis:7.0.4-alpine
     container_name: firefly-redis
     restart: unless-stopped
-    command: redis-server --save 60 1 --loglevel warning --requirepass yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     environment:
       TZ: "America/Toronto"
     volumes:
@@ -111,7 +111,7 @@ services:
       SESSION_DRIVER: redis
       REDIS_HOST: firefly-redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: yyccV9QUgbGhPWZ8fjXZnXMN3zT74az4
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_SCHEME: tcp
       REDIS_DB: "0"
       REDIS_CACHE_DB: "1"
