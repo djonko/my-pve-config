@@ -68,9 +68,7 @@ services:
       - CONFIG_SQLPWD
 
   adminer:
-    build:
-      context: .
-      dockerfile: adminer.dockerfile
+    image: adminer:latest
     container_name: adminer
     security_opt:
       - no-new-privileges:true
@@ -81,7 +79,9 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db_nginx
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
-      TZ: "America/Toronto"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     secrets:
       - DB_ROOT_PWD
     restart: unless-stopped
