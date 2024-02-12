@@ -4,6 +4,8 @@ services:
     image: portainer/portainer-ce:latest
     container_name: portainer
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "8200:8000"
       - "9200:9443"
