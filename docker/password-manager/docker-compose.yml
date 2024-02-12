@@ -18,7 +18,7 @@ services:
     cap_drop:
       - ALL
     volumes:
-      - "/opt/data-docker/password_manager:/data"
+      - "/opt/data-docker/vaultwarden:/data"
     ports:
       - "8100:80"
     environment:
