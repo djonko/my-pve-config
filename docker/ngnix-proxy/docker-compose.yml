@@ -56,7 +56,7 @@ services:
       MYSQL_DATABASE: "${NG_DB}"
       MYSQL_USER: "${NG_USER}"
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
     volumes:
       - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
@@ -81,7 +81,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: db_ngnix
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
-      TZ: "America/Montreal"
+      TZ: "America/Toronto"
     secrets:
       - DB_ROOT_PWD
     restart: unless-stopped
