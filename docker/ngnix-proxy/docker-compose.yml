@@ -2,15 +2,15 @@ version: '3.9'
 
 secrets:
   DB_ROOT_PWD:
-    file: /opt/data-etc/ngnix/db_root_pwd.secret.txt
+    file: /opt/data-etc/nginx/db_root_pwd.secret.txt
   MYSQL_PWD:
-    file: /opt/data-etc/ngnix/db_pwd.secret.txt
+    file: /opt/data-etc/nginx/db_pwd.secret.txt
   CONFIG_SQLPWD:
-    file: /opt/data-etc/ngnix/mysql.sqlpwd
+    file: /opt/data-etc/nginx/mysql.sqlpwd
 
 services:
-  ngnix_proxy:
-    container_name: ngnix_proxy
+  nginx_proxy:
+    container_name: nginx_proxy
     restart: unless-stopped
     image: 'jc21/nginx-proxy-manager:latest'
     security_opt:
@@ -24,7 +24,7 @@ services:
       - '9200:443'
       - '443:443'
     environment:
-      DB_MYSQL_HOST: "db_ngnix"
+      DB_MYSQL_HOST: "db_nginx"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "${NG_USER}"
       DB_MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
@@ -32,18 +32,18 @@ services:
       DISABLE_IPV6: 'true'
       TZ: "America/Toronto"
     depends_on:
-      - db_ngnix
+      - db_nginx
     volumes:
-      - "/opt/data-adm-docker/volumes/ngnix_proxy:/data"
-      - "/opt/data-adm-docker/volumes/ngnix_letsencrypt:/etc/letsencrypt"
+      - "/opt/data-docker/nginx_proxy:/data"
+      - "/opt/data-docker/nginx_letsencrypt:/etc/letsencrypt"
     secrets:
       - MYSQL_PWD
 
-  db_ngnix:
+  db_nginx:
     build:
       context: .
-    container_name: db_ngnix
-    restart: unless-stopped
+    container_name: db_nginx
+    restart: always
     security_opt:
       - no-new-privileges:true
     labels:
@@ -58,10 +58,10 @@ services:
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
       TZ: "America/Toronto"
     volumes:
-      - "/opt/data-adm-docker/volumes/mysql_ngnix:/var/lib/mysql"
+      - "/opt/data-docker/mysql_nginx:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/data-adm-docker/volumes/dump_dir:/var/lib/allsqldump"
+      - "/opt/data-docker/dump_dir:/var/lib/allsqldump"
     secrets:
       - MYSQL_PWD
       - DB_ROOT_PWD
@@ -77,9 +77,9 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
     depends_on:
-      - db_ngnix
+      - db_nginx
     environment:
-      ADMINER_DEFAULT_SERVER: db_ngnix
+      ADMINER_DEFAULT_SERVER: db_nginx
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
       TZ: "America/Toronto"
     secrets:
