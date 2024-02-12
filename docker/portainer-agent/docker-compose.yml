@@ -5,6 +5,8 @@ services:
     deploy:
       mode: global
     image: portainer/agent:latest
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "9001:9001"
     volumes:
