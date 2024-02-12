@@ -13,4 +13,6 @@ services:
       - "8080:3001"
     volumes:
       - "/opt/data-docker/uptime-kuma:/app/data"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
 
