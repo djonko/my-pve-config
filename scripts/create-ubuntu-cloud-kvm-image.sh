@@ -33,18 +33,19 @@ TEMPL_NAME="ubuntu-cloud"
 VMID="9801"
 
 DISK_SIZE=$HD_SIZE
-DISK_STOR="zfsa"
+DISK_STOR="local"
 NET_BRIDGE="vmbr0"
-SSH_PUB="$HOME_USER/.ssh/id_ed25519.pub"
-MY_DNS="192.168.20.2"
-MY_DOMAIN="ui24.mywire.com"
+#SSH_PUB="$HOME_USER/.ssh/id_ed25519.pub"
+MY_DNS=""
+MY_DOMAIN=""
 
-qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true --nameserver $MY_DNS --searchdomain $MY_DOMAIN
+#qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true --nameserver $MY_DNS --searchdomain $MY_DOMAIN
+qm create $VMID --name $TEMPL_NAME --memory $MEM --net0 virtio,bridge=$NET_BRIDGE --localtime true
 qm importdisk $VMID $IMG_NAME $DISK_STOR
 qm set $VMID --scsihw virtio-scsi-pci --scsi0 $DISK_STOR:vm-$VMID-disk-0
 qm set $VMID --ide2 $DISK_STOR:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0
 qm set $VMID --ipconfig0 ip=dhcp
-qm set $VMID --sshkey "$SSH_PUB"
+#qm set $VMID --sshkey "$SSH_PUB"
 qm set $VMID --agent enabled=1
 qm resize $VMID scsi0 "$DISK_SIZE"
 qm template $VMID

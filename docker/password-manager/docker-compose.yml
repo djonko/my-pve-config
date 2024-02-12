@@ -18,6 +18,10 @@ services:
     restart: always
     container_name: vaultwarden
     image: vaultwarden/server:latest
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     volumes:
       - "/opt/data-adm-docker/volumes/password_manager:/data"
     ports:
@@ -45,8 +49,6 @@ services:
       EMERGENCY_ACCESS_ALLOWED: true
       SENDS_ALLOWED: true
       WEB_VAULT_ENABLED: true
-      TIME_ZONE: "America/Montreal" #change this to your timezone
-      TZ: "America/Montreal"
     secrets:
       - SMTP_USERNAME
       - SMTP_PASSWORD
