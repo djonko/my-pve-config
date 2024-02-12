@@ -1,17 +1,12 @@
-#docker pull vaultwarden/server:latest
-#docker run -d --name vaultwarden -v /vw-data/:/data/ -p 80:80 vaultwarden/server:latest
-
 version: '3.9'
 
 secrets:
   SMTP_USERNAME:
-    file: /opt/data-etc/password-manager/smtp_user.secret.txt
+    file: /opt/data-etc/vaultwarden/smtp_user.secret.txt
   SMTP_PASSWORD:
-    file: /opt/data-etc/password-manager/smtp_pwd.secret.txt
-  #ADMIN_TOKEN:
-    #file: /opt/data-etc/password-manager/admin_token.secret.txt
+    file: /opt/data-etc/vaultwarden/smtp_pwd.secret.txt
   ADMIN_TOKEN_ARGON:
-    file: /opt/data-etc/password-manager/admin_token_argon.secret.txt
+    file: /opt/data-etc/vaultwarden/admin_token_argon.secret.txt
 
 services:
   vaultwarden:
@@ -23,7 +18,7 @@ services:
     cap_drop:
       - ALL
     volumes:
-      - "/opt/data-adm-docker/volumes/password_manager:/data"
+      - "/opt/data-docker/password_manager:/data"
     ports:
       - "8100:80"
     environment:
