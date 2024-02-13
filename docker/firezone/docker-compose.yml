@@ -90,7 +90,7 @@ services:
       - no-new-privileges:true
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - /opt/data-docker/firezone/backups:/var/lib/firezone-backups/
+      - ${FZ_INSTALL_DIR:-.}/backups:/var/lib/firezone-backups/
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     environment:
