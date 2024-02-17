@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.9"
 secrets:
   WEB_PASSWORD_SECRET:
     file: /opt/data-docker-etc/pihole/pwd.secret.txt
@@ -20,6 +20,7 @@ services:
       - DNS_BOGUS_PRIV=true
       - PIHOLE_DNS_=172.20.0.3
       - VIRTUAL_HOST=${HOSTNAME}
+      - DNSMASQ_LISTENING=all
     volumes:
       - '/opt/data-docker/pihole/etc/pihole:/etc/pihole'
       - '/opt/data-docker/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
