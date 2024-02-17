@@ -2,7 +2,7 @@
 # Disable Host Dns resolving
 # sudo systemctl disable systemd-resolved.service
 # sudo systemctl stop systemd-resolved.service
-#
+# sudo sed --in-place "s/^#DNSStubListener=yes$/DNSStubListener=no/g" /etc/systemd/resolved.conf
 version: "3.9"
 secrets:
   WEB_PASSWORD_SECRET:
@@ -50,7 +50,7 @@ services:
       pihole_local_network:
         ipv4_address: 172.20.0.3 #this will be your upstream DNS server in Pi-Hole
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges:false
 
 networks:
   pihole_local_network:
