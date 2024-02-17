@@ -1,3 +1,8 @@
+# Fix host resolve : https://bbs.archlinux.org/viewtopic.php?id=275976
+# Disable Host Dns resolving
+# sudo systemctl disable systemd-resolved.service
+# sudo systemctl stop systemd-resolved.service
+#
 version: "3.9"
 secrets:
   WEB_PASSWORD_SECRET:
