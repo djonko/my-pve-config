@@ -45,7 +45,9 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     volumes:
-      - /opt/data-docker/stubby/stubby.yml:/usr/local/etc/stubby/stubby.yml
+      - "/opt/data-docker/stubby/stubby.yml:/usr/local/etc/stubby/stubby.yml"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     networks:
       pihole_local_network:
         ipv4_address: 172.20.0.3 #this will be your upstream DNS server in Pi-Hole
