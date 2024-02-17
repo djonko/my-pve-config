@@ -23,7 +23,7 @@ services:
       - WEBPASSWORD_FILE=/run/secrets/WEB_PASSWORD_SECRET
       #- DNSSEC=true
       - DNS_BOGUS_PRIV=true
-      - PIHOLE_DNS_=172.20.0.3
+      - PIHOLE_DNS_=172.20.0.3;9.9.9.9;149.112.112.112
       - VIRTUAL_HOST=${HOSTNAME}
       - DNSMASQ_LISTENING=all
     volumes:
