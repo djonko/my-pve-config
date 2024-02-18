@@ -95,7 +95,7 @@ services:
       APP_DEBUG: 'false'
       DEFAULT_LANGUAGE: en_US
       DEFAULT_LOCALE: equal
-      SITE_OWNER: admin@firefly.ui24.mywire.com
+      SITE_OWNER: ${SITE_OWNER}
       TZ: "America/Toronto"
       TRUSTED_PROXIES: "**"
       APP_LOG_LEVEL: notice
@@ -115,12 +115,12 @@ services:
       REDIS_DB: "0"
       REDIS_CACHE_DB: "1"
       MAIL_MAILER: log
-      MAIL_HOST: smtp.mailgun.org
-      MAIL_PORT: 587
-      MAIL_FROM: notreply@firefly.ui24.mywire.com
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_FROM: ${MAIL_FROM}
       MAIL_USERNAME_FILE: /run/secrets/MAIL_USERNAME
       MAIL_PASSWORD_FILE: /run/secrets/MAIL_PASSWORD
-      MAIL_ENCRYPTION: tls
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
       SEND_REGISTRATION_MAIL: 'true'
       SEND_ERROR_MESSAGE: "true"
       SEND_LOGIN_NEW_IP_WARNING: 'true'
