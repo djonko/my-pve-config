@@ -55,7 +55,7 @@ services:
 
 
   redis:
-    image: redis:7.0.4-alpine
+    image: redis:alpine
     container_name: firefly-redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
