@@ -26,7 +26,7 @@ secrets:
 
 services:
   firefly-db:
-    image: mariadb:latest
+    image: mariadb:11.2
     restart: unless-stopped
     container_name: firefly-db
     environment:
