@@ -38,7 +38,6 @@ services:
       MARIADB_DATABASE: firefly-db
       MARIADB_USER_FILE: /run/secrets/MYSQL_USER
       MARIADB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
-      TZ: "America/Toronto"
     volumes:
       - "/opt/data-docker/firefly/mariadb:/var/lib/mysql"
       - "/opt/data-docker/firefly/db-backups:/var/lib/allsqldump"
