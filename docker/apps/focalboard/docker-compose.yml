@@ -19,8 +19,8 @@ services:
       - focalboard-db
     restart: unless-stopped
     volumes:
-      - "/opt/data-docker/volumes/focalboard/data:/data"
-      - "/opt/data-docker/volumes/focalboard/data-opt/config.json:/opt/focalboard/config.json"
+      - "/opt/data-docker/focalboard/data:/data"
+      - "/opt/data-docker/focalboard/data-opt/config.json:/opt/focalboard/config.json"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     environment:
@@ -30,16 +30,20 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    security_opt:
+      - no-new-privileges:true
 
   focalboard-db:
-    image: postgres:14.5
+    image: postgres:16.2
     container_name: focalboard-db
     restart: unless-stopped
     volumes:
-      - "/opt/data-docker/volumes/focalboard/postgresql:/var/lib/postgresql/data"
-      - "/opt/data-docker/volumes/focalboard/backups:/var/lib/postgresql/focal-backups/"
+      - "/opt/data-docker/focalboard/postgresql:/var/lib/postgresql/data"
+      - "/opt/data-docker/focalboard/db-backups:/var/lib/postgresql/focal-backups/"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+    security_opt:
+      - no-new-privileges:true
     environment:
       POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB  #boards
       POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER #boardsuser
@@ -60,6 +64,8 @@ services:
     container_name: adminer_focal
     depends_on:
       - focalboard-db
+    security_opt:
+      - no-new-privileges:true
     environment:
       ADMINER_DEFAULT_SERVER: focalboard-db
     networks:
