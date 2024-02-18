@@ -13,11 +13,13 @@ services:
     image: postgres:15.2
     container_name: joplin_db
     volumes:
-      - "/opt/data-docker/volumes/joplin/postgresql:/var/lib/postgresql/data"
-      - "/opt/data-docker/volumes/joplin/backups:/var/lib/postgresql/joplin-backups"
+      - "/opt/data-docker/joplin/postgresql:/var/lib/postgresql/data"
+      - "/opt/data-docker/joplin/backups:/var/lib/postgresql/joplin-backups"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PWD
       - POSTGRES_USER_FILE=/run/secrets/POSTGRES_USER
@@ -78,5 +80,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: joplin_db
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "6806:8080"

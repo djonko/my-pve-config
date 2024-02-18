@@ -40,8 +40,8 @@ services:
       MARIADB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       TZ: "America/Toronto"
     volumes:
-      - "/opt/data-docker/volumes/mariadb:/var/lib/mysql"
-      - "/opt/data-docker/volumes/dump_dir:/var/lib/allsqldump"
+      - "/opt/data-docker/firefly/mariadb:/var/lib/mysql"
+      - "/opt/data-docker/firefly/db-backups:/var/lib/allsqldump"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     secrets:
@@ -87,7 +87,7 @@ services:
     ports:
       - "7801:8080"
     volumes:
-      - "/opt/data-docker/volumes/firefly:/var/www/html/storage/upload"
+      - "/opt/data-docker/firefly/app:/var/www/html/storage/upload"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     environment:
@@ -160,7 +160,7 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: adminer
+    container_name: firefly_adminer
     depends_on:
       - firefly-db
     environment:
