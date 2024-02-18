@@ -10,11 +10,11 @@ secrets:
 
 services:
   joplin_db:
-    image: postgres:15.2
+    image: postgres:16.2
     container_name: joplin_db
     volumes:
       - "/opt/data-docker/joplin/postgresql:/var/lib/postgresql/data"
-      - "/opt/data-docker/joplin/backups:/var/lib/postgresql/joplin-backups"
+      - "/opt/data-docker/joplin/db-backups:/var/lib/postgresql/joplin-backups"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     restart: unless-stopped
