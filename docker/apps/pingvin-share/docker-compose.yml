@@ -8,7 +8,7 @@ services:
     ports:
       - "7805:3000"
     volumes:
-      - "/opt/data-docker/pingvin-share/nfs-data:/opt/app/backend/data"
+      - "/opt/data-docker/pingvin-share/data:/opt/app/backend/data"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     labels:
