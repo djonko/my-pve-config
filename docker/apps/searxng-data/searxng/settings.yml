@@ -1,4 +1,5 @@
 # see https://docs.searxng.org/admin/engines/settings.html#use-default-settings
+
 use_default_settings: true
 server:
   # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
@@ -6,21 +7,44 @@ server:
   limiter: true  # can be disabled for a private instance
   image_proxy: true
   method: "GET"
+  default_http_headers:
+    X-Content-Type-Options: nosniff
+    X-Download-Options: noopen
+    X-Robots-Tag: noindex, nofollow
+    Referrer-Policy: no-referrer
 search:
-  autocomplete: "duckduckgo"
-  default_lang: ""
+  autocomplete: "google"
+  autocomplete_min: 4
+  default_lang: "auto"
+  ban_time_on_fail: 5
   formats:
     - html
     - json
     - csv
     - rss
+  max_ban_time_on_fail: 120
+  suspended_times:
+    # Engine suspension time after error (in seconds; set to 0 to disable)
+    # For error "Access denied" and "HTTP error [402, 403]"
+    SearxEngineAccessDenied: 86400
+    # For error "CAPTCHA"
+    SearxEngineCaptcha: 86400
+    # For error "Too many request" and "HTTP error 429"
+    SearxEngineTooManyRequests: 3600
+    # Cloudflare CAPTCHA
+    cf_SearxEngineCaptcha: 1296000
+    cf_SearxEngineAccessDenied: 86400
+    # ReCAPTCHA
+    recaptcha_SearxEngineCaptcha: 604800
 ui:
   static_use_hash: true
 redis:
-  url: redis://redis:6379/0
+  url: redis://searxng-redis:6379/0
 general:
-  instance_name: "My-Search"
+  instance_name: "SearXNG"
   debug: false
   enable_metrics: true
   contact_url: false
+  privacypolicy_url: false
+  donation_url: false
 
