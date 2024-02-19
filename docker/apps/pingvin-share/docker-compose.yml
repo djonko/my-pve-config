@@ -2,6 +2,7 @@ version: '3.9'
 services:
   pingvin-share:
     image: stonith404/pingvin-share
+    container_name: pingvin-share
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
