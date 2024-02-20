@@ -1,25 +1,34 @@
 version: "3.9"
 services:
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    environment:
-      - TZ=America/Montreal
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_POLL_INTERVAL=3600
-      - WATCHTOWER_TRACE=true
-      - WATCHTOWER_LOG_LEVEL=warn
-      - WATCHTOWER_INCLUDE_RESTARTING=true
-      - WATCHTOWER_SCOPE=toUpdateScope
-      #- WATCHTOWER_NOTIFICATIONS=email
-      #- WATCHTOWER_NOTIFICATION_EMAIL_FROM=watchtower-mail@sp1.theworkpc.com
-      #- WATCHTOWER_NOTIFICATION_EMAIL_TO=sp1-WATCHTOWER_5DDjIsU@sp1.theworkpc.com
-      #- WATCHTOWER_NOTIFICATION_EMAIL_SERVER=192.168.20.7
-      #- WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=1025
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  ntfy-server:
+    image: "binwiederhier/ntfy"
+    container_name: "ntfy-server"
+    command:
+      - serve
     restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
+    ports:
+      - "8103:80"
+      - "1025:25"
+    user: "1000:1000"
+    environment:
+      - TZ=America/Toronto
+      - NTFY_BASE_URL=${NTFY_BASE_URL}
+      - NTFY_UPSTREAM_BASE_URL=${NTFY_UPSTREAM_BASE_URL}
+      - NTFY_LISTEN_HTTP=:80
+      - NTFY_CACHE_FILE=/var/cache/ntfy/cache.db
+      - NTFY_CACHE_DURATION=48h
+      - NTFY_AUTH_FILE=/var/cache/ntfy/auth_file.db
+      - NTFY_BEHIND_PROXY=true
+      - NTFY_SMTP_SERVER_LISTEN=:25
+      - NTFY_SMTP_SERVER_DOMAIN=${NTFY_SMTP_SERVER_DOMAIN}
+      - NTFY_SMTP_SERVER_ADDR_PREFIX=${NTFY_SMTP_SERVER_ADDR_PREFIX}
+      - NTFY_ENABLE_SIGNUP=true
+      - NTFY_ENABLE_LOGIN=true
+    volumes:
+      - "/opt/data-docker/ntfy/config:/etc/ntfy"
+      - "/opt/data-docker/ntfy/cache:/var/cache/ntfy"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
