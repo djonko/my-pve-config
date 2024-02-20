@@ -1,0 +1,47 @@
+## how to install https://github.com/androidseb25/iGotify-Notification-Assistent/tree/main?ref=homelab.casaursus.net
+
+version: "3.9"
+services:
+  gotify:
+    container_name: gotify
+    hostname: gotify
+    image: gotify/server
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - gotify-network
+    ports:
+      - "8680:80"
+    volumes:
+      - "/opt/data-docker/gotify/data:/app/data"
+    environment:
+      TZ: 'America/Toronto'
+      GOTIFY_DEFAULTUSER_PASS: 'strong-gotify-key'
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  igotify:
+    container_name: igotify
+    hostname: igotify
+    image: ghcr.io/androidseb25/igotify-notification-assist:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pull_policy: always
+    networks:
+      - gotify-network
+    ports:
+      - "8681:8080"
+    volumes:
+      - "/opt/data-docker/gotify/igotify:/app/data"
+    environment:
+      IGOTIFY_CLIENT_TOKEN: '<CLIENT_TOKEN>'  # create a client in gotify an add here the client token
+      GOTIFY_SERVER_URL: 'http://gotify'   # default container name from gotify server
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+networks:
+  gotify-network:
