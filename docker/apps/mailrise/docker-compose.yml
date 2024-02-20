@@ -8,6 +8,8 @@ services:
       - "8025:8025"
     volumes:
       - "/opt/data-docker/mailrise/mailrise.conf:/etc/mailrise.conf:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
       - "docker-volume-backup.stop-during-backup=true"
