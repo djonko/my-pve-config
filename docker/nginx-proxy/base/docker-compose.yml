@@ -32,7 +32,8 @@ services:
       DISABLE_IPV6: 'true'
       TZ: "America/Toronto"
     depends_on:
-      - db_nginx
+      db_nginx:
+        condition: service_healthy
     volumes:
       - "/opt/data-docker/nginx_proxy:/data"
       - "/opt/data-docker/nginx_letsencrypt:/etc/letsencrypt"
@@ -40,8 +41,7 @@ services:
       - MYSQL_PWD
 
   db_nginx:
-    build:
-      context: .
+    image: jc21/mariadb-aria:10.11.5
     container_name: db_nginx
     restart: always
     security_opt:
@@ -75,7 +75,8 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
     depends_on:
-      - db_nginx
+      db_nginx:
+        condition: service_healthy
     environment:
       ADMINER_DEFAULT_SERVER: db_nginx
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
