@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  mailrise-server:
+    image: "yoryan/mailrise"
+    container_name: "mailrise-server"
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+    volumes:
+      - "/opt/data-docker/mailrise/mailrise.conf:/etc/mailrise.conf:ro"
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
