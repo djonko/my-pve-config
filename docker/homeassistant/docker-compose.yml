@@ -10,7 +10,9 @@ services:
     volumes:
       - /home/bobdi/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
-      - /run/dbus:/run/dbus:ro
+      #- /run/dbus:/run/dbus:ro
     restart: unless-stopped
     privileged: true
     network_mode: host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
