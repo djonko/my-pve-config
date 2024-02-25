@@ -3,16 +3,14 @@ services:
   homeassistant:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
-    environment:
-      #- PUID=
-      #- PGID=
-      - TZ=America/Toronto
+    #environment:
+    #  - PUID=1000
+    #  - PGID=
     volumes:
-      - /home/bobdi/homeassistant:/config
-      - /etc/localtime:/etc/localtime:ro
+      - "/opt/data-docker/homeassistant/apps:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
       #- /run/dbus:/run/dbus:ro
     restart: unless-stopped
     privileged: true
     network_mode: host
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
