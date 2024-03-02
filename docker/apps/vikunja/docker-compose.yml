@@ -10,6 +10,8 @@ services:
   vikunja:
     image: "vikunja/vikunja"
     container_name: "vikunja"
+    env_file:
+      - /opt/data-etc/vikunja/config.env
     ports:
       - "7802:3456"
     volumes:
