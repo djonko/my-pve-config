@@ -62,7 +62,10 @@ services:
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning
     healthcheck:
-      test: "exit 1"
+      test: ["CMD","redis-cli","ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 1
     volumes:
       - "cache:/data"
       - "/etc/timezone:/etc/timezone:ro"
