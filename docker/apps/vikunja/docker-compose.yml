@@ -50,8 +50,8 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u vikunja --password=$(< /run/secrets/MYSQL_PWD)"]
-      interval: 30s
-      start_period: 40s
+      interval: 10s
+      start_period: 20s
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
