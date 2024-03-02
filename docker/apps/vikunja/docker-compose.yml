@@ -37,10 +37,10 @@ services:
       - DB_ROOT_PWD
       - CONFIG_SQLPWD
     environment:
-      MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
-      MYSQL_USER: "vikunja"
-      MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
-      MYSQL_DATABASE: "vikunja"
+      MARIADB_ROOT_PASSWORD_FILE: run/secrets/DB_ROOT_PWD
+      MARIADB_USER: "vikunja"
+      MARIADB_PASSWORD_FILE: run/secrets/MYSQL_PWD
+      MARIADB_DATABASE: "vikunja"
     security_opt:
       - no-new-privileges:true
     volumes:
