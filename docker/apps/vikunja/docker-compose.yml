@@ -49,7 +49,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "healthcheck.sh --defaults-file=/run/secrets/CONFIG_SQLPWD" --connect]
+      test: ["CMD-SHELL", "healthcheck.sh --defaults-file=/run/secrets/CONFIG_SQLPWD", --connect]
       interval: 10s
       start_period: 20s
     labels:
