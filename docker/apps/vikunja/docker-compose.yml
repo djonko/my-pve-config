@@ -61,6 +61,8 @@ services:
     container_name: "vikunja_redis"
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: "exit 1"
     volumes:
       - "cache:/data"
       - "/etc/timezone:/etc/timezone:ro"
