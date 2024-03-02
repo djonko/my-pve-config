@@ -1,0 +1,23 @@
+version: "3.9"
+secrets:
+  TYPESENSE_API_KEY_SECRET:
+    file: /opt/data-etc/typesense/typesense.secret.txt
+services:
+  typesense:
+    image: "typesense/typesense"
+    container_name: "typesense"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    ports:
+      - "7808:8108"
+    environment:
+      TYPESENSE_API_KEY: /run/secrets/TYPESENSE_API_KEY_SECRET
+    secrets:
+      - TYPESENSE_API_KEY_SECRET
+    volumes:
+      - "/opt/data-docker/typesense/data:/data"
+    command: '--data-dir /data --api-key=$(< /run/secrets/TYPESENSE_API_KEY_SECRET) --enable-cors'
