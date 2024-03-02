@@ -11,7 +11,7 @@ services:
     image: "vikunja/vikunja"
     container_name: "vikunja"
     ports:
-      - "8103:3456"
+      - "7802:3456"
     volumes:
       - "/opt/data-docker/vikunja/files:/app/vikunja/files"
       - "/etc/timezone:/etc/timezone:ro"
