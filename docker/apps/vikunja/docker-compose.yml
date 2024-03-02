@@ -15,6 +15,7 @@ services:
     ports:
       - "7802:3456"
     volumes:
+      - "/opt/data-docker/vikunja/app:/app/vikunja"
       - "/opt/data-docker/vikunja/app/files:/app/vikunja/files"
       - "/opt/data-docker/vikunja/logs:/app/vikunja"
       - "/etc/timezone:/etc/timezone:ro"
