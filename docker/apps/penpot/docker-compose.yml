@@ -48,7 +48,7 @@ services:
     ports:
       - "7809:6060"
     volumes:
-      - "/opt/data-docker/penpot/assets:/opt/data/assets"
+      - "/opt/data-docker/penpot/assets:/opt/data/assets:rw"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     labels:
