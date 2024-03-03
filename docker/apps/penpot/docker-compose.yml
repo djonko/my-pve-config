@@ -16,7 +16,7 @@ services:
     image: "penpotapp/frontend:latest"
     restart: unless-stopped
     ports:
-      - "7809:80"
+      - "7808:80"
     environment:
       - PENPOT_FLAGS=enable-registration enable-login-with-password
       - PENPOT_BACKEND_URI=http://penpot-backend:6060
