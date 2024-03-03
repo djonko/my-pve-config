@@ -19,6 +19,8 @@ services:
       - "7809:80"
     environment:
       - PENPOT_FLAGS=enable-registration enable-login-with-password
+      - PENPOT_BACKEND_URI=http://penpot-backend:6060
+      - PENPOT_EXPORTER_URI=http://penpot-exporter:6061
     volumes:
       - "/opt/data-docker/penpot/assets:/opt/data/assets"
       - "/etc/localtime:/etc/localtime:ro"
