@@ -15,12 +15,10 @@ services:
     container_name: penpot-frontend
     image: "penpotapp/frontend:latest"
     restart: unless-stopped
+    env_file:
+      - /opt/data-etc/penpot/config-frontend.env
     ports:
       - "7808:80"
-    environment:
-      - PENPOT_FLAGS=enable-registration enable-login-with-password
-      - PENPOT_BACKEND_URI=http://penpot-backend:6060
-      - PENPOT_EXPORTER_URI=http://penpot-exporter:6061
     volumes:
       - "/opt/data-docker/penpot/assets:/opt/data/assets"
       - "/etc/localtime:/etc/localtime:ro"
@@ -47,6 +45,8 @@ services:
       - penpot-redis
     networks:
       - penpot_net
+    ports:
+      - "7809:6060"
     volumes:
       - "/opt/data-docker/penpot/assets:/opt/data/assets"
       - "/etc/localtime:/etc/localtime:ro"
@@ -71,6 +71,7 @@ services:
     networks:
       - penpot_net
     environment:
+      - POSTGRES_INITDB_ARGS=--data-checksums
       - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PWD
       - POSTGRES_USER_FILE=/run/secrets/POSTGRES_USER
       - POSTGRES_DB_FILE=/run/secrets/POSTGRES_DB
@@ -109,3 +110,17 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
 
+  adminer:
+    image: adminer:latest
+    container_name: penpot_db_viewer
+    depends_on:
+      - penpot-postgres
+    environment:
+      ADMINER_DEFAULT_SERVER: penpot-postgres
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - penpot_net
+    ports:
+      - "6807:8080"
