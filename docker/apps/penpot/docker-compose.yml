@@ -36,6 +36,7 @@ services:
 
   penpot-backend:
     image: "penpotapp/backend:latest"
+    user: "${UID}:${GID}"
     container_name: penpot-backend
     restart: unless-stopped
     env_file:
