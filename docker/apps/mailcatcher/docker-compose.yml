@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  mailcatcher:
+    restart: on-failure
+    image: "dockage/mailcatcher"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    ports:
+      - "1080:1080"
+      - "1025:1025"

@@ -1,0 +1,111 @@
+version: "3.9"
+networks:
+  penpot_net:
+
+secrets:
+  POSTGRES_PWD:
+    file: /opt/data-etc/penpot/db_pwd.secret.txt
+  POSTGRES_USER:
+    file: /opt/data-etc/penpot/db_user.secret.txt
+  POSTGRES_DB:
+    file: /opt/data-etc/penpot/db_name.secret.txt
+
+services:
+  penpot-frontend:
+    container_name: penpot-frontend
+    image: "penpotapp/frontend:latest"
+    restart: unless-stopped
+    ports:
+      - "7809:80"
+    environment:
+      - PENPOT_FLAGS=enable-registration enable-login-with-password
+    volumes:
+      - "/opt/data-docker/penpot/assets:/opt/data/assets"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    depends_on:
+      - penpot-backend
+      - penpot-exporter
+    networks:
+      - penpot_net
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  penpot-backend:
+    image: "penpotapp/backend:latest"
+    container_name: penpot-backend
+    restart: unless-stopped
+    env_file:
+      - /opt/data-etc/penpot/config.env
+    depends_on:
+      - penpot-postgres
+      - penpot-redis
+    networks:
+      - penpot_net
+    volumes:
+      - "/opt/data-docker/penpot/assets:/opt/data/assets"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  penpot-postgres:
+    image: postgres:16.2
+    container_name: penpot-postgres
+    volumes:
+      - "/opt/data-docker/penpot/postgresql:/var/lib/postgresql/data"
+      - "/opt/data-docker/penpot/db-backups:/var/lib/postgresql/penpot-backups"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - penpot_net
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PWD
+      - POSTGRES_USER_FILE=/run/secrets/POSTGRES_USER
+      - POSTGRES_DB_FILE=/run/secrets/POSTGRES_DB
+    secrets:
+      - POSTGRES_PWD
+      - POSTGRES_USER
+      - POSTGRES_DB
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $(< /run/secrets/POSTGRES_USER) $(< /run/secrets/POSTGRES_DB) > /var/lib/postgresql/penpot-backups/bck_db_penpot$(date +%Y%m%d-%H%M).sql'
+
+  penpot-exporter:
+    image: "penpotapp/exporter:latest"
+    container_name: penpot-exporter
+    restart: unless-stopped
+    networks:
+      - penpot_net
+    environment:
+      - PENPOT_PUBLIC_URI=http://penpot-frontend
+      - PENPOT_REDIS_URI=redis://penpot-redis/0
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  penpot-redis:
+    image: "redis:latest"
+    container_name: penpot-redis
+    restart: unless-stopped
+    networks:
+      - penpot_net
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+
