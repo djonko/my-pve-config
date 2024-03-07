@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 secrets:
   DB_ROOT_PWD:
     file: /opt/data-etc/nginx/db_root_pwd.secret.txt
