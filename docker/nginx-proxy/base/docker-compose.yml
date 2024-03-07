@@ -13,6 +13,8 @@ services:
     container_name: nginx_proxy
     restart: unless-stopped
     image: 'jc21/nginx-proxy-manager:latest'
+    env_file:
+      - "/opt/data-etc/nginx/run.env"
     security_opt:
       - no-new-privileges:true
     labels:
@@ -43,7 +45,9 @@ services:
   db_nginx:
     image: jc21/mariadb-aria:10.11.5
     container_name: db_nginx
-    restart: always
+    restart: unless-stopped
+    env_file:
+      - "/opt/data-etc/nginx/run.env"
     security_opt:
       - no-new-privileges:true
     labels:
