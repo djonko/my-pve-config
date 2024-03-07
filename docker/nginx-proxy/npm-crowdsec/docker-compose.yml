@@ -27,7 +27,7 @@ services:
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
       TZ: "America/Toronto"
     volumes:
-      - "/opt/data-docker/nginx_crds/mysql:/var/lib/mysql"
+      - "/opt/data-docker/nginx_crds/mysql_nginx:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/data-docker/nginx_crds/dump_dir:/var/lib/allsqldump"
