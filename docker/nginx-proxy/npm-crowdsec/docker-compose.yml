@@ -80,6 +80,8 @@ services:
     image: "crowdsecurity/crowdsec:latest"
     container_name: crowdsec
     expose:
+      - "8080"
+    ports:
       - "8300:8080"
     environment:
       PGID: "1000"
