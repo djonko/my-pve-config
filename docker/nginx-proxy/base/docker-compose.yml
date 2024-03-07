@@ -34,8 +34,7 @@ services:
       DISABLE_IPV6: 'true'
       TZ: "America/Toronto"
     depends_on:
-      db_nginx:
-        condition: service_healthy
+      - db_nginx
     volumes:
       - "/opt/data-docker/nginx_proxy:/data"
       - "/opt/data-docker/nginx_letsencrypt:/etc/letsencrypt"
@@ -79,8 +78,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
     depends_on:
-      db_nginx:
-        condition: service_healthy
+      - db_nginx
     environment:
       ADMINER_DEFAULT_SERVER: db_nginx
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
