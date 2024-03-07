@@ -51,15 +51,15 @@ services:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     ports:
-      - '8200:80'
-      - '8201:81'
-      - '9200:443'
-      - '443:443'
+      - '8200:8080'
+      - '8201:8181'
+      - '9200:4443'
+      - '443:4443'
     environment:
       DB_MYSQL_HOST: "db_nginx_crds"
       DB_MYSQL_PORT: "3306"
       DB_MYSQL_USER: "${NG_USER}"
-      DB_MYSQL_PASSWORD__FILE: "/run/secrets/MYSQL_PWD"
+      DB_MYSQL_PASSWORD: "${MYSQL_PWD}"
       DB_MYSQL_NAME: "${NG_DB}"
       #DISABLE_IPV6: 'true'
       DISABLE_IPV6: "1"
