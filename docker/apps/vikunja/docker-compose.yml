@@ -1,0 +1,84 @@
+version: "3.9"
+secrets:
+  DB_ROOT_PWD:
+    file: /opt/data-etc/vikunja/db_root_pwd.secret.txt
+  MYSQL_PWD:
+    file: /opt/data-etc/vikunja/db_pwd.secret.txt
+  CONFIG_SQLPWD:
+    file: /opt/data-etc/vikunja/mysql.sqlpwd
+services:
+  vikunja:
+    image: "vikunja/vikunja"
+    container_name: "vikunja"
+    env_file:
+      - /opt/data-etc/vikunja/config.env
+    ports:
+      - "7802:3456"
+    volumes:
+      #- "/opt/data-docker/vikunja/app:/app/vikunja"
+      - "/opt/data-docker/vikunja/app:/app/vikunja/files"
+      #- "/opt/data-docker/vikunja/logs:/app/vikunja"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+  db:
+    image: "mariadb:11"
+    container_name: "vikunja_db"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    secrets:
+      - MYSQL_PWD
+      - DB_ROOT_PWD
+      - CONFIG_SQLPWD
+    environment:
+      MARIADB_ROOT_PASSWORD_FILE: run/secrets/DB_ROOT_PWD
+      MARIADB_USER: "vikunja"
+      MARIADB_PASSWORD_FILE: run/secrets/MYSQL_PWD
+      MARIADB_DATABASE: "vikunja"
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - "/opt/data-docker/vikunja/mysql:/var/lib/mysql"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --defaults-file=/run/secrets/CONFIG_SQLPWD", --connect]
+      interval: 10s
+      start_period: 20s
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  redis:
+    image: "redis:alpine"
+    container_name: "vikunja_redis"
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD","redis-cli","ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 1
+    volumes:
+      - "cache:/data"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - '6379'
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+volumes:
+  cache:
+    driver: local
