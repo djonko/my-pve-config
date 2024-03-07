@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 secrets:
   DB_ROOT_PWD:
     file: /opt/data-etc/nginx/db_root_pwd.secret.txt
@@ -8,16 +8,18 @@ secrets:
     file: /opt/data-etc/nginx/mysql.sqlpwd
 
 services:
-  db_nginx:
+  db_nginx_crds:
     image: jc21/mariadb-aria:10.11.5
-    container_name: db_nginx
+    container_name: db_nginx_crds
     restart: always
+    env_file:
+      - "/opt/data-etc/nginx/config.nginx.env"
     security_opt:
       - no-new-privileges:true
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-      - docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/allsqldump/backup-nginx$(date +\%Y\%m\%d).sql'
+      - docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --defaults-extra-file=/run/secrets/CONFIG_SQLPWD --all-databases > /var/lib/allsqldump/backup-nginxcrds$(date +\%Y\%m\%d).sql'
     environment:
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
       MYSQL_DATABASE: "${NG_DB}"
@@ -25,24 +27,26 @@ services:
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
       TZ: "America/Toronto"
     volumes:
-      - "/opt/data-docker/mysql_nginx:/var/lib/mysql"
+      - "/opt/data-docker/nginx_crds/mysql:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/data-docker/dump_dir:/var/lib/allsqldump"
+      - "/opt/data-docker/nginx_crds/dump_dir:/var/lib/allsqldump"
     secrets:
       - MYSQL_PWD
       - DB_ROOT_PWD
       - CONFIG_SQLPWD
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.30.0.1
+        ipv4_address: 172.30.10.1
 
-  nginx_proxy:
-    container_name: nginx_proxy
+  nginx_proxy_crds:
+    container_name: nginx_proxy_crds
     restart: unless-stopped
     image: "lepresidente/nginx-proxy-manager:latest"
     security_opt:
       - no-new-privileges:true
+    env_file:
+      - "/opt/data-etc/nginx/config.nginx.env"
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
@@ -52,7 +56,7 @@ services:
       - '9200:443'
       - '443:443'
     environment:
-      DB_MYSQL_HOST: "db_nginx"
+      DB_MYSQL_HOST: "db_nginx_crds"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "${NG_USER}"
       DB_MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
@@ -61,17 +65,17 @@ services:
       DISABLE_IPV6: "1"
       TZ: "America/Toronto"
     depends_on:
-      db_nginx:
+      db_nginx_crds:
         condition: service_healthy
     volumes:
-      - "/opt/data-docker/nginx_proxy:/data"
-      - "/opt/data-docker/nginx_letsencrypt:/etc/letsencrypt"
-      - "/opt/data-docker/nginx_crowdsec/templates:/templates"
+      - "/opt/data-docker/nginx_crds/nginx_proxy:/data"
+      - "/opt/data-docker/nginx_crds/nginx_letsencrypt:/etc/letsencrypt"
+      - "/opt/data-docker/nginx_crds/nginx_crowdsec/templates:/templates"
     secrets:
       - MYSQL_PWD
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.30.0.2
+        ipv4_address: 172.30.10.2
 
   crowdsec:
     image: "crowdsecurity/crowdsec:latest"
@@ -87,26 +91,26 @@ services:
       - "/opt/data-docker/crowdsec/data:/var/lib/crowdsec/data"
       - "/opt/data-docker/crowdsec/config:/etc/crowdsec"
       - "/var/log/auth.log:/var/log/auth.log:ro"
-      - "/opt/data-docker/nginx_proxy/logs:/var/log/nginx"
+      - "/opt/data-docker/nginx_crds/nginx_proxy/logs:/var/log/nginx"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     restart: unless-stopped
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.30.0.3
+        ipv4_address: 172.30.10.3
 
-  adminer:
+  adminer_crds:
     image: adminer:latest
-    container_name: adminer
+    container_name: adminer_crds
     security_opt:
       - no-new-privileges:true
     labels:
       - "docker-volume-backup.stop-during-backup=true"
     depends_on:
-      db_nginx:
+      db_nginx_crds:
         condition: service_healthy
     environment:
-      ADMINER_DEFAULT_SERVER: db_nginx
+      ADMINER_DEFAULT_SERVER: db_nginx_crds
       MYSQL_ROOT_PASSWORD__FILE: run/secrets/DB_ROOT_PWD
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
@@ -118,11 +122,11 @@ services:
       - "8100:8080"
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.30.0.4
+        ipv4_address: 172.30.10.4
 
 networks:
   crowdsec_proxy:
     ipam:
       driver: default
       config:
-        - subnet: 172.30.0.0/24
+        - subnet: 172.30.10.0/24
