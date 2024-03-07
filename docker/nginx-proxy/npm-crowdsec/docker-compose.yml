@@ -37,7 +37,7 @@ services:
       - CONFIG_SQLPWD
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.10.10.1
+        ipv4_address: 172.10.10.2
 
   nginx_proxy_crds:
     container_name: nginx_proxy_crds
@@ -74,7 +74,7 @@ services:
       - MYSQL_PWD
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.10.10.2
+        ipv4_address: 172.10.10.3
 
   crowdsec:
     image: "crowdsecurity/crowdsec:latest"
@@ -96,7 +96,7 @@ services:
     restart: unless-stopped
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.10.10.3
+        ipv4_address: 172.10.10.4
 
   adminer_crds:
     image: adminer:latest
@@ -120,7 +120,7 @@ services:
       - "8100:8080"
     networks:
       crowdsec_proxy:
-        ipv4_address: 172.10.10.4
+        ipv4_address: 172.10.10.5
 
 networks:
   crowdsec_proxy:
