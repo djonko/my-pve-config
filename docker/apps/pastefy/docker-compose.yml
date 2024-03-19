@@ -13,6 +13,7 @@ services:
   db_pastefy:
     container_name: db_pastefy
     image: "linuxserver/mariadb:10.11.6"
+    restart: unless-stopped
     volumes:
       - "/opt/data-docker/pastefy/mysql:/config"
       - "/opt/data-docker/pastefy/backup_mysql:/var/lib/allsqldump/backup-pastefy"
@@ -42,6 +43,7 @@ services:
       - no-new-privileges:true
     image: "interaapps/pastefy:latest"
     container_name: pastefy
+    restart: unless-stopped
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
