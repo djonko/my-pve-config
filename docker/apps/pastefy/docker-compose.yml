@@ -28,8 +28,6 @@ services:
       - MYSQL_USER
       - MYSQL_DATABASE
       - MYSQL_ROOT_PASSWORD
-    ports:
-      - "3306:3306"
   pastefy:
     depends_on:
       - db_pastefy
