@@ -59,6 +59,19 @@ services:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
+  adminer:
+    image: adminer:latest
+    container_name: vikunjadb_viewer
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: vikunja_db
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "6808:8080"
+
   redis:
     image: "redis:alpine"
     container_name: "vikunja_redis"
