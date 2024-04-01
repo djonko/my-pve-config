@@ -3,3 +3,6 @@
 
 
 sudo localectl set-locale LANG=en_US.UTF-8
+
+sudo dpkg-reconfigure tzdata
+sudo apt install qemu-guest-agent
