@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  db_linkwarden:
+    image: postgres:16-alpine
+    container_name: db_linkwarden
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - /opt/data-etc/linkwarden/config.env
+    restart: unless-stopped
+    volumes:
+      - '/opt/data-docker/linkwarden/postgresql:/var/lib/postgresql/data'
+      - '/opt/data-docker/linkwarden/db-backups:/var/lib/postgresql/db-backups'
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} > /var/lib/postgresql/db-backups/bck_db_linkwarden$(date +%Y%m%d-%H%M).sql'
+
+  linkwarden:
+    env_file:
+      - /opt/data-etc/linkwarden/config.env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_PASSWORD}:${POSTGRES_PASSWORD}@db_linkwarden:5432/${POSTGRES_DB}
+    restart: unless-stopped
+    image: ghcr.io/linkwarden/linkwarden:latest
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "7811:3000"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    volumes:
+      - "/opt/data-docker/linkwarden/linkwarden_data:/data/data"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    depends_on:
+      - db_linkwarden
