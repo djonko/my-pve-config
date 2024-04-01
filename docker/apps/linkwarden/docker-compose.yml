@@ -22,8 +22,6 @@ services:
     container_name: "linkwarden"
     env_file:
       - /opt/data-etc/linkwarden/config.env
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_PASSWORD}:${POSTGRES_PASSWORD}@db_linkwarden:5432/${POSTGRES_DB}
     restart: unless-stopped
     image: ghcr.io/linkwarden/linkwarden:latest
     security_opt:
