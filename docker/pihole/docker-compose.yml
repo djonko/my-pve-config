@@ -3,6 +3,8 @@
 # sudo systemctl disable systemd-resolved.service
 # sudo systemctl stop systemd-resolved.service
 # sudo sed --in-place "s/^#DNSStubListener=yes$/DNSStubListener=no/g" /etc/systemd/resolved.conf
+#https://pimylifeup.com/pi-hole-docker/
+
 version: "3.9"
 secrets:
   WEB_PASSWORD_SECRET:
@@ -19,7 +21,6 @@ services:
       - "67:67/udp"
       - "8200:80/tcp" # this is for your dashboard
     environment:
-      - TZ=America/Montreal # change this to your timezone
       - WEBPASSWORD_FILE=/run/secrets/WEB_PASSWORD_SECRET
       #- DNSSEC=true
       - DNS_BOGUS_PRIV=true
@@ -31,6 +32,8 @@ services:
       - '/opt/data-docker/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
       - '/opt/data-docker/pihole/etc/resolv.conf:/etc/resolv.conf'
       - '/opt/data-docker/pihole/var:/var/log/pihole'
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:false
