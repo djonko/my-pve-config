@@ -1,0 +1,85 @@
+version: "3.9"
+
+secrets:
+  POSTGRES_PWD:
+    file: /opt/data-etc/gitea/db_pwd.secret.txt
+  POSTGRES_USER:
+    file: /opt/data-etc/gitea/db_user.secret.txt
+  POSTGRES_DB:
+    file: /opt/data-etc/gitea/db_name.secret.txt
+
+networks:
+  gitea-v2-net:
+    external: false
+
+services:
+  db:
+    image: postgres:16
+    container_name: db-gitea
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PWD
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
+    secrets:
+      - POSTGRES_PWD
+      - POSTGRES_USER
+      - POSTGRES_DB
+    networks:
+      - gitea-v2-net
+    volumes:
+      - "/opt/data-docker/gitea/postgres:/var/lib/postgresql/data"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+
+  gitea-server:
+    image: gitea/gitea:latest
+    container_name: gitea
+    restart: unless-stopped
+    depends_on:
+      - db
+    env_file:
+      - /opt/data-etc/gitea/config.env
+    environment:
+      - USER_UID=1001
+      - USER_GID=1001
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db-gitea:5432
+      - GITEA__database__NAME=${POSTGRES_DB}
+      - GITEA__database__USER=${POSTGRES_USER}
+      - GITEA__database__PASSWD=${POSTGRES_PASSWORD}
+      - GITEA__mailer__ENABLED=true
+      - GITEA__mailer__FROM=${GITEA__mailer__FROM}
+      - GITEA__mailer__PROTOCOL=smtp
+      - GITEA__mailer__TLS=false
+      - GITEA__mailer__SMTP_ADDR=${GITEA__mailer__SMTP_ADDR}
+      - GITEA__mailer__SMTP_PORT=${GITEA__mailer__SMTP_PORT}
+      - GITEA__mailer__HOST=${GITEA__mailer__HOST}
+      - GITEA__mailer__USER=${GITEA__mailer__USER}
+      - GITEA__mailer__PASSWD="${GITEA__mailer__PASSWD}"
+      - GITEA__service__ENABLE_NOTIFY_MAIL=true
+      - GITEA__service__REGISTER_EMAIL_CONFIRM=true
+      - GITEA__service__NO_REPLY_ADDRESS=no-reply
+      - GITEA__server__LFS_START_SERVER=true
+      #- GITEA__indexer__REPO_INDEXER_ENABLED=true
+    networks:
+      - gitea-v2-net
+    volumes:
+      - "/opt/data-docker/gitea/gitea-data:/data"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "8100:3000"
+      - "2222:22"
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db-gitea
+    networks:
+      - gitea-v2-net
+    restart: unless-stopped
+    ports:
+      - "8102:8080"
