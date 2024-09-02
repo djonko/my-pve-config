@@ -1,4 +1,4 @@
-version: "3.8"
+name: nginx_proxy
 secrets:
   DB_ROOT_PWD:
     file: /opt/data-etc/nginx/db_root_pwd.secret.txt
