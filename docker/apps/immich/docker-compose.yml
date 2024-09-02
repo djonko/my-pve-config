@@ -10,6 +10,9 @@ services:
       - ${EXTERNAL_PATH}:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    environment:
+      REDIS_HOSTNAME: immich_redis
+      REDIS_PORT: 6379
     env_file:
       - /opt/data-docker/immich/config/run.env
     ports:
@@ -31,6 +34,8 @@ services:
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     environment:
       TZ: "America/Toronto"
+      REDIS_HOSTNAME: immich_redis
+      REDIS_PORT: 6379
     volumes:
       - /opt/data-docker/immich/machine-learning:/cache
       - /etc/timezone:/etc/timezone:ro
@@ -75,5 +80,3 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${DB_USERNAME} ${DB_DATABASE_NAME} > /db-backups/bck_db_immich$(date +%Y%m%d-%H%M).sql'
-volumes:
-  model-cache:
