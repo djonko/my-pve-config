@@ -1,17 +1,19 @@
+version: "3.9"
 name: immich
 services:
   immich-server:
     container_name: immich_server
-    devices:
-      - /dev/dri:/dev/dri
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:release
+    command: [ "start.sh", "immich" ]
+    environment:
+      TZ: "America/Toronto"
+    env_file:
+      - /opt/data-docker/immich/config/run.env
     volumes:
       - /opt/data-docker/immich/upload:/usr/src/app/upload
       - ${EXTERNAL_PATH}:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - /opt/data-docker/immich/config/run.env
     ports:
       - "8101:3001"
     depends_on:
@@ -20,15 +22,39 @@ services:
     restart: always
     security_opt:
       - no-new-privileges:true
-    healthcheck:
-      disable: false
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  immich-microservices:
+    container_name: immich_microservices
+    image: ghcr.io/immich-app/immich-server:release
+    environment:
+      TZ: "America/Toronto"
+    extends:
+       file: /opt/data-docker/immich/config/hwaccel.yml
+       service: hwaccel
+    command: [ "start.sh", "microservices" ]
+    env_file:
+      - /opt/data-docker/immich/config/run.env
+    volumes:
+      - /opt/data-docker/immich/upload:/usr/src/app/upload
+      - ${EXTERNAL_PATH}:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - redis
+      - database
+    restart: always
+    security_opt:
+      - no-new-privileges:true
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   immich-machine-learning:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:release
     environment:
       TZ: "America/Toronto"
     volumes:
@@ -38,42 +64,40 @@ services:
     env_file:
       - /opt/data-docker/immich/config/run.env
     restart: always
-    healthcheck:
-      disable: false
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   redis:
     container_name: immich_redis
-    image: docker.io/redis:6.2-alpine@sha256:e3b17ba9479deec4b7d1eeec1548a253acc5374d68d3b27937fcfe4df8d18c7e
-    healthcheck:
-      test: redis-cli ping || exit 1
+    image: redis:alpine
     restart: always
     security_opt:
       - no-new-privileges:true
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
+
   database:
     container_name: immich_postgres
-    image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    security_opt:
+      - no-new-privileges:true
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
-      POSTGRES_INITDB_ARGS: '--data-checksums'
+      TZ: "America/Toronto"
     volumes:
       - /opt/data-docker/immich/pgvecto-rs:/var/lib/postgresql/data
       - /opt/data-docker/immich/db-backups:/db-backups
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    healthcheck:
-      test: pg_isready --dbname='${DB_DATABASE_NAME}' --username='${DB_USERNAME}' || exit 1; Chksum="$$(psql --dbname='${DB_DATABASE_NAME}' --username='${DB_USERNAME}' --tuples-only --no-align --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')"; echo "checksum failure count is $$Chksum"; [ "$$Chksum" = '0' ] || exit 1
-      interval: 5m
-      start_interval: 30s
-      start_period: 5m
-    command: ["postgres", "-c", "shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
     restart: always
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U ${DB_USERNAME} ${DB_DATABASE_NAME} > /db-backups/bck_db_immich$(date +%Y%m%d-%H%M).sql'
-volumes:
-  model-cache:
+
+
