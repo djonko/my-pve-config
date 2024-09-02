@@ -42,7 +42,7 @@ services:
 
   nginx_proxy_crds:
     container_name: nginx_proxy_crds
-    restart: unless-stopped
+    restart: always
     image: "lepresidente/nginx-proxy-manager:latest"
     security_opt:
       - no-new-privileges:true
@@ -96,7 +96,7 @@ services:
       - "/opt/data-docker/nginx_crds/nginx_proxy/log:/var/log/nginx"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-    restart: unless-stopped
+    restart: always
     networks:
       crowdsec_proxy:
         ipv4_address: 172.10.10.4
