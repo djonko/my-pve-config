@@ -25,6 +25,7 @@ services:
       MYSQL_DATABASE: "${NG_DB}"
       MYSQL_USER: "${NG_USER}"
       MYSQL_PASSWORD__FILE: run/secrets/MYSQL_PWD
+      MARIADB_AUTO_UPGRADE: 1
       TZ: "America/Toronto"
     volumes:
       - "/opt/data-docker/nginx_crds/mysql_nginx:/var/lib/mysql"
