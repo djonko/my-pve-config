@@ -1,4 +1,3 @@
-name: "gitea"
 secrets:
   POSTGRES_PWD:
     file: /opt/data-etc/gitea/db_pwd.secret.txt
