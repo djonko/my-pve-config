@@ -62,7 +62,6 @@ services:
       - GITEA__mailer__TLS=false
       - GITEA__mailer__SMTP_ADDR=${GITEA__mailer__SMTP_ADDR}
       - GITEA__mailer__SMTP_PORT=${GITEA__mailer__SMTP_PORT}
-      - GITEA__mailer__HOST=${GITEA__mailer__HOST}
       - GITEA__mailer__USER=${GITEA__mailer__USER}
       - GITEA__mailer__PASSWD="${GITEA__mailer__PASSWD}"
       - GITEA__service__ENABLE_NOTIFY_MAIL=true
