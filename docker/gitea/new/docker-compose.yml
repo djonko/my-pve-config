@@ -50,6 +50,7 @@ services:
     environment:
       - USER_UID=1000
       - USER_GID=1000
+      - USER=${GITEA_RUNNER_USER}
       - GITEA__database__DB_TYPE=postgres
       - GITEA__database__HOST=db-gitea:5432
       - GITEA__database__NAME=${POSTGRES_DB}
