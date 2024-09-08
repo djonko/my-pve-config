@@ -31,7 +31,7 @@ services:
       - gitea-v2-net
     volumes:
       - "/opt/data-docker/gitea/postgres:/var/lib/postgresql/data"
-      - "/opt/data-docker/gitea/postgres/db-backups:/var/lib/postgresql/db-backups"
+      #- "/opt/data-docker/gitea/postgres/db-backups:/var/lib/postgresql/db-backups"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
