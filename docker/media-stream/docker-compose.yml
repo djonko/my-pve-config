@@ -115,7 +115,7 @@ services:
     networks:
       - media-net
   whisparr:
-    image: cr.hotio.dev/hotio/whisparr
+    image: ghcr.io/hotio/whisparr
     container_name: whisparr
     restart: unless-stopped
     labels:
@@ -134,7 +134,7 @@ services:
     networks:
       - media-net
   readarr:
-    image: cr.hotio.dev/hotio/readarr
+    image: ghcr.io/hotio/readarr
     container_name: readarr
     restart: unless-stopped
     labels:
