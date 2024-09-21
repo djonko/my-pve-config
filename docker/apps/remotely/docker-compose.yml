@@ -1,0 +1,76 @@
+name: remotely
+networks:
+  remotely-network:
+    external: false
+
+services:
+  remotely:
+    image: immybot/remotely:latest
+    container_name: remotely
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /opt/data-docker/remotely/app:/app/AppData
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    networks:
+      - remotely-network
+    environment:
+      # ASPNETCORE environment variables should *not* be changed.
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=5000
+
+      # Other ASP.NET Core configurations can be overridden here, such as Logging.
+      # See https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-8.0
+      - Serilog__MinimumLevel__Override__Microsoft.AspNetCore=Warning
+      - Serilog__MinimumLevel__Override__System=Warning
+
+      # Values for DbProvider are SQLite, SQLServer, and PostgreSQL.
+      - Remotely_ApplicationOptions__DbProvider=PostgreSQL
+      # The Docker gateway will be used in Forwarded Headers, which is necessary to
+      # to correctly determine request hostname and scheme within the app.  If you change
+      # the network config, you must update this value as well.
+      - Remotely_ApplicationOptions__DockerGateway=${RM_DOCKER_GATEWAY}
+      # This path shouldn't be changed.  It points to the Docker volume.
+      #- Remotely_ConnectionStrings__SQLite=Data Source=/app/AppData/Remotely.db
+      # If using SQL Server, change the connection string to point to your SQL Server instance.
+      #- Remotely_ConnectionStrings__SQLServer=Server=(localdb)\\mssqllocaldb;Database=Remotely-Server-53bc9b9d-9d6a-45d4-8429-2a2761773502;Trusted_Connection=True;MultipleActiveResultSets=true
+      # If using PostgreSQL, change the connection string to point to your PostgreSQL instance.
+      - Remotely_ConnectionStrings__PostgreSQL=Host=db-remotely;Database=${RM_DB_NAME};Username=${RM_DB_USER};Password=${RM_DB_PWD};
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+  db-remotely:
+    image: bitnami/postgresql:alpine
+    container_name: db-remotely
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_USER: ${RM_DB_USER}
+      POSTGRES_PASSWORD: ${RM_DB_PWD}
+      POSTGRES_DB: ${RM_DB_NAME}
+      TZ: "America/Toronto"
+    networks:
+      - remotely-network
+    volumes:
+      - "/opt/data-docker/remotely/postgres:/var/lib/postgresql/data"
+      - "/opt/data-docker/remotely/db-backups:/opt/db-backups"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $RM_DB_USER $RM_DB_NAME > /opt/db-backups/bck_db_remotely$(date +%Y%m%d-%H%M).sql'
+
+  adminer:
+    image: adminer:latest
+    container_name: remotely_adminer
+    depends_on:
+      - db-remotely
+    environment:
+      ADMINER_DEFAULT_SERVER: db-remotely
+    networks:
+      - remotely-network
+    restart: unless-stopped
+    ports:
+      - "8100:8080"
