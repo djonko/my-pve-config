@@ -1,7 +1,7 @@
 name: mailcatcher
 services:
   mailcatcher:
-    restart: on-failure
+    restart: always
     image: "dockage/mailcatcher"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
