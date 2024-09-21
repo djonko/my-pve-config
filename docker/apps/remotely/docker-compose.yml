@@ -41,7 +41,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
   db-remotely:
-    image: bitnami/postgresql:alpine
+    image: bitnami/postgresql:15
     container_name: db-remotely
     restart: unless-stopped
     security_opt:
