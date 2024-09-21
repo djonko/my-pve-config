@@ -73,4 +73,4 @@ services:
       - remotely-network
     restart: unless-stopped
     ports:
-      - "8101:8080"
+      - "8100:8080"
