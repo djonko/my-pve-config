@@ -1,0 +1,39 @@
+services:
+  wdpressdb:
+    image: mariadb:latest
+    command: '--default-authentication-plugin=mysql_native_password'
+    container_name: wdpressdb
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /opt/data-docker/wordpress/db:/var/lib/mysql
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: always
+    env_file:
+      - /opt/data-etc/wordpress/config.env
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+    expose:
+      - 3306
+    ports:
+      - 3306
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    volumes:
+      - /opt/data-docker/wordpress/app:/var/www/html
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+    ports:
+      - 8101:80
+    restart: unless-stopped
+    env_file:
+      - /opt/data-etc/wordpress/config.env
+    environment:
+      - WORDPRESS_DB_HOST=wdpressdb
+      - WORDPRESS_DB_USER=${MYSQL_USER}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
