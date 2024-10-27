@@ -35,7 +35,6 @@ echo "Removing old kernels..."
 sudo dpkg --list | grep linux-image | awk '{print $2}' | grep -v $(uname -r) | while read -r line; do
   sudo apt purge -y "$line"
 done
-sudo update-grub
 
 # 8. Clear Cache and Temporary Files
 echo "Clearing cache and temporary files..."
