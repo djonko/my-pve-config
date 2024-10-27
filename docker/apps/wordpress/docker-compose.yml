@@ -20,6 +20,7 @@ services:
       - 3306
   wordpress:
     image: wordpress:latest
+    container_name: wordpress
     volumes:
       - /opt/data-docker/wordpress/app:/var/www/html
       - "/etc/timezone:/etc/timezone:ro"
@@ -27,8 +28,10 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
     ports:
-      - 80:80
-    restart: always
+      - 8101:80
+    restart: unless-stopped
+    env_file:
+      - /opt/data-etc/wordpress/config.env
     environment:
       - WORDPRESS_DB_HOST=wdpressdb
       - WORDPRESS_DB_USER=${MYSQL_USER}
