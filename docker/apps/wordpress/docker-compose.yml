@@ -6,7 +6,7 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - /opt/data-docker/wordpress/db:/var/lib/mysql
+      - /opt/data-docker/wordpress/db:/var/lib/mysql:delegated
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     restart: always
@@ -22,10 +22,11 @@ services:
     image: wordpress:latest
     container_name: wordpress
     volumes:
-      - type: bind
-        source: /opt/data-docker/wordpress/app
-        target: /var/www/html
-        consistency: cached
+      - /opt/data-docker/wordpress/app:/var/www/html:delegated
+      #- type: bind
+      #  source: /opt/data-docker/wordpress/app
+      #  target: /var/www/html
+      #  consistency: cached
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
