@@ -23,6 +23,10 @@ services:
       - DATABASE_URL=postgresql://${PLK_DB_USER}:${PLK_DB_PWD}@db-planka:5432/${PLK_DB_NAME}
       - SECRET_KEY=${PLK_SECRET_KEY}
       - TOKEN_EXPIRES_IN=365
+      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL}
+      - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD}
+      - DEFAULT_ADMIN_NAME=${DEFAULT_ADMIN_NAME}
+      - DEFAULT_ADMIN_USERNAME=${DEFAULT_ADMIN_USERNAME}
     # Email Notifications (https://nodemailer.com/smtp/)
     # - SMTP_HOST=
     # - SMTP_PORT=587
