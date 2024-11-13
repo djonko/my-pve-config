@@ -27,15 +27,14 @@ services:
       - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD}
       - DEFAULT_ADMIN_NAME=${DEFAULT_ADMIN_NAME}
       - DEFAULT_ADMIN_USERNAME=${DEFAULT_ADMIN_USERNAME}
-    # Email Notifications (https://nodemailer.com/smtp/)
-    # - SMTP_HOST=
-    # - SMTP_PORT=587
-    # - SMTP_NAME=
-    # - SMTP_SECURE=true
-    # - SMTP_USER=
-    # - SMTP_PASSWORD=
-    # - SMTP_FROM="Demo Demo" <demo@demo.demo>
-    # - SMTP_TLS_REJECT_UNAUTHORIZED=false
+      - SMTP_HOST=$SMTP_HOST
+      - SMTP_PORT=$SMTP_PORT
+      - SMTP_NAME=$SMTP_NAME
+      - SMTP_SECURE=$SMTP_SECURE
+      - SMTP_USER=$SMTP_USER
+      - SMTP_PASSWORD=$SMTP_PASSWORD
+      - SMTP_FROM=$SMTP_FROM
+      - SMTP_TLS_REJECT_UNAUTHORIZED=$SMTP_TLS_REJECT_UNAUTHORIZED
     depends_on:
       db-planka:
         condition: service_healthy
