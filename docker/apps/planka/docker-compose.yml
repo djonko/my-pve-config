@@ -38,7 +38,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
   db-planka:
-    image: bitnami/postgresql:15
+    image: bitnami/postgresql:17
     container_name: db-planka
     restart: unless-stopped
     security_opt:
@@ -47,6 +47,7 @@ services:
       POSTGRES_USER: ${PLK_DB_USER}
       POSTGRES_PASSWORD: ${PLK_DB_PWD}
       POSTGRES_DB: ${PLK_DB_NAME}
+      POSTGRESQL_REPLICATION_USE_PASSFILE: false
       TZ: "America/Toronto"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${PLK_DB_USER} -d ${PLK_DB_NAME}" ]
