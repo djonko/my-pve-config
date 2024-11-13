@@ -43,7 +43,7 @@ services:
   nginx_proxy_crds:
     container_name: nginx_proxy_crds
     restart: always
-    image: "lepresidente/nginx-proxy-manager:latest"
+    image: "lepresidente/nginx-proxy-manager:v24.07.1"
     security_opt:
       - no-new-privileges:true
     env_file:
