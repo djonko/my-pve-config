@@ -1,0 +1,78 @@
+name: planka
+networks:
+  planka-network:
+    external: false
+
+services:
+  planka:
+    image: ghcr.io/plankanban/planka:latest
+    container_name: planka
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /opt/data-docker/planka/app/user-avatars:/app/public/user-avatars
+      - /opt/data-docker/planka/app/project-background-images:/app/public/project-background-images
+      - /opt/data-docker/planka/app/attachments:/app/private/attachments
+    restart: unless-stopped
+    ports:
+      - "7812:1337"
+    networks:
+      - planka-network
+    environment:
+      - BASE_URL=${PLK_BASE_URL}
+      - DATABASE_URL=postgresql://${PLK_DB_USER}:${PLK_DB_PWD}@db-planka:5432/${PLK_DB_NAME}
+      - SECRET_KEY=${PLK_SECRET_KEY}
+      - TOKEN_EXPIRES_IN=365
+    # Email Notifications (https://nodemailer.com/smtp/)
+    # - SMTP_HOST=
+    # - SMTP_PORT=587
+    # - SMTP_NAME=
+    # - SMTP_SECURE=true
+    # - SMTP_USER=
+    # - SMTP_PASSWORD=
+    # - SMTP_FROM="Demo Demo" <demo@demo.demo>
+    # - SMTP_TLS_REJECT_UNAUTHORIZED=false
+    depends_on:
+      db-planka:
+        condition: service_healthy
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+  db-planka:
+    image: bitnami/postgresql:15
+    container_name: db-planka
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_USER: ${PLK_DB_USER}
+      POSTGRES_PASSWORD: ${PLK_DB_PWD}
+      POSTGRES_DB: ${PLK_DB_NAME}
+      TZ: "America/Toronto"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${PLK_DB_USER} -d ${PLK_DB_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - planka-network
+    volumes:
+      - "/opt/data-docker/planka/postgres:/var/lib/postgresql/data"
+      - "/opt/data-docker/planka/db-backups:/opt/db-backups"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - docker-volume-backup.archive-pre=/bin/bash -c 'pg_dump -U $PLK_DB_USER $PLK_DB_NAME > /opt/db-backups/bck_db_planka$(date +%Y%m%d-%H%M).sql'
+
+  adminer:
+    image: adminer:latest
+    container_name: planka_adminer
+    depends_on:
+      - db-planka
+    environment:
+      ADMINER_DEFAULT_SERVER: db-planka
+    networks:
+      - planka-network
+    restart: unless-stopped
+    ports:
+      - "7813:8080"
