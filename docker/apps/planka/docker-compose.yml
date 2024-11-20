@@ -41,7 +41,7 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
   db-planka:
-    image: bitnami/postgresql:17
+    image: postgres:17
     container_name: db-planka
     restart: unless-stopped
     security_opt:
