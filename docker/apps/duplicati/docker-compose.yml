@@ -1,18 +1,17 @@
-version: "3.9"
 services:
   duplicati:
     image: ghcr.io/linuxserver/duplicati
     container_name: duplicati
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
     environment:
       - TZ=America/Toronto
       - PUID=1000
       - PGID=1000
     volumes:
       - "/opt/data-docker/duplicati/config:/config"
-      - "docker-volume-backup.stop-during-backup=true"
-      - "${EXTERNAL_PATH}:/data"
+      - "${PBS_DISK_PATH}:/pbs_data"
     ports:
       - "8101:8200"
     restart: unless-stopped
