@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  wekan:
+    image: ghcr.io/wekan/wekan:latest
+    container_name: wekan
+    restart: unless-stopped
+    environment:
+      - MONGO_URL=mongodb://wekan-db:27017/wekan
+      - ROOT_URL=http://wekan.yourdomain.com  # Replace with your domain or IP
+      - PORT=8080
+      - MAIL_URL=smtp://user:password@smtp.example.com:587/  # Optional: Configure SMTP for email notifications
+    ports:
+      - "8080:8080"  # Expose port 8080 for Wekan
+    volumes:
+      - /opt/data-docker/wekan/wekan-data:/data
+    depends_on:
+      - wekan-db
+    networks:
+      - wekan-net
+
+  wekan-db:
+    image: mongo:4.4
+    container_name: wekan-db
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=yourpassword  # Replace with a secure password
+    volumes:
+      - /opt/data-docker/wekan/db-data:/data/db
+    networks:
+      - wekan-net
+
+networks:
+  wekan-net:
+    name: wekan-net
+    driver: bridge
