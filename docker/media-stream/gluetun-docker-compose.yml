@@ -1,6 +1,5 @@
 # wiki: https://github.com/qdm12/gluetun-wiki
 ## docker compose -f gluetun-docker-compose.yml --env-file=/opt/data-etc/media_stream/.gluetun.env pull
-version: '3.9'
 services:
   socks5:
     image: serjs/go-socks5-proxy
