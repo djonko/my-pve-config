@@ -12,6 +12,7 @@ services:
     volumes:
       - /opt/data-docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - /opt/data-docker/traefik/dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro
+      - /opt/data-docker/traefik/acme.json:/etc/traefik/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - DYNU_API_KEY=${DYNU_API_KEY}
