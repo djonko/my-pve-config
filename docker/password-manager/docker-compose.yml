@@ -30,7 +30,7 @@ services:
       SMTP_USERNAME_FILE: /run/secrets/SMTP_USERNAME
       SMTP_PASSWORD_FILE: /run/secrets/SMTP_PASSWORD
       SMTP_TIMEOUT: 30
-      SMTP_AUTH_MECHANISM: "TLS"
+      #SMTP_AUTH_MECHANISM: "TLS" No need for port 587
       LOGIN_RATELIMIT_MAX_BURST: 10
       LOGIN_RATELIMIT_SECONDS: 60
       DOMAIN: ${PWD_DOMAIN} #change this to your URL
