@@ -61,10 +61,9 @@ services:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
       AUTHENTIK_ERROR_REPORTING__ENABLED: true
       AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
-      #AUTHENTIK_HOST: ${AUTHENTIK_HOST}
-      #AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
-    ports:
-      - "9000:9000"
+      AUTHENTIK_HOST: ${AUTHENTIK_HOST}
+      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
+
     volumes:
       - /opt/data-docker/authentik/app/media:/media:rw
       - /opt/data-docker/authentik/app/custom-templates:/templates:rw
@@ -110,8 +109,8 @@ services:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
       AUTHENTIK_ERROR_REPORTING__ENABLED: true
       AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
-      #AUTHENTIK_HOST: ${AUTHENTIK_HOST}
-      #AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
+      AUTHENTIK_HOST: ${AUTHENTIK_HOST}
+      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
