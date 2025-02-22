@@ -74,6 +74,11 @@ services:
       - "traefik.http.routers.authentik.tls=true"
       - "traefik.http.routers.authentik.tls.certresolver=dynu-resolver"
       - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://127.0.0.1:9000/api/v3/core/brands/" ]
+      interval: 10s
+      retries: 5
+      start_period: 20s
     depends_on:
       postgresql:
         condition: service_healthy
