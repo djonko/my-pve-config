@@ -60,6 +60,7 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
       AUTHENTIK_ERROR_REPORTING__ENABLED: true
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
       #AUTHENTIK_HOST: ${AUTHENTIK_HOST}
       #AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
     volumes:
@@ -74,6 +75,8 @@ services:
       - "traefik.http.routers.authentik.tls=true"
       - "traefik.http.routers.authentik.tls.certresolver=dynu-resolver"
       - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+      - "traefik.http.routers.authentik.service=authentik"
+      - "traefik.http.routers.authentik-output-rtr.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAINNAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
     depends_on:
       postgresql:
         condition: service_healthy
@@ -103,6 +106,7 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
       AUTHENTIK_ERROR_REPORTING__ENABLED: true
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
       #AUTHENTIK_HOST: ${AUTHENTIK_HOST}
       #AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
     user: root
