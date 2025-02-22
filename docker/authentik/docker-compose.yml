@@ -115,8 +115,6 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-    env_file:
-      - .env
     depends_on:
       postgresql:
         condition: service_healthy
