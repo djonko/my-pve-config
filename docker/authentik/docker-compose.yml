@@ -122,6 +122,7 @@ services:
         condition: service_healthy
     networks:
       - frontend-network
+      - backend-network
 
 networks:
   frontend-network:
