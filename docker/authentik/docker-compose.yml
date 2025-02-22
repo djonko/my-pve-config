@@ -60,14 +60,16 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
       AUTHENTIK_ERROR_REPORTING__ENABLED: true
+      AUTHENTIK_HOST: ${AUTHENTIK_HOST}
+      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
     volumes:
-      - /opt/data-docker/authentik/app/media:/media
-      - /opt/data-docker/authentik/app/custom-templates:/templates
+      - /opt/data-docker/authentik/app/media:/media:rw
+      - /opt/data-docker/authentik/app/custom-templates:/templates:rw
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.authentik.rule=Host(`auth.ui24.theworkpc.com`)"
+      - "traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_DOMAIN}`)"
       - "traefik.http.services.authentik.loadbalancer.server.port=9000"
       - "traefik.http.routers.authentik.entryPoints=websecure"
       - "traefik.http.routers.authentik.tls=true"
@@ -106,12 +108,14 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
       AUTHENTIK_ERROR_REPORTING__ENABLED: true
+      AUTHENTIK_HOST: ${AUTHENTIK_HOST}
+      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/data-docker/authentik/app/media:/media
-      - /opt/data-docker/authentik/app/certs:/certs
-      - /opt/data-docker/authentik/app/custom-templates:/templates
+      - /opt/data-docker/authentik/app/media:/media:rw
+      - /opt/data-docker/authentik/app/certs:/certs:rw
+      - /opt/data-docker/authentik/app/custom-templates:/templates:rw
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
