@@ -63,6 +63,8 @@ services:
       AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
       #AUTHENTIK_HOST: ${AUTHENTIK_HOST}
       #AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
+    ports:
+      - "9000:9000"
     volumes:
       - /opt/data-docker/authentik/app/media:/media:rw
       - /opt/data-docker/authentik/app/custom-templates:/templates:rw
