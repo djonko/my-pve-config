@@ -1,7 +1,7 @@
 services:
   redis:
     container_name: searxng-redis
-    image: "redis:alpine"
+    image: "docker.io/valkey/valkey:8-alpine"
     command: redis-server --save "" --appendonly "no"
     restart: unless-stopped
     labels:
@@ -19,7 +19,7 @@ services:
 
   searxng:
     container_name: searxng
-    image: searxng/searxng:latest
+    image: docker.io/searxng/searxng:latest
     restart: unless-stopped
     networks:
       - searxng
