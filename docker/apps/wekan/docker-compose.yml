@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   wekan:
     image: ghcr.io/wekan/wekan:latest
