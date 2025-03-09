@@ -1,0 +1,23 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false # Disable exposing services by default
+  file:
+    filename: /etc/traefik/dynamic_conf.yml
+
+api:
+  dashboard: true
+
+certificatesResolvers:
+  dynu-resolver:
+    acme:
+      email: your-email@example.com
+      storage: acme.json
+      dnsChallenge:
+        provider: dynu
+        delayBeforeCheck: 0

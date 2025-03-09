@@ -1,0 +1,12 @@
+http:
+  routers:
+    example-router:
+      rule: "Host(`example.your-domain.com`)"
+      service: example-service
+      tls:
+        certResolver: dynu-resolver
+  services:
+    example-service:
+      loadBalancer:
+        servers:
+          - url: "http://example-service:80"
