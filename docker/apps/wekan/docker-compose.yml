@@ -5,6 +5,7 @@ services:
     image: ghcr.io/wekan/wekan:latest
     container_name: wekan
     restart: unless-stopped
+    user: "1000:1000"
     environment:
       - MONGO_URL=mongodb://wekan-db:27017/wekan
       - ROOT_URL=http://wekan.yourdomain.com  # Replace with your domain or IP
