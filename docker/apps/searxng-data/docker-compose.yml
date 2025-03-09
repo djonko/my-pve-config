@@ -24,7 +24,7 @@ services:
     networks:
       - searxng
     ports:
-      - "8200:8080"
+      - "8201:8080"
     volumes:
       - "/opt/data-docker/searxng/data:/etc/searxng"
       - "/etc/localtime:/etc/localtime:ro"
