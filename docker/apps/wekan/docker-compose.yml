@@ -10,17 +10,27 @@ services:
       - ROOT_URL=http://wekan.yourdomain.com  # Replace with your domain or IP
       - PORT=8080
       - MAIL_URL=smtp://user:password@smtp.example.com:587/  # Optional: Configure SMTP for email notifications
+      - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURES_BEFORE=3
+      - ACCOUNTS_LOCKOUT_KNOWN_USERS_PERIOD=60
+      - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURE_WINDOW=15
+      - ACCOUNTS_LOCKOUT_UNKNOWN_USERS_FAILURES_BERORE=3
+      - ACCOUNTS_LOCKOUT_UNKNOWN_USERS_LOCKOUT_PERIOD=60
+      - ACCOUNTS_LOCKOUT_UNKNOWN_USERS_FAILURE_WINDOW=15
+      - RICHER_CARD_COMMENT_EDITOR=true
+      - BROWSER_POLICY_ENABLED=true
     ports:
-      - "8080:8080"  # Expose port 8080 for Wekan
+      - "8201:8080"  # Expose port 8080 for Wekan
     volumes:
       - /opt/data-docker/wekan/wekan-data:/data
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     depends_on:
       - wekan-db
     networks:
       - wekan-net
 
   wekan-db:
-    image: mongo:4.4
+    image: mongo:7-jammy
     container_name: wekan-db
     restart: unless-stopped
     environment:
@@ -28,6 +38,9 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=yourpassword  # Replace with a secure password
     volumes:
       - /opt/data-docker/wekan/db-data:/data/db
+      - /opt/data-docker/wekan/db-dump:/dump
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     networks:
       - wekan-net
 
