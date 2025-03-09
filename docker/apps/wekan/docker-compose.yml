@@ -8,12 +8,12 @@ services:
     user: "1000:1000"
     environment:
       - MONGO_URL=mongodb://wekan-db:27017/wekan
-      - ROOT_URL=http://wekan.yourdomain.com  # Replace with your domain or IP
+      - ROOT_URL=${ROOT_URL} # Replace with your domain or IP
       - PORT=8080
       #- MAIL_URL=smtp://user:password@smtp.example.com:587/  # Optional: Configure SMTP for email notifications
       - MAIL_SERVICE=Gmail
-      - MAIL_SERVICE_USER=firstname.lastname@hotmail.com
-      - MAIL_SERVICE_PASSWORD=SecretPassword
+      - MAIL_SERVICE_USER=${MAIL_SERVICE_USER}
+      - MAIL_SERVICE_PASSWORD=${MAIL_SERVICE_PASSWORD}
       - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURES_BEFORE=3
       - ACCOUNTS_LOCKOUT_KNOWN_USERS_PERIOD=60
       - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURE_WINDOW=15
