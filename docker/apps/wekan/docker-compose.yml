@@ -9,7 +9,10 @@ services:
       - MONGO_URL=mongodb://wekan-db:27017/wekan
       - ROOT_URL=http://wekan.yourdomain.com  # Replace with your domain or IP
       - PORT=8080
-      - MAIL_URL=smtp://user:password@smtp.example.com:587/  # Optional: Configure SMTP for email notifications
+      #- MAIL_URL=smtp://user:password@smtp.example.com:587/  # Optional: Configure SMTP for email notifications
+      - MAIL_SERVICE=Gmail
+      - MAIL_SERVICE_USER=firstname.lastname@hotmail.com
+      - MAIL_SERVICE_PASSWORD=SecretPassword
       - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURES_BEFORE=3
       - ACCOUNTS_LOCKOUT_KNOWN_USERS_PERIOD=60
       - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURE_WINDOW=15
@@ -30,12 +33,12 @@ services:
       - wekan-net
 
   wekan-db:
-    image: mongo:7-jammy
+    image: mongo:6
     container_name: wekan-db
-    restart: unless-stopped
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=yourpassword  # Replace with a secure password
+    restart: always
+    command: mongod --logpath /dev/null --oplogSize 128 --quiet
+    expose:
+      - 27017
     volumes:
       - /opt/data-docker/wekan/db-data:/data/db
       - /opt/data-docker/wekan/db-dump:/dump
