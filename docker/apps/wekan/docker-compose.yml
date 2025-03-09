@@ -33,7 +33,7 @@ services:
       - wekan-net
 
   wekan-db:
-    image: mongo:6
+    image: mongo:4.4
     container_name: wekan-db
     restart: always
     command: mongod --logpath /dev/null --oplogSize 128 --quiet
