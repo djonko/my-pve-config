@@ -9,6 +9,7 @@ services:
       - ROOT_URL=${ROOT_URL} # Replace with your domain or IP
       - PORT=8080
       #- MAIL_URL=smtp://user:password@smtp.example.com:587/  # Optional: Configure SMTP for email notifications
+      - MAIL_URL=smtps://smtp.gmail.com:465/
       - MAIL_SERVICE=Gmail
       - MAIL_SERVICE_USER=${MAIL_SERVICE_USER}
       - MAIL_SERVICE_PASSWORD=${MAIL_SERVICE_PASSWORD}
