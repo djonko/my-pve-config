@@ -24,7 +24,7 @@ services:
     ports:
       - "8201:8080"  # Expose port 8080 for Wekan
     volumes:
-      - /opt/data-docker/wekan/wekan-data:/data
+      - /opt/data-docker/wekan/wekan-data:/data:rw
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     depends_on:
