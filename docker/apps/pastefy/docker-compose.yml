@@ -40,7 +40,7 @@ services:
       - db_pastefy
     security_opt:
       - no-new-privileges:true
-    image: "interaapps/pastefy:latest"
+    image: "interaapps/pastefy:6.7.5"
     container_name: pastefy
     restart: unless-stopped
     volumes:
@@ -60,7 +60,7 @@ services:
       DATABASE_PASSWORD: ${PAST_MYSQL_PASSWORD}
       DATABASE_HOST: db_pastefy
       DATABASE_PORT: 3306
-      AUTH_PROVIDER: NONE
+      AUTH_PROVIDER: INTERAAPPS
       SERVER_NAME: ${PAST_SERVER_URL}
       PASTEFY_LOGIN_REQUIRED: true
       PASTEFY_LOGIN_REQUIRED_CREATE: false
