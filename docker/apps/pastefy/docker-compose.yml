@@ -1,4 +1,3 @@
-version: "3.9"
 secrets:
   MYSQL_ROOT_PASSWORD:
     file: "/opt/data-etc/pastefy/root_pwd.txt"
