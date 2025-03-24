@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"       # HTTP (for Let's Encrypt challenges)
+      - "443:443"     # HTTPS
+      - "8080:8080"   # Traefik Dashboard (optional, secure it with authentication)
+    volumes:
+      - /opt/data-docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - /opt/data-docker/traefik/dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro
+      - /opt/data-docker/traefik/acme.json:/etc/traefik/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DYNU_API_KEY=${DYNU_API_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.your-domain.com`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+
+volumes:
+  traefik_data:
