@@ -1,0 +1,140 @@
+services:
+  postgresql:
+    image: docker.io/library/postgres:16-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - /opt/data-docker/authentik/postgresql:/var/lib/postgresql/data
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    environment:
+      POSTGRES_PASSWORD: ${ATK_POSTGRES_PASSWORD}
+      POSTGRES_USER: ${ATK_POSTGRES_USER}
+      POSTGRES_DB: ${ATK_POSTGRES_DB}
+    networks:
+      - backend-network
+
+  redis:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - /opt/data-docker/authentik/redis:/data
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    networks:
+      - backend-network
+
+  server:
+    image: ghcr.io/goauthentik/server:2024.12
+    restart: unless-stopped
+    command: server
+    container_name: authentik-proxy
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_EMAIL__HOST: ${ATK_SMTP_HOST}
+      AUTHENTIK_EMAIL__PORT: ${ATK_SMTP_PORT}
+      AUTHENTIK_EMAIL__USERNAME: ${ATK_SMTP_USER}
+      AUTHENTIK_EMAIL__PASSWORD: ${ATK_SMTP_PASSWORD}
+      AUTHENTIK_EMAIL__USE_TLS: ${ATK_SMTP_USE_TLS}
+      AUTHENTIK_EMAIL__FROM: ${ATK_SMTP_FROM}
+      AUTHENTIK_EMAIL__USE_SSL: false
+      AUTHENTIK_EMAIL__TIMEOUT: 10
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${ATK_POSTGRES_USER}
+      AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: true
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
+      AUTHENTIK_HOST: ${AUTHENTIK_HOST}
+      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
+
+    volumes:
+      - /opt/data-docker/authentik/app/media:/media:rw
+      - /opt/data-docker/authentik/app/custom-templates:/templates:rw
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authentik.entryPoints=websecure"
+      - "traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_DOMAIN}`)"
+      - "traefik.http.routers.authentik.tls=true"
+      - "traefik.http.routers.authentik.tls.certresolver=dynu-resolver"
+      - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+      - "traefik.http.routers.authentik.service=authentik"
+      - "traefik.http.routers.authentik-output-rtr.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAINNAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      - "traefik.docker.network=frontend-network"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - frontend-network
+      - backend-network
+
+  worker:
+    image: ghcr.io/goauthentik/server:2024.12
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_EMAIL__HOST: ${ATK_SMTP_HOST}
+      AUTHENTIK_EMAIL__PORT: ${ATK_SMTP_PORT}
+      AUTHENTIK_EMAIL__USERNAME: ${ATK_SMTP_USER}
+      AUTHENTIK_EMAIL__PASSWORD: ${ATK_SMTP_PASSWORD}
+      AUTHENTIK_EMAIL__USE_TLS: ${ATK_SMTP_USE_TLS}
+      AUTHENTIK_EMAIL__FROM: ${ATK_SMTP_FROM}
+      AUTHENTIK_EMAIL__USE_SSL: false
+      AUTHENTIK_EMAIL__TIMEOUT: 10
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${ATK_POSTGRES_USER}
+      AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: true
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
+      AUTHENTIK_HOST: ${AUTHENTIK_HOST}
+      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/data-docker/authentik/app/media:/media:rw
+      - /opt/data-docker/authentik/app/certs:/certs:rw
+      - /opt/data-docker/authentik/app/custom-templates:/templates:rw
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - frontend-network
+      - backend-network
+
+networks:
+  frontend-network:
+    driver: bridge
+    external: true
+  backend-network:
+    driver: bridge
+    external: true

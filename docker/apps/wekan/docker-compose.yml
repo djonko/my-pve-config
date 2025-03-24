@@ -1,0 +1,55 @@
+services:
+  wekan:
+    image: ghcr.io/wekan/wekan:latest
+    container_name: wekan
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      - MONGO_URL=mongodb://wekan-db:27017/wekan
+      - ROOT_URL=${ROOT_URL} # Replace with your domain or IP
+      - PORT=8080
+      - MAIL_URL=${MAIL_URL}
+      #- MAIL_SERVICE=Gmail
+      #- MAIL_SERVICE_USER=${MAIL_SERVICE_USER}
+      #- MAIL_USERNAME=${MAIL_SERVICE_USER}
+      #- MAIL_PASSWORD=${MAIL_SERVICE_PASSWORD}
+      #- MAIL_SERVICE_PASSWORD=${MAIL_SERVICE_PASSWORD}
+      - MAIL_FROM=${MAIL_SERVICE_USER}
+      - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURES_BEFORE=3
+      - ACCOUNTS_LOCKOUT_KNOWN_USERS_PERIOD=60
+      - ACCOUNTS_LOCKOUT_KNOWN_USERS_FAILURE_WINDOW=15
+      - ACCOUNTS_LOCKOUT_UNKNOWN_USERS_FAILURES_BERORE=3
+      - ACCOUNTS_LOCKOUT_UNKNOWN_USERS_LOCKOUT_PERIOD=60
+      - ACCOUNTS_LOCKOUT_UNKNOWN_USERS_FAILURE_WINDOW=15
+      - RICHER_CARD_COMMENT_EDITOR=true
+      - BROWSER_POLICY_ENABLED=true
+    ports:
+      - "8201:8080"  # Expose port 8080 for Wekan
+    volumes:
+      - /opt/data-docker/wekan/wekan-data:/data:rw
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    depends_on:
+      - wekan-db
+    networks:
+      - wekan-net
+
+  wekan-db:
+    image: mongo:4.4
+    container_name: wekan-db
+    restart: always
+    command: mongod --logpath /dev/null --oplogSize 128 --quiet
+    expose:
+      - 27017
+    volumes:
+      - /opt/data-docker/wekan/db-data:/data/db
+      - /opt/data-docker/wekan/db-dump:/dump
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    networks:
+      - wekan-net
+
+networks:
+  wekan-net:
+    name: wekan-net
+    driver: bridge
