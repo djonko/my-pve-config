@@ -40,7 +40,7 @@ services:
       - db_pastefy
     security_opt:
       - no-new-privileges:true
-    image: "interaapps/pastefy:6.7.5"
+    image: "interaapps/pastefy:latest"
     container_name: pastefy
     restart: unless-stopped
     volumes:
