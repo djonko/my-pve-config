@@ -5,7 +5,6 @@
 # sudo sed --in-place "s/^#DNSStubListener=yes$/DNSStubListener=no/g" /etc/systemd/resolved.conf
 #https://pimylifeup.com/pi-hole-docker/
 
-version: "3.9"
 secrets:
   WEB_PASSWORD_SECRET:
     file: /opt/data-docker-etc/pihole/pwd.secret.txt
