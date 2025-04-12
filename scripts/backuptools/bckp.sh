@@ -56,7 +56,7 @@ backup() {
 
 # Restore function
 restore() {
-    local paths=("${@:-${DEFAULT_PATHS[@]}"} )
+    local paths=("${@:-${DEFAULT_PATHS[@]}}")
     for path in "${paths[@]}"; do
         base_name=$(basename "$path")
         latest_backup=$(ls -t "$BACKUP_DIR" | grep "^${base_name}_backup_.*\.tar\.gz$" | head -n1)
