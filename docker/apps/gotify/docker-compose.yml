@@ -1,6 +1,5 @@
 ## how to install https://github.com/androidseb25/iGotify-Notification-Assistent/tree/main?ref=homelab.casaursus.net
 
-version: "3.9"
 services:
   gotify:
     container_name: gotify
