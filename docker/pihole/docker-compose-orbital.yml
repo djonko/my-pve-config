@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   orbital-sync:
     image: mattwebbio/orbital-sync:latest
