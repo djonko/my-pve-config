@@ -16,6 +16,8 @@ services:
       - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=true
     expose:
       - 3306
+    ports:
+      - "9306:3306"
     volumes:
       - "/opt/data-docker/invoiceshelf/db:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
