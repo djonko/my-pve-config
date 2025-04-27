@@ -16,8 +16,8 @@ services:
       - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=true
     expose:
       - 3306
-    ports:
-      - "9306:3306"
+    #ports:
+    #  - "9306:3306"
     volumes:
       - "/opt/data-docker/invoiceshelf/db:/var/lib/mysql"
       - "/etc/timezone:/etc/timezone:ro"
@@ -73,6 +73,19 @@ services:
     restart: unless-stopped
     depends_on:
       - invoiceshelf_db
+
+  adminer:
+    container_name: adminer
+    image: adminer:latest  # lightweight single php file app
+    restart: unless-stopped
+    ports:
+      - "9080:8080" # expose adminer at yourserver:9080
+    networks:
+      - invoiceshelf
+    environment:
+      - ADMINER_DEFAULT_SERVER=invoiceshelf_db
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   invoiceshelf:
