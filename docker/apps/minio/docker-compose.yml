@@ -1,0 +1,41 @@
+#-------------------------------------------
+# MinIO - S3 Compatible Object Storage
+# Production-Ready Docker Compose
+#-------------------------------------------
+services:
+  minio:
+    container_name: minio
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    ports:
+      - "9000:9000"  # S3 API port
+      - "8103:9001"  # MinIO Console UI
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL}
+    command: server /data --console-address ":9001"
+    volumes:
+      - "${S3_DISK_PATH}:/data"
+      - /opt/data-docker/minio/config:/root/.minio
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - minio_network
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
+
+networks:
+  minio_network:
+    driver: bridge
+
+volumes:
+  minio_data:
+  minio_config:
