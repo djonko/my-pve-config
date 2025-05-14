@@ -31,7 +31,7 @@ services:
       retries: 10
 
   invoiceshelf:
-    image: invoiceshelf/invoiceshelf:nightly
+    image: invoiceshelf/invoiceshelf
     container_name: invoiceshelf
     security_opt:
       - no-new-privileges:true
