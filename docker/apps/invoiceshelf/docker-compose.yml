@@ -1,0 +1,91 @@
+#-------------------------------------------
+# InvoiceShelf MySQL docker-compose variant
+# Repo : https://github.com/InvoiceShelf/docker
+#-------------------------------------------
+
+services:
+  invoiceshelf_db:
+    container_name: invoiceshelf_db
+    image: mariadb:10
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=true
+    expose:
+      - 3306
+    #ports:
+    #  - "9306:3306"
+    volumes:
+      - "/opt/data-docker/invoiceshelf/db:/var/lib/mysql"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - invoiceshelf
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  invoiceshelf:
+    image: invoiceshelf/invoiceshelf
+    container_name: invoiceshelf
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - ${APP_PORT}:80
+    volumes:
+      - /opt/data-docker/invoiceshelf/data:/data
+      - /opt/data-docker/invoiceshelf/conf:/conf
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - invoiceshelf
+    environment:
+      - PHP_TZ=${PHP_TZ}
+      - TIMEZONE=${TIMEZONE}
+      - APP_NAME=${APP_NAME}
+      - APP_ENV=${APP_ENV}
+      - APP_DEBUG=${APP_DEBUG}
+      - APP_URL=${APP_URL}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_STORE=${CACHE_STORE}
+      - SESSION_DRIVER=${SESSION_DRIVER}
+      - SESSION_LIFETIME=${SESSION_LIFETIME}
+      - SESSION_ENCRYPT=${SESSION_ENCRYPT}
+      - SESSION_PATH=${SESSION_PATH}
+      - SESSION_DOMAIN=${SESSION_DOMAIN}
+      - SANCTUM_STATEFUL_DOMAINS=${SANCTUM_STATEFUL_DOMAINS}
+      - MAIL_DRIVER=${MAIL_DRIVER}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
+    restart: unless-stopped
+    depends_on:
+      - invoiceshelf_db
+
+  adminer:
+    container_name: adminer
+    image: adminer:latest  # lightweight single php file app
+    restart: unless-stopped
+    ports:
+      - "9080:8080" # expose adminer at yourserver:9080
+    networks:
+      - invoiceshelf
+    environment:
+      - ADMINER_DEFAULT_SERVER=invoiceshelf_db
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  invoiceshelf:
