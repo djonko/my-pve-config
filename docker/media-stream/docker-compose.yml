@@ -208,6 +208,13 @@ services:
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
