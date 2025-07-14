@@ -224,7 +224,7 @@ services:
     volumes:
       - /opt/data-docker/media_stream/jellyfin/config:/config
       - /opt/data-docker/media_stream/jellyfin/cache:/cache
-      - /nfs/stream_data:/media
+      #- /nfs/stream_data:/media
     restart: unless-stopped
 
 networks:
