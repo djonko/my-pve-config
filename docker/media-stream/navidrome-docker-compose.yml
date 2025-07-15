@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   navidrome:
     image: deluan/navidrome:latest
@@ -14,7 +13,7 @@ services:
     environment:
       TZ: America/Montreal
       # Optional: put your config options customization here. Examples:
-      ND_SCANSCHEDULE: 5h
+      ND_SCANSCHEDULE: 6h
       ND_LOGLEVEL: info
       ND_SESSIONTIMEOUT: 24h
       ND_BASEURL: ""
