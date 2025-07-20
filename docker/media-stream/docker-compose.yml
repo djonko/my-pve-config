@@ -231,6 +231,8 @@ services:
     image: lscr.io/linuxserver/lazylibrarian:latest
     container_name: lazylibrarian
     restart: unless-stopped
+    ports:
+      - "5299:5299"
     environment:
       - PUID=1000
       - PGID=1000
