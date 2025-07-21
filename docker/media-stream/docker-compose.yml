@@ -227,6 +227,23 @@ services:
       - /nfs/stream_data:/media
     restart: unless-stopped
 
+  lazylibrarian:
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    container_name: lazylibrarian
+    restart: unless-stopped
+    ports:
+      - "5299:5299"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Montreal
+      - DOCKER_MODS=linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg
+    volumes:
+      - /opt/data-docker/media_stream/lazylibrarian/config:/config
+      - /nfs/downloads/:/downloads
+      - /nfs/books/:/books
+    networks:
+      - media-net
 networks:
   media-net:
     external: true
