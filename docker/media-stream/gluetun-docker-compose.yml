@@ -49,6 +49,7 @@ services:
     image: "qmcgaw/gluetun"
     container_name: gluetun
     restart: unless-stopped
+    privileged: true
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     cap_add:
@@ -62,6 +63,8 @@ services:
     env_file: /opt/data-etc/media_stream/.gluetun.env
     environment:
       - TZ=America/Montreal
+    devices:
+      - /dev/net/tun:/dev/net/tun
 
 
 
