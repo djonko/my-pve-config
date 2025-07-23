@@ -1,5 +1,3 @@
-version: '3.9'
-
 secrets:
   SMTP_USERNAME:
     file: /opt/data-etc/vaultwarden/smtp_user.secret.txt
@@ -13,6 +11,7 @@ services:
     restart: always
     container_name: vaultwarden
     image: vaultwarden/server:latest
+    user: 1001:1001 # Rootless user (matches your setup)
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -20,30 +19,38 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     ports:
-      - "8100:80"
+      - "8100:8080/tcp" # HTTP port (adjusted to match ROCKET_PORT)
+      - "3012:3012" # WebSocket port
     environment:
-      SMTP_HOST: ${PWD_SMTP_HOST}
-      SMTP_FROM: ${PWD_SMTP_FROM}
-      SMTP_FROM_NAME: Password Vault
-      SMTP_SECURITY: starttls
-      SMTP_PORT: ${PWD_SMTP_PORT}
-      SMTP_USERNAME_FILE: /run/secrets/SMTP_USERNAME
-      SMTP_PASSWORD_FILE: /run/secrets/SMTP_PASSWORD
-      SMTP_TIMEOUT: 30
-      #SMTP_AUTH_MECHANISM: "TLS" No need for port 587
-      LOGIN_RATELIMIT_MAX_BURST: 10
-      LOGIN_RATELIMIT_SECONDS: 60
-      DOMAIN: ${PWD_DOMAIN} #change this to your URL
-      INVITATION_ORG_NAME: HomePwd-Mg #change this to your company name
-      INVITATIONS_ALLOWED: false
-      ADMIN_TOKEN_FILE: /run/secrets/ADMIN_TOKEN_ARGON #generate your own admin token
-      SIGNUPS_ALLOWED: true
-      SIGNUPS_VERIFY: true
-      SIGNUPS_VERIFY_RESEND_TIME: 3600
-      SIGNUPS_VERIFY_RESEND_LIMIT: 6
-      EMERGENCY_ACCESS_ALLOWED: true
-      SENDS_ALLOWED: true
-      WEB_VAULT_ENABLED: true
+      - ROCKET_PORT=8080 # Non-privileged port for HTTP
+      - WEBSOCKET_ENABLED=true # Enable WebSocket
+      - WEBSOCKET_PORT=3012 # WebSocket port
+      - SMTP_HOST=${PWD_SMTP_HOST}
+      - SMTP_FROM=${PWD_SMTP_FROM}
+      - SMTP_FROM_NAME=Password Vault
+      - SMTP_SECURITY=starttls
+      - SMTP_PORT=${PWD_SMTP_PORT}
+      - SMTP_USERNAME_FILE=/run/secrets/SMTP_USERNAME
+      - SMTP_PASSWORD_FILE=/run/secrets/SMTP_PASSWORD
+      - SMTP_TIMEOUT=30
+      - LOGIN_RATELIMIT_MAX_BURST=10
+      - LOGIN_RATELIMIT_SECONDS=60
+      - DOMAIN=${PWD_DOMAIN} # e.g., https://vaultwarden.example.com
+      - INVITATION_ORG_NAME=HomePwd-Mg
+      - INVITATIONS_ALLOWED=false
+      - ADMIN_TOKEN_FILE=/run/secrets/ADMIN_TOKEN_ARGON
+      - SIGNUPS_ALLOWED=true
+      - SIGNUPS_VERIFY=true
+      - SIGNUPS_VERIFY_RESEND_TIME=3600
+      - SIGNUPS_VERIFY_RESEND_LIMIT=6
+      - EMERGENCY_ACCESS_ALLOWED=true
+      - SENDS_ALLOWED=true
+      - WEB_VAULT_ENABLED=true
+      - SHOW_PASSWORD_HINT=false # Disable password hints for security
+      - DISABLE_ICON_DOWNLOAD=true # Disable icon fetching for privacy
+      - LOG_FILE=/data/vaultwarden.log # Enable logging for Fail2Ban
+      - LOG_LEVEL=warn # Log warnings and errors
+      - EXTENDED_LOGGING=true # Enhanced logging for security
     secrets:
       - SMTP_USERNAME
       - SMTP_PASSWORD
