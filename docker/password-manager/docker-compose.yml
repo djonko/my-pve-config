@@ -35,7 +35,7 @@ services:
       - SMTP_TIMEOUT=30
       - LOGIN_RATELIMIT_MAX_BURST=10
       - LOGIN_RATELIMIT_SECONDS=60
-      - DOMAIN=https://${PWD_DOMAIN} # e.g., https://vaultwarden.example.com
+      - DOMAIN=${PWD_DOMAIN} # e.g., https://vaultwarden.example.com
       - INVITATION_ORG_NAME=HomePwd-Mg
       - INVITATIONS_ALLOWED=false
       - ADMIN_TOKEN_FILE=/run/secrets/ADMIN_TOKEN_ARGON
