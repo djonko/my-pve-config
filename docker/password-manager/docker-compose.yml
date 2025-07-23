@@ -48,9 +48,9 @@ services:
       - WEB_VAULT_ENABLED=true
       - SHOW_PASSWORD_HINT=false # Disable password hints for security
       - DISABLE_ICON_DOWNLOAD=true # Disable icon fetching for privacy
-      #- LOG_FILE=/data/vaultwarden.log # Enable logging for Fail2Ban
-      #- LOG_LEVEL=warn # Log warnings and errors
-      #- EXTENDED_LOGGING=true # Enhanced logging for security
+      - LOG_FILE=/data/vaultwarden.log # Enable logging for Fail2Ban
+      - LOG_LEVEL=warn # Log warnings and errors
+      - EXTENDED_LOGGING=true # Enhanced logging for security
     secrets:
       - SMTP_USERNAME
       - SMTP_PASSWORD
@@ -58,5 +58,3 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=true"
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-
-# No networks defined,-visitor: true
