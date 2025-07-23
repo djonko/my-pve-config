@@ -11,7 +11,7 @@ services:
     restart: always
     container_name: vaultwarden
     image: vaultwarden/server:latest
-    user: 1001:1001 # Rootless user (matches your setup)
+    #user: 1001:1001 # Rootless user (matches your setup)
     security_opt:
       - no-new-privileges:true
     volumes:
