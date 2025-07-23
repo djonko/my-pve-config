@@ -4,7 +4,7 @@ secrets:
   SMTP_PASSWORD:
     file: /opt/data-etc/vaultwarden/smtp_pwd.secret.txt
   ADMIN_TOKEN_ARGON:
-    file: /opt/data-etc/vaultwarden/admin_token.argon.secret.txt
+    file: /opt/data-etc/vaultwarden/admin_token_argon.secret.txt
 
 services:
   vaultwarden:
