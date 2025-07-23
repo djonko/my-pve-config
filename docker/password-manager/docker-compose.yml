@@ -11,7 +11,7 @@ services:
     restart: always
     container_name: vaultwarden
     image: vaultwarden/server:latest
-    #user: 1001:1001 # Rootless user (matches your setup)
+    user: 1001:1001 # Rootless user (matches your setup)
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -19,10 +19,10 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     ports:
-      - "8100:80/tcp" # HTTP port (adjusted to match ROCKET_PORT)
+      - "8100:8080/tcp" # HTTP port (adjusted to match ROCKET_PORT)
       - "3012:3012" # WebSocket port
     environment:
-      #- ROCKET_PORT=8080 # Non-privileged port for HTTP
+      - ROCKET_PORT=8080 # Non-privileged port for HTTP
       - WEBSOCKET_ENABLED=true # Enable WebSocket
       - WEBSOCKET_PORT=3012 # WebSocket port
       - SMTP_HOST=${PWD_SMTP_HOST}
