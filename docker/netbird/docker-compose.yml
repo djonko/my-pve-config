@@ -27,6 +27,7 @@ services:
       - NETBIRD_AUTH_DEVICE_AUTH_AUDIENCE=${AUTH_CLIENT_ID}
       - NETBIRD_TOKEN_SOURCE=accessToken
       - NETBIRD_DISABLE_LETSENCRYPT=true
+      - NETBIRD_AUTH_PKCE_DISABLE_PROMPT_LOGIN=true
     ports:
       - "33073:33073"
     networks:
@@ -47,6 +48,7 @@ services:
       - NETBIRD_TOKEN_SOURCE=accessToken
       - NGINX_SSL_PORT=443
       - NETBIRD_DISABLE_LETSENCRYPT=true
+      - NETBIRD_AUTH_PKCE_DISABLE_PROMPT_LOGIN=true
     ports:
       - "8100:80"
     networks:
