@@ -3,6 +3,7 @@ services:
     image: netbirdio/management:latest
     restart: unless-stopped
     container_name: netbird-management
+    command: ["--log-level", "debug"]
     volumes:
       - /opt/data-docker/netbird/management:/var/lib/netbird
       - /opt/data-docker/netbird/config/management.json:/etc/netbird/management.json
