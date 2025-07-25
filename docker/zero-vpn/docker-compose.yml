@@ -4,8 +4,10 @@ services:
     container_name: headscale
     restart: unless-stopped
     volumes:
-      - ./config:/etc/headscale
-      - ./data:/var/lib/headscale
+      - /opt/data-docker/headscale/config:/etc/headscale
+      - /opt/data-docker/headscale/data:/var/lib/headscale
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     command: serve
     ports:
       - "41641:41641/udp" # WireGuard
@@ -24,10 +26,11 @@ services:
     image: goodieshq/headscale-admin:0.25.6
     container_name: headscale-admin
     restart: unless-stopped
+
     ports:
       - "8082:80/tcp"
     networks:
       - proxy
 networks:
   proxy:
-    external: true
+    driver: bridge
