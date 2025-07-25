@@ -13,6 +13,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - NETBIRD_MGMT_API_ENDPOINT=${NETBIRD_MGMT_API_ENDPOINT}
+      - LOG_LEVEL=debug
       - NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT=${NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT}
       - NETBIRD_AUTH_AUDIENCE=${AUTH_CLIENT_ID}
       - NETBIRD_AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
@@ -49,6 +50,7 @@ services:
       - NGINX_SSL_PORT=443
       - NETBIRD_DISABLE_LETSENCRYPT=true
       - NETBIRD_AUTH_PKCE_DISABLE_PROMPT_LOGIN=true
+      - LOG_LEVEL=debug
     ports:
       - "8100:80"
     networks:
@@ -64,6 +66,8 @@ services:
     image: netbirdio/signal:latest
     restart: unless-stopped
     container_name: netbird-signal
+    environment:
+      - LOG_LEVEL=debug
     ports:
       - "10000:10000"
     networks:
