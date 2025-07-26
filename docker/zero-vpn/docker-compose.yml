@@ -23,7 +23,7 @@ services:
     networks:
       - proxy
   headscale-admin:
-    image: goodieshq/headscale-admin:0.25.6
+    image: goodieshq/headscale-admin:0.26
     container_name: headscale-admin
     restart: unless-stopped
 
