@@ -1,0 +1,60 @@
+## How to install LubeLogger
+## Source: https://github.com/hargata/lubelog
+## This Docker Compose file sets up LubeLogger, a self-hosted vehicle maintenance and fuel mileage tracker.
+## It uses the official LubeLogger Docker image and persists data using a volume.
+## Ensure you set the appropriate environment variables (e.g., TZ) for your environment.
+## Optional: Configure PostgreSQL instead of SQLite by uncommenting the relevant lines.
+
+services:
+  lubelogger:
+    container_name: lubelogger
+    hostname: lubelogger
+    image: hargata/lubelogger:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - lubelogger-network
+    ports:
+      - "8080:8080"  # Map host port 8080 to container port 8080
+    volumes:
+      - "/opt/data-docker/lubelogger/data:/app/data"  # Persistent storage for SQLite database and uploads
+      - "/etc/timezone:/etc/timezone:ro"  # Timezone configuration
+      - "/etc/localtime:/etc/localtime:ro"  # Local time configuration
+    environment:
+      TZ: 'America/Toronto'  # Set your timezone
+      # Uncomment the following lines to use PostgreSQL instead of SQLite
+      # DB_CONNECTION: 'pgsql'
+      # DB_HOST: 'postgres'
+      # DB_PORT: '5432'
+      # DB_DATABASE: 'lubelogger'
+      # DB_USERNAME: '${DB_USERNAME}'
+      # DB_PASSWORD: '${DB_PASSWORD}'
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  # Optional PostgreSQL service (uncomment to use instead of SQLite)
+  # postgres:
+  #   container_name: lubelogger-postgres
+  #   hostname: postgres
+  #   image: postgres:latest
+  #   restart: unless-stopped
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   networks:
+  #     - lubelogger-network
+  #   volumes:
+  #     - "/opt/data-docker/lubelogger/postgres:/var/lib/postgresql/data"
+  #     - "/etc/timezone:/etc/timezone:ro"
+  #     - "/etc/localtime:/etc/localtime:ro"
+  #   environment:
+  #     POSTGRES_DB: 'lubelogger'
+  #     POSTGRES_USER: '${DB_USERNAME}'
+  #     POSTGRES_PASSWORD: '${DB_PASSWORD}'
+  #   labels:
+  #     - "docker-volume-backup.stop-during-backup=true"
+  #     - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+networks:
+  lubelogger-network:
