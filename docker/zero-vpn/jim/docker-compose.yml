@@ -3,6 +3,7 @@ services:
     image: netbirdio/management:latest
     restart: unless-stopped
     container_name: netbird-management
+    command: ["--log-level", "debug"]
     volumes:
       - /opt/data-docker/netbird/management:/var/lib/netbird
       - /opt/data-docker/netbird/config/management.json:/etc/netbird/management.json
@@ -13,6 +14,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     environment:
       - NETBIRD_MGMT_API_ENDPOINT=${NETBIRD_MGMT_API_ENDPOINT}
+      - LOG_LEVEL=debug
       - NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT=${NETBIRD_AUTH_OIDC_CONFIGURATION_ENDPOINT}
       - NETBIRD_AUTH_AUDIENCE=${AUTH_CLIENT_ID}
       - NETBIRD_AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
@@ -27,6 +29,7 @@ services:
       - NETBIRD_AUTH_DEVICE_AUTH_AUDIENCE=${AUTH_CLIENT_ID}
       - NETBIRD_TOKEN_SOURCE=accessToken
       - NETBIRD_DISABLE_LETSENCRYPT=true
+      - NETBIRD_AUTH_PKCE_DISABLE_PROMPT_LOGIN=true
     ports:
       - "33073:33073"
     networks:
@@ -47,6 +50,8 @@ services:
       - NETBIRD_TOKEN_SOURCE=accessToken
       - NGINX_SSL_PORT=443
       - NETBIRD_DISABLE_LETSENCRYPT=true
+      - NETBIRD_AUTH_PKCE_DISABLE_PROMPT_LOGIN=true
+      - LOG_LEVEL=debug
     ports:
       - "8100:80"
     networks:
@@ -62,6 +67,8 @@ services:
     image: netbirdio/signal:latest
     restart: unless-stopped
     container_name: netbird-signal
+    environment:
+      - LOG_LEVEL=debug
     ports:
       - "10000:10000"
     networks:

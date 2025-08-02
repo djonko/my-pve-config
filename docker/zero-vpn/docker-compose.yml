@@ -1,0 +1,36 @@
+services:
+  headscale:
+    image: headscale/headscale:0.26.1
+    container_name: headscale
+    restart: unless-stopped
+    volumes:
+      - /opt/data-docker/headscale/config:/etc/headscale
+      - /opt/data-docker/headscale/data:/var/lib/headscale
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    command: serve
+    ports:
+      - "41641:41641/udp" # WireGuard
+      - "8080:8080/tcp"
+    networks:
+      - proxy
+  headscale-ui:
+    image: ghcr.io/gurucomputing/headscale-ui:2025.07.12
+    container_name: headscale-ui
+    restart: unless-stopped
+    ports:
+      - "8081:8080/tcp"
+    networks:
+      - proxy
+  headscale-admin:
+    image: goodieshq/headscale-admin:0.26
+    container_name: headscale-admin
+    restart: unless-stopped
+
+    ports:
+      - "8082:80/tcp"
+    networks:
+      - proxy
+networks:
+  proxy:
+    driver: bridge
