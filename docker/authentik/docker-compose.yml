@@ -23,6 +23,7 @@ services:
     image: docker.io/library/redis:alpine
     command: --save 60 1 --loglevel warning
     restart: unless-stopped
+    container_name: redis
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       start_period: 20s
@@ -40,7 +41,7 @@ services:
       - backend-network
 
   server:
-    image: ghcr.io/goauthentik/server:2024.12
+    image: ghcr.io/goauthentik/server:2025.6
     restart: unless-stopped
     command: server
     container_name: authentik-proxy
@@ -89,7 +90,7 @@ services:
       - backend-network
 
   worker:
-    image: ghcr.io/goauthentik/server:2024.12
+    image: ghcr.io/goauthentik/server:2025.6
     restart: unless-stopped
     command: worker
     environment:
