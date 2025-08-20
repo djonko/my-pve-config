@@ -12,7 +12,7 @@ services:
     volumes:
       - "/opt/data-docker/duplicati/config:/config"
       - "${PBS_DISK_PATH}:/pbs_data"
-      - "${ZFSA_ABZ_DOC_PATH}:/zfsa_documents"
+      - "${ZFSA_ABZ_DOC_PATH}:/abz_documents"
       - "/opt/rclone/1.70.3:/opt/rclone"
     ports:
       - "8101:8200"
