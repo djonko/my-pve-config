@@ -1,0 +1,16 @@
+services:
+  erugo:
+    image: wardy784/erugo:latest
+    container_name: erugo
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "8100:80"
+    volumes:
+      - "/opt/data-docker/erugo/data:/var/www/html/storage"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    labels:
+      - "docker-volume-backup.stop-during-backup=true"
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
