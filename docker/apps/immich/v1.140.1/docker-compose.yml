@@ -36,8 +36,6 @@ services:
       - model-cache:/cache
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    env_file:
-      - .env
     restart: always
     healthcheck:
       disable: false
