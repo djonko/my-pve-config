@@ -31,15 +31,15 @@ services:
       retries: 10
 
   invoiceshelf:
-    image: invoiceshelf/invoiceshelf:nightly
+    image: invoiceshelf/invoiceshelf:latest-legacy
     container_name: invoiceshelf
     security_opt:
       - no-new-privileges:true
     ports:
       - ${APP_PORT}:80
     volumes:
-      - /opt/data-docker/invoiceshelf/data:/var/www/html/storage
-      #- /opt/data-docker/invoiceshelf/conf:/conf
+      - /opt/data-docker/invoiceshelf/data:/data
+      - /opt/data-docker/invoiceshelf/conf:/conf
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     networks:
