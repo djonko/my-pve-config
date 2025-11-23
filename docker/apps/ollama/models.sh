@@ -7,9 +7,9 @@ ollama pull nomic-embed-text:v1.5  # Keep
 
 # Adds
 ollama pull hf.co/infosys/NT-Java-1.1B-GGUF:Q4_K_M
-ollama pull hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q4_K_M
-ollama pull hf.co/BAAI/bge-reranker-v2-m3-GGUF:Q4_K_M
-ollama pull hf.co/richardyoung/olmOCR-2-7B-1025-GGUF:Q4_K_M
+ollama pull hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q8_0
+ollama pull hf.co/gpustack/bge-reranker-v2-m3-GGUF:Q4_K_M
+ollama pull hf.co/bartowski/allenai_olmOCR-2-7B-1025-GGUF:Q8_0
 
 # Cleanup
 ollama rm qwen3:4b mistral:latest codellama:13b gemma3:12b stable-code:latest mannix/llamax3-8b-alpaca:latest llama3.2:3b hf.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q2_K_XL hf.co/Lamapi/next-4b:F16
