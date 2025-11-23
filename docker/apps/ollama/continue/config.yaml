@@ -60,7 +60,7 @@ models:
   # ── IMAGE / OCR (screenshots, error UIs, diagrams) ───────────────
   - name: olmOCR 7B (Vision + OCR)
     provider: ollama
-    model: hf.co/richardyoung/olmOCR-2-7B-1025-GGUF:Q4_K_M
+    model: hf.co/bartowski/allenai_olmOCR-2-7B-1025-GGUF:Q8_0
     apiBase: http://192.168.20.31:11434
     roles:
       - chat
@@ -69,14 +69,14 @@ models:
   # ── EMBEDDINGS & RERANKER (codebase search @codebase) ────────────
   - name: Qwen3 Embedding 0.6B (SOTA multilingual + code)
     provider: ollama
-    model: hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q4_K_M
+    model: hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q8_0
     apiBase: http://192.168.20.31:11434
     roles:
       - embed
 
   - name: BGE Reranker v2-m3
     provider: ollama
-    model: hf.co/BAAI/bge-reranker-v2-m3-GGUF:Q4_K_M
+    model: hf.co/gpustack/bge-reranker-v2-m3-GGUF:Q4_K_M
     apiBase: http://192.168.20.31:11434
     roles:
       - rerank
@@ -100,4 +100,4 @@ defaultModel: Qwen2.5-Coder 20B (Microsoft NextCoder)
 embeddingsProvider: ollama
 rerankers:
   - provider: ollama
-    model: hf.co/BAAI/bge-reranker-v2-m3-GGUF:Q4_K_M
+    model: hf.co/gpustack/bge-reranker-v2-m3-GGUF:Q4_K_M
