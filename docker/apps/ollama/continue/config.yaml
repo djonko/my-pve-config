@@ -1,0 +1,103 @@
+name: Local Homelab Assistant (2025)
+version: 1.0.0
+schema: v1
+
+models:
+  # ── MAIN CODING MODELS (chat + edit + apply) ─────────────────────
+  - name: Qwen2.5-Coder 20B (Microsoft NextCoder)
+    provider: ollama
+    model: hf.co/mradermacher/Qwen2.5-Microsoft-NextCoder-Brainstorm20x-128k-ctx-20B-GGUF:Q4_K_S
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    title: "Qwen2.5 20B · Best for PHP/Laravel/Symfony + .NET Core"
+
+  - name: DeepSeek-Coder R1 8B
+    provider: ollama
+    model: deepseek-r1:8b
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete          # excellent FIM support
+    completionOptions:
+      fillInTheMiddle: true
+    title: "DeepSeek 8B · React/Angular/TypeScript beast"
+
+  - name: NT-Java 1.1B (Spring Boot specialist)
+    provider: ollama
+    model: hf.co/infosys/NT-Java-1.1B-GGUF:Q4_K_M
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - autocomplete
+      - chat
+    completionOptions:
+      fillInTheMiddle: true
+    title: "NT-Java · Ultra-fast Java/Spring Boot autocomplete"
+
+  - name: Qwen2.5-Coder 1.5B (lightning autocomplete)
+    provider: ollama
+    model: hf.co/unsloth/Qwen2.5-Coder-1.5B-Instruct-128K-GGUF:Q4_K_M
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - autocomplete
+    completionOptions:
+      fillInTheMiddle: true
+    title: "Qwen2.5 1.5B · Instant autocomplete fallback"
+
+  # ── TERMINAL / SYSADMIN (Linux, Docker, Proxmox) ─────────────────
+  - name: Phi-3.5 Mini (Terminal Agent)
+    provider: ollama
+    model: hf.co/microsoft/Phi-3.5-mini-instruct-GGUF:Q4_K_M
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - chat
+    title: "Phi-3.5 Mini · Instant Docker/Proxmox/Linux answers"
+
+  # ── IMAGE / OCR (screenshots, error UIs, diagrams) ───────────────
+  - name: olmOCR 7B (Vision + OCR)
+    provider: ollama
+    model: hf.co/bartowski/allenai_olmOCR-2-7B-1025-GGUF:Q8_0
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - chat
+    title: "olmOCR · Explain screenshots, error messages, Proxmox UI"
+
+  # ── EMBEDDINGS & RERANKER (codebase search @codebase) ────────────
+  - name: Qwen3 Embedding 0.6B (SOTA multilingual + code)
+    provider: ollama
+    model: hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q8_0
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - embed
+
+  - name: BGE Reranker v2-m3
+    provider: ollama
+    model: hf.co/gpustack/bge-reranker-v2-m3-GGUF:Q4_K_M
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - rerank
+
+# ── CONTEXT PROVIDERS (all the good stuff) ───────────────────────
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: codebase
+    params:
+      nRetrieve: 25
+      nFinal: 8
+      useReranking: true          # ← uses BGE reranker above
+
+# ── GLOBAL DEFAULTS (optional but recommended) ───────────────────
+defaultModel: Qwen2.5-Coder 20B (Microsoft NextCoder)
+embeddingsProvider: ollama
+rerankers:
+  - provider: ollama
+    model: hf.co/gpustack/bge-reranker-v2-m3-GGUF:Q4_K_M
