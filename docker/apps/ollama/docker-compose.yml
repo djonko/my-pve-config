@@ -10,16 +10,16 @@ services:
       - "11434:11434"
     environment:
       - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_FLASH_ATTENTION=1
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_NUM_PARALLEL=2
       - OLLAMA_MODELS=/root/.ollama/models
-      - OLLAMA_CUDA_ENABLED=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+      #- OLLAMA_CUDA_ENABLED=1
     restart: unless-stopped
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    runtime: nvidia
     networks:
       - ai_network
     labels:
