@@ -4,48 +4,58 @@ services:
     container_name: ollama
     volumes:
       - ollama_data:/root/.ollama
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     ports:
-      - "11434:11434"
+      - 11434:11434
     environment:
-      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_HOST=0.0.0.0:11434          # 2025 syntax
       - OLLAMA_ORIGINS=*
       - OLLAMA_FLASH_ATTENTION=1
       - OLLAMA_MAX_LOADED_MODELS=1
-      - OLLAMA_NUM_PARALLEL=2
-      - OLLAMA_MODELS=/root/.ollama/models
+      - OLLAMA_NUM_PARALLEL=4             # 4060 Ti 16 GB eats 4 concurrent requests for breakfast
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_VISIBLE_DEVICES=all
-      #- OLLAMA_CUDA_ENABLED=1
     restart: unless-stopped
     runtime: nvidia
     networks:
       - ai_network
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     volumes:
       - open_webui_data:/app/backend/data
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      # Optional but GOLD for architects: mount your real codebases for RAG
+      # - /home/youruser/projects:/app/backend/data/projects:ro
     ports:
-      - "3000:8080"
+      - 3000:8080
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
       - ENABLE_SIGNUP=${WEBUI_ENABLE_SIGNUP}
-      - DEFAULT_MODELS=codellama,llama3.1
+
+      # Productivity turbo-chargers
+      - DEFAULT_MODELS=hf.co/mradermacher/Qwen2.5-Microsoft-NextCoder-Brainstorm20x-128k-ctx-20B-GGUF:Q4_K_S,deepseek-r1:8b,hf.co/microsoft/Phi-3.5-mini-instruct-GGUF:Q4_K_M
+      - WEBUI_NAME=Local Architect Brain
+      - ENABLE_RAG_WEB_SEARCH=true                     # Search your own docs + web when needed
+      - ENABLE_IMAGE_GENERATION=true                  # You don’t want Flux here – keep it clean
+      - ENABLE_COMMUNITY_MODEL_SHARING=false
+      - ENABLE_MODEL_FILTER=true
+      - RAG_EMBEDDING_MODEL=hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q4_K_M
+      - RAG_RERANKING_MODEL=hf.co/BAAI/bge-reranker-v2-m3-GGUF:Q4_K_M
+      - RAG_TOP_K=15
+      - RAG_CHUNK_SIZE=1024
+      - ENABLE_OPENAPI=true                            # Use with Raycast/Alfred shortcuts
+      - SCARF_ANALYTICS=false                          # Disable telemetry
+    extra_hosts:
+      - "host.docker.internal:host-gateway"            # Allows WebUI to reach your host services if needed
     depends_on:
       - ollama
     restart: unless-stopped
     networks:
       - ai_network
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   code-server:
     image: lscr.io/linuxserver/code-server:latest
