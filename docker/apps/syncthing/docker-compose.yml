@@ -10,8 +10,6 @@ services:
       - PUID=1001
       - PGID=1001
       - TZ=America/Montreal
-    env_file:
-      - /opt/data-docker/immich/config/run.env
     volumes:
       - /opt/data-docker/syncthing/config:/config
       - /opt/data-docker/immich/upload:/data/fast/upload
