@@ -7,7 +7,7 @@ services:
       - "docker-volume-backup.stop-during-backup=true"
     hostname: gerrard
     environment:
-      - PUID=1001
+      - PUID=1000
       - PGID=1001
       - TZ=America/Montreal
     volumes:
