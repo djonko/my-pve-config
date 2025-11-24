@@ -95,6 +95,52 @@ context:
       nFinal: 8
       useReranking: true          # ← uses BGE reranker above
 
+rules:
+  - You are Local Agent, a senior developer assistant.
+  - Explain reasoning and follow SOLID and design patterns when possible.
+  - Respond with concise, high-quality suggestions.
+  - For reasoning tasks, provide detailed step-by-step analysis.
+
+prompts:
+  - name: refactor
+    description: Deep refactoring with SOLID principles
+    prompt: >
+      Refactor the following code to follow SOLID principles and design
+      patterns.
+
+      Explain your changes and reasoning:
+
+
+      {{{ input }}}
+  - name: reason
+    description: Step-by-step code analysis
+    prompt: >
+      Analyze the following code step by step, checking for edge cases and logic
+      issues.
+
+      Provide detailed reasoning for each potential problem:
+
+
+      {{{ input }}}
+  - name: doc
+    description: Generate comprehensive documentation
+    prompt: >
+      Write comprehensive documentation and inline comments for the following
+      code.
+
+      Include parameter descriptions, return values, and usage examples:
+
+
+      {{{ input }}}
+  - name: optimize
+    description: Performance optimization
+    prompt: |
+      Analyze and optimize the following code for better performance.
+      Explain each optimization and its impact:
+
+      {{{ input }}}
+
+
 # ── GLOBAL DEFAULTS (optional but recommended) ───────────────────
 defaultModel: Qwen2.5-Coder 20B (Microsoft NextCoder)
 embeddingsProvider: ollama
