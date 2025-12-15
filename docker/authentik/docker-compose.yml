@@ -61,8 +61,6 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
       - frontend-network
       - backend-network
@@ -73,7 +71,7 @@ services:
     command: worker
     environment:
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-      AUTHENTIK_REDIS__HOST: redis
+      #AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_EMAIL__HOST: ${ATK_SMTP_HOST}
       AUTHENTIK_EMAIL__PORT: ${ATK_SMTP_PORT}
       AUTHENTIK_EMAIL__USERNAME: ${ATK_SMTP_USER}
@@ -103,8 +101,6 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
     depends_on:
       postgresql:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     networks:
       - frontend-network
