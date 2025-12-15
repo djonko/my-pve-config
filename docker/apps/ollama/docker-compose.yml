@@ -15,6 +15,7 @@ services:
       - OLLAMA_MAX_LOADED_MODELS=1
       - OLLAMA_NUM_PARALLEL=4             # 4060 Ti 16 GB eats 4 concurrent requests for breakfast
       - NVIDIA_VISIBLE_DEVICES=all
+      - OLLAMA_CONTEXT_LENGTH=8192
     restart: unless-stopped
     runtime: nvidia
     networks:
