@@ -4,7 +4,7 @@ services:
   gotify:
     container_name: gotify
     hostname: gotify
-    image: gotify/server
+    image: gotify/server:latest
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
