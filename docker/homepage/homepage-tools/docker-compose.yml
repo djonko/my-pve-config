@@ -5,6 +5,7 @@ services:
     environment:
       - PUID=1000 # Change to your user's PUID
       - PGID=1000 # Change to your user's PGID
+      - HOMEPAGE_ALLOWED_HOSTS=*
     ports:
       - "3000:3000" # Or your preferred host port for Homepage
     volumes:
