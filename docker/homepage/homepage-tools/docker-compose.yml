@@ -2,6 +2,8 @@ services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
+    env_file:
+      - /opt/data-etc/homepage/config.env
     environment:
       - PUID=1000 # Change to your user's PUID
       - PGID=1000 # Change to your user's PGID
