@@ -12,7 +12,7 @@ services:
       - "3000:3000" # Or your preferred host port for Homepage
     volumes:
       - /opt/data-docker/homepage/config:/app/config # Mount your Homepage config directory
-      - /opt/data-docker/homepage/images:/images # Mount your Homepage images directory
+      - /opt/data-docker/homepage/images:/app/public/images # Mount your Homepage images directory
       # - /var/run/docker.sock:/var/run/docker.sock:ro # Optional: if using Docker integrations
     restart: unless-stopped
 
