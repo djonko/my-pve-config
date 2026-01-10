@@ -166,9 +166,9 @@ services:
       - "8191:8191"
     networks:
       - media-net
-  jellyseerr:
-    image: ghcr.io/hotio/jellyseerr:latest
-    container_name: jellyseerr
+  seerr:
+    image: ghcr.io/hotio/seerr
+    container_name: seerr
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
@@ -180,7 +180,7 @@ services:
     ports:
       - "5055:5055"
     volumes:
-      - /opt/data-docker/media_stream/jellyseerr/config:/config
+      - /opt/data-docker/media_stream/seerr/config:/config
       - /nfs/stream_data/videos/movies:/data/medialibrary/movies
       - /nfs/stream_data/videos/tvshows:/data/medialibrary/tv #optional
       - /nfs/stream_data/downloads:/data/downloads
