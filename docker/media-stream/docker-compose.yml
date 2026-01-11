@@ -132,25 +132,6 @@ services:
       - "6969:6969"
     networks:
       - media-net
-  readarr:
-    image: ghcr.io/hotio/readarr
-    container_name: readarr
-    restart: unless-stopped
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK=0022
-      - TZ=America/Montreal
-    volumes:
-      - /opt/data-docker/media_stream/readarr/config:/config
-      - /nfs/stream_data/books:/data/medialibrary/books
-      - /nfs/stream_data/downloads:/data/downloads #optional
-    ports:
-      - "8787:8787"
-    networks:
-      - media-net
   torrserver:
     image: ghcr.io/yourok/torrserver:latest
     container_name: torrserver
@@ -185,9 +166,9 @@ services:
       - "8191:8191"
     networks:
       - media-net
-  jellyseerr:
-    image: ghcr.io/hotio/jellyseerr:latest
-    container_name: jellyseerr
+  seerr:
+    image: ghcr.io/hotio/seerr
+    container_name: seerr
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
@@ -199,7 +180,7 @@ services:
     ports:
       - "5055:5055"
     volumes:
-      - /opt/data-docker/media_stream/jellyseerr/config:/config
+      - /opt/data-docker/media_stream/seerr/config:/config
       - /nfs/stream_data/videos/movies:/data/medialibrary/movies
       - /nfs/stream_data/videos/tvshows:/data/medialibrary/tv #optional
       - /nfs/stream_data/downloads:/data/downloads
@@ -242,6 +223,7 @@ services:
       - /opt/data-docker/media_stream/lazylibrarian/config:/config
       - /nfs/downloads/:/downloads
       - /nfs/books/:/books
+      - /nfs/stream_data/books:/data/medialibrary/books
     networks:
       - media-net
 networks:
