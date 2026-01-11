@@ -26,9 +26,9 @@ services:
       #- PIHOLE_DNS_=172.20.0.3;9.9.9.9;149.112.112.112 -> to activate quad9dns
       - PIHOLE_DNS_=172.20.0.3
       - VIRTUAL_HOST=${HOSTNAME}
-      - DNSMASQ_LISTENING=all
+      #- DNSMASQ_LISTENING=all
       # If using Docker's default `bridge` network setting the dns listening mode should be set to 'ALL'
-      - FTLCONF_dns_listeningMode='ALL'
+      #- FTLCONF_dns_listeningMode='ALL'
     volumes:
       - '/opt/data-docker/pihole/etc/pihole:/etc/pihole'
       - '/opt/data-docker/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
