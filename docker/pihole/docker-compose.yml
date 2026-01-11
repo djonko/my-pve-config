@@ -27,6 +27,8 @@ services:
       - PIHOLE_DNS_=172.20.0.3
       - VIRTUAL_HOST=${HOSTNAME}
       - DNSMASQ_LISTENING=all
+      # If using Docker's default `bridge` network setting the dns listening mode should be set to 'ALL'
+      - FTLCONF_dns_listeningMode='ALL'
     volumes:
       - '/opt/data-docker/pihole/etc/pihole:/etc/pihole'
       - '/opt/data-docker/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
@@ -40,6 +42,14 @@ services:
     networks:
       pihole_local_network:
         ipv4_address: 172.20.0.2
+    cap_add:
+      # See https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+      # Required if you are using Pi-hole as your DHCP server, else not needed
+      - NET_ADMIN
+      # Required if you are using Pi-hole as your NTP client to be able to set the host's system time
+      - SYS_TIME
+      # Optional, if Pi-hole should get some more processing time
+      - SYS_NICE
 
   stubby:
     container_name: stubby
