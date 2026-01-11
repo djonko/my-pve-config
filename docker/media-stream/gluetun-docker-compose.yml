@@ -11,6 +11,7 @@ services:
       - gluetun
     environment:
       - TZ=America/Montreal
+      - REQUIRE_AUTH=false
     network_mode: "service:gluetun"
 
   qbittorrent:
