@@ -24,6 +24,8 @@ services:
     image: adminer:latest
     container_name: adminer_ptsql
     restart: unless-stopped
+    depends_on:
+      - postgresql
     entrypoint:
       - ADMINER_DEFAULT_SERVER=postgresql
     ports:
