@@ -1,6 +1,6 @@
 services:
   radicale:
-    image: christf/docker-radicale-birthday:latest
+    image: christf/docker-radicale-birthday:v0.16.0
     container_name: radicale
     ports:
       - "5232:5232"
