@@ -26,8 +26,8 @@ services:
     restart: unless-stopped
     depends_on:
       - postgresql
-    environment:
-      - ADMINER_DEFAULT_SERVER=postgresql
+    #environment:
+    #  - ADMINER_DEFAULT_SERVER=postgresql
     ports:
       - "8210:8080"
     networks:
