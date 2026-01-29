@@ -2,6 +2,7 @@ services:
   postgresql:
     image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
+    container_name: postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       start_period: 20s
@@ -16,6 +17,17 @@ services:
       POSTGRES_PASSWORD: ${ATK_POSTGRES_PASSWORD}
       POSTGRES_USER: ${ATK_POSTGRES_USER}
       POSTGRES_DB: ${ATK_POSTGRES_DB}
+    networks:
+      - backend-network
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer_ptsql
+    restart: unless-stopped
+    entrypoint:
+      - ADMINER_DEFAULT_SERVER=postgresql
+    ports:
+      - "8210:8080"
     networks:
       - backend-network
   server:
