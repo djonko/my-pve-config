@@ -1,6 +1,6 @@
 services:
   radicale:
-    image: tomsquest/docker-radicale
+    image: christf/docker-radicale-birthday:latest
     container_name: radicale
     ports:
       - "5232:5232"
@@ -27,5 +27,6 @@ services:
     restart: unless-stopped
     volumes:
       - "/opt/data-docker/radicale/data:/data"
+      - "/opt/data-docker/radicale/config:/config"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
