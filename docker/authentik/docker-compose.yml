@@ -19,7 +19,7 @@ services:
     networks:
       - backend-network
   server:
-    image: ghcr.io/goauthentik/server:2025.10.2
+    image: ghcr.io/goauthentik/server:2025.12.1
     restart: unless-stopped
     command: server
     container_name: authentik-proxy
@@ -66,7 +66,7 @@ services:
       - backend-network
 
   worker:
-    image: ghcr.io/goauthentik/server:2025.10.2
+    image: ghcr.io/goauthentik/server:2025.12.1
     restart: unless-stopped
     command: worker
     environment:
