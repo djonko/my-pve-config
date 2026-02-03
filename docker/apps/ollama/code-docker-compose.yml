@@ -1,0 +1,29 @@
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - PASSWORD=${CODE_SERVER_PASSWORD}
+      - SUDO_PASSWORD=${CODE_SERVER_SUDO_PASSWORD}
+    volumes:
+      - code_server_data:/config
+      - ollama_data:/root/.ollama:ro
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    ports:
+      - "8443:8443"
+    restart: unless-stopped
+    networks:
+      - ai_network
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+volumes:
+  code_server_data:
+
+networks:
+  ai_network:
+    driver: bridge
