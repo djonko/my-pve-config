@@ -1,0 +1,23 @@
+- Networking, Notification, Metric, Tools, Media, Company, VPSF, kubernetes, My Apps, Online Tools, Productivity
+
+- name: "Portainer"
+  icon: "mdi:portainer"
+  href: "https://docker-ctl.example.com"
+  group: "Management"
+  integration: "portainer"
+  ping: true
+  api_key: accesstokentest
+
+- name: "LibreSpeed"
+  icon: "speedtest"
+  href: "http://radarr:7878"
+  group: "Networking"
+  ping: true
+
+- name: "Uptime Kuma"
+  icon: "mdi:portainer"
+  href: "https://uptime.example.com"
+  group: "Monitoring"
+  integration: "uptimekuma"
+  ping: true
+  slug: "allstatus"
