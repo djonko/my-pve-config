@@ -28,7 +28,7 @@ services:
       - SMTP_HOST=${PWD_SMTP_HOST}
       - SMTP_FROM=${PWD_SMTP_FROM}
       - SMTP_FROM_NAME=Password Vault
-      - SMTP_SECURITY=starttls
+      - SMTP_SECURITY=force_tls
       - SMTP_PORT=${PWD_SMTP_PORT}
       - SMTP_USERNAME_FILE=/run/secrets/SMTP_USERNAME
       - SMTP_PASSWORD_FILE=/run/secrets/SMTP_PASSWORD
