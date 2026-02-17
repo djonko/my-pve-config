@@ -48,7 +48,7 @@ if ! docker ps --filter name="^${CONTAINER}$" -q | grep -q .; then
 fi
 
 # ──── Remove decision(s) ─────────────────────────────────────
-if docker exec "${CONTAINER}" cscli decisions list -i "${PUBLIC_IP}" --quiet | grep -q .; then
+if docker exec "${CONTAINER}" cscli decisions list -i "${PUBLIC_IP}" | grep -q .; then
     if docker exec "${CONTAINER}" cscli decisions delete -i "${PUBLIC_IP}" >/dev/null 2>&1; then
         log "SUCCESS: Removed ban for ${PUBLIC_IP}"
     else
