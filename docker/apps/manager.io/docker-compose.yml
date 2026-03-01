@@ -1,12 +1,12 @@
 services:
-  excalidraw:
-    image: managerio/server
+  managerio:
+    image: ghcr.io/aliyusuf95/manager.io:latest
     container_name: managerio-abz
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     ports:
-      - "8101:80"
+      - "8101:8080"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
