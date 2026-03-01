@@ -72,6 +72,16 @@ services:
       - "traefik.http.routers.authentik.service=authentik"
       - "traefik.http.routers.authentik-output-rtr.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAINNAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
       - "traefik.docker.network=frontend-network"
+      - "traefik.http.middlewares.authentik-lan-allowlist.ipallowlist.sourcerange=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+      # LAN (nouveau) -> utilise un 2e hostname interne
+      # Mets AUTHENTIK_LAN_DOMAIN=authentik.lan.tondomaine.tld dans ton .env
+      - "traefik.http.routers.authentik-lan.entryPoints=websecure"
+      - "traefik.http.routers.authentik-lan.rule=Host(`${AUTHENTIK_LAN_DOMAIN}`)"
+      - "traefik.http.routers.authentik-lan.tls=true"
+      - "traefik.http.routers.authentik-lan.tls.certresolver=dynu-resolver"
+      - "traefik.http.routers.authentik-lan.service=authentik"
+      - "traefik.http.routers.authentik-lan.middlewares=authentik-lan-allowlist@docker"
+
     depends_on:
       postgresql:
         condition: service_healthy
