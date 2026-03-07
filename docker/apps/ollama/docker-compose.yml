@@ -4,70 +4,73 @@ services:
     container_name: ollama
     volumes:
       - ollama_data:/root/.ollama
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     ports:
-      - "11434:11434"
+      - 11434:11434
     environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_MODELS=/root/.ollama/models
-      - OLLAMA_CUDA_ENABLED=1
+      # Network
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_ORIGINS=*
+      # GPU
+      - NVIDIA_VISIBLE_DEVICES=all
+      # Performance
+      - OLLAMA_FLASH_ATTENTION=1
+      - OLLAMA_CONTEXT_LENGTH=8192
+      # Memory control (important for 16GB VRAM)
+      - OLLAMA_MAX_LOADED_MODELS=2
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_KV_CACHE_TYPE=q8_0
     restart: unless-stopped
+    runtime: nvidia
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+              count: all
+              capabilities: [ gpu ]
     networks:
       - ai_network
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     volumes:
       - open_webui_data:/app/backend/data
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      # Optional but GOLD for architects: mount your real codebases for RAG
+      # - /home/youruser/projects:/app/backend/data/projects:ro
     ports:
-      - "3000:8080"
+      - 3000:8080
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
       - ENABLE_SIGNUP=${WEBUI_ENABLE_SIGNUP}
-      - DEFAULT_MODELS=codellama,llama3.1
+      - SCARF_ANALYTICS=false
+
+      # RAG (local & fast)
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_EMBEDDING_MODEL=nomic-embed-text:v1.5
+      - RAG_RERANKING_MODEL=hf.co/l-nmch/bge-reranker-v2-m3-Q8_0-GGUF:Q8_0
+      - RAG_TOP_K=15
+      - RAG_CHUNK_SIZE=1024
+
+      # Productivity turbo-chargers
+      - WEBUI_NAME=Local Architect Brain
+      - ENABLE_RAG_WEB_SEARCH=true                     # Search your own docs + web when needed
+      - ENABLE_IMAGE_GENERATION=true                  # You don’t want Flux here – keep it clean
+      - ENABLE_COMMUNITY_MODEL_SHARING=false
+      - ENABLE_MODEL_FILTER=true
+      - ENABLE_OPENAPI=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"            # Allows WebUI to reach your host services if needed
     depends_on:
       - ollama
     restart: unless-stopped
     networks:
       - ai_network
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
-
-  code-server:
-    image: lscr.io/linuxserver/code-server:latest
-    container_name: code-server
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - PASSWORD=${CODE_SERVER_PASSWORD}
-      - SUDO_PASSWORD=${CODE_SERVER_SUDO_PASSWORD}
-    volumes:
-      - code_server_data:/config
-      - ollama_data:/root/.ollama:ro
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
-    ports:
-      - "8443:8443"
-    restart: unless-stopped
-    networks:
-      - ai_network
-    labels:
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
 
 volumes:
   ollama_data:

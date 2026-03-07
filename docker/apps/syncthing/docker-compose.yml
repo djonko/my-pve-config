@@ -1,7 +1,6 @@
-version: "3.9"
 services:
   syncthing:
-    image: ghcr.io/linuxserver/syncthing
+    image: lscr.io/linuxserver/syncthing:latest
     container_name: syncthing
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
