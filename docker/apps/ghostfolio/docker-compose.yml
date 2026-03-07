@@ -1,0 +1,127 @@
+services:
+  ghostfolio:
+    image: docker.io/ghostfolio/ghostfolio:latest
+    container_name: ghostfolio
+    restart: unless-stopped
+    init: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - .env
+    environment:
+      - ACCESS_TOKEN_SALT=${ACCESS_TOKEN_SALT}
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - PORT=${GHOSTFOLIO_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - ROOT_URL=${ROOT_URL}
+      - ENABLE_FEATURE_AUTH_OIDC=${ENABLE_FEATURE_AUTH_OIDC}
+      - ENABLE_FEATURE_AUTH_TOKEN=${ENABLE_FEATURE_AUTH_TOKEN}
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - OIDC_ISSUER=${OIDC_ISSUER}
+      - OIDC_SCOPE=${OIDC_SCOPE}
+      # Optional manual overrides if ever needed:
+      # - OIDC_CALLBACK_URL=${OIDC_CALLBACK_URL}
+      # - OIDC_AUTHORIZATION_URL=${OIDC_AUTHORIZATION_URL}
+      # - OIDC_TOKEN_URL=${OIDC_TOKEN_URL}
+      # - OIDC_USER_INFO_URL=${OIDC_USER_INFO_URL}
+      # Optional data provider keys:
+      - API_KEY_COINGECKO_DEMO=${API_KEY_COINGECKO_DEMO}
+      # - API_KEY_COINGECKO_PRO=${API_KEY_COINGECKO_PRO}
+    ports:
+      - "${GHOSTFOLIO_BIND_PORT}:${GHOSTFOLIO_PORT}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    depends_on:
+      ghostfolio-db:
+        condition: service_healthy
+      ghostfolio-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${GHOSTFOLIO_PORT}/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    networks:
+      - ghostfolio-net
+      - ghostfolio-backend-net
+
+  ghostfolio-db:
+    image: docker.io/library/postgres:15-alpine
+    container_name: ghostfolio-db
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_READ_SEARCH
+      - FOWNER
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    expose:
+      - "5432"
+    volumes:
+      - /opt/data-docker/ghostfolio/postgres-data:/var/lib/postgresql/data
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d \"$${POSTGRES_DB}\" -U \"$${POSTGRES_USER}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - ghostfolio-backend-net
+
+  ghostfolio-redis:
+    image: docker.io/library/redis:alpine
+    container_name: ghostfolio-redis
+    restart: unless-stopped
+    user: "999:1000"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - .env
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    expose:
+      - "6379"
+    volumes:
+      - /opt/data-docker/ghostfolio/redis-data:/data
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --pass \"$${REDIS_PASSWORD}\" ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - ghostfolio-backend-net
+
+networks:
+  ghostfolio-net:
+    name: ghostfolio-net
+    driver: bridge
+  ghostfolio-backend-net:
+    name: ghostfolio-backend-net
+    driver: bridge
