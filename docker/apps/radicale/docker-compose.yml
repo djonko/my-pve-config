@@ -1,0 +1,32 @@
+services:
+  radicale:
+    image: christf/docker-radicale-birthday:v0.16.0
+    container_name: radicale
+    ports:
+      - "5232:5232"
+    init: true
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+      - KILL
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          pids: 50
+    healthcheck:
+      test: curl -f http://127.0.0.1:5232 || exit 1
+      interval: 30s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - "/opt/data-docker/radicale/data:/data"
+      - "/opt/data-docker/radicale/config:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"

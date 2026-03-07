@@ -2,6 +2,7 @@ services:
   postgresql:
     image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
+    container_name: postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       start_period: 20s
@@ -19,35 +20,26 @@ services:
     networks:
       - backend-network
 
-  redis:
-    image: docker.io/library/redis:alpine
-    command: --save 60 1 --loglevel warning
+  adminer:
+    image: adminer:latest
+    container_name: adminer_ptsql
     restart: unless-stopped
-    container_name: redis
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 3s
-    volumes:
-      - authentik_redis_data:/data
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-    labels:
-      - "docker-volume-backup.stop-during-backup=true"
-      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+    depends_on:
+      - postgresql
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgresql
+    ports:
+      - "8210:8080"
     networks:
       - backend-network
-
   server:
-    image: ghcr.io/goauthentik/server:2025.6
+    image: ghcr.io/goauthentik/server:2025.12.4
     restart: unless-stopped
     command: server
     container_name: authentik-proxy
     environment:
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-      AUTHENTIK_REDIS__HOST: redis
+      #AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_EMAIL__HOST: ${ATK_SMTP_HOST}
       AUTHENTIK_EMAIL__PORT: ${ATK_SMTP_PORT}
       AUTHENTIK_EMAIL__USERNAME: ${ATK_SMTP_USER}
@@ -80,22 +72,22 @@ services:
       - "traefik.http.routers.authentik.service=authentik"
       - "traefik.http.routers.authentik-output-rtr.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAINNAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
       - "traefik.docker.network=frontend-network"
+      - "traefik.http.middlewares.authentik-lan-allowlist.ipallowlist.sourcerange=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+
     depends_on:
       postgresql:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     networks:
       - frontend-network
       - backend-network
 
   worker:
-    image: ghcr.io/goauthentik/server:2025.6
+    image: ghcr.io/goauthentik/server:2025.12.4
     restart: unless-stopped
     command: worker
     environment:
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-      AUTHENTIK_REDIS__HOST: redis
+      #AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_EMAIL__HOST: ${ATK_SMTP_HOST}
       AUTHENTIK_EMAIL__PORT: ${ATK_SMTP_PORT}
       AUTHENTIK_EMAIL__USERNAME: ${ATK_SMTP_USER}
@@ -126,14 +118,10 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
       - frontend-network
       - backend-network
 
-volumes:
-  authentik_redis_data:
 networks:
   frontend-network:
     driver: bridge
