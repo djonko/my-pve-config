@@ -73,6 +73,13 @@ services:
       - "traefik.http.routers.authentik-output-rtr.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAINNAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
       - "traefik.docker.network=frontend-network"
       - "traefik.http.middlewares.authentik-lan-allowlist.ipallowlist.sourcerange=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+      - "traefik.http.routers.authentik-outpost.rule: Host(`outpost-${AUTHENTIK_DOMAIN}`)"
+      - "traefik.http.routers.authentik-outpost.entrypoints=websecure"
+      - "traefik.http.routers.authentik-outpost.tls=true"
+      - "traefik.http.routers.authentik-outpost.tls.certresolver=dynu-resolver"
+      - "traefik.http.services.authentik-outpost.loadbalancer.server.port=9000"
+      - "traefik.http.services.authentik-outpost.loadbalancer.healthcheck.path=/outpost.goauthentik.io/ping"
+      - "traefik.http.services.authentik-outpost.loadbalancer.healthcheck.port=9300"
 
     depends_on:
       postgresql:
