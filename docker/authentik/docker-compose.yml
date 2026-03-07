@@ -34,59 +34,65 @@ services:
       - backend-network
   server:
     image: ghcr.io/goauthentik/server:2025.12.4
+    container_name: authentik-proxy
     restart: unless-stopped
     command: server
-    container_name: authentik-proxy
     environment:
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-      #AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_EMAIL__HOST: ${ATK_SMTP_HOST}
       AUTHENTIK_EMAIL__PORT: ${ATK_SMTP_PORT}
       AUTHENTIK_EMAIL__USERNAME: ${ATK_SMTP_USER}
       AUTHENTIK_EMAIL__PASSWORD: ${ATK_SMTP_PASSWORD}
       AUTHENTIK_EMAIL__USE_TLS: ${ATK_SMTP_USE_TLS}
       AUTHENTIK_EMAIL__FROM: ${ATK_SMTP_FROM}
-      AUTHENTIK_EMAIL__USE_SSL: false
-      AUTHENTIK_EMAIL__TIMEOUT: 10
+      AUTHENTIK_EMAIL__USE_SSL: "false"
+      AUTHENTIK_EMAIL__TIMEOUT: "10"
       AUTHENTIK_POSTGRESQL__HOST: postgresql
       AUTHENTIK_POSTGRESQL__USER: ${ATK_POSTGRES_USER}
       AUTHENTIK_POSTGRESQL__NAME: ${ATK_POSTGRES_DB}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${ATK_POSTGRES_PASSWORD}
-      AUTHENTIK_ERROR_REPORTING__ENABLED: true
-      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "true"
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
       AUTHENTIK_HOST: ${AUTHENTIK_HOST}
-      AUTHENTIK_DOMAIN: ${AUTHENTIK_DOMAIN}
 
     volumes:
       - /opt/data-docker/authentik/app/media:/media:rw
       - /opt/data-docker/authentik/app/custom-templates:/templates:rw
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.authentik.entryPoints=websecure"
-      - "traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_DOMAIN}`)"
-      - "traefik.http.routers.authentik.tls=true"
-      - "traefik.http.routers.authentik.tls.certresolver=dynu-resolver"
-      - "traefik.http.services.authentik.loadbalancer.server.port=9000"
-      - "traefik.http.routers.authentik.service=authentik"
-      - "traefik.http.routers.authentik-output-rtr.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAINNAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
-      - "traefik.docker.network=frontend-network"
-      - "traefik.http.middlewares.authentik-lan-allowlist.ipallowlist.sourcerange=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-      - "traefik.http.routers.authentik-outpost.rule: Host(`outpost-${AUTHENTIK_DOMAIN}`)"
-      - "traefik.http.routers.authentik-outpost.entrypoints=websecure"
-      - "traefik.http.routers.authentik-outpost.tls=true"
-      - "traefik.http.routers.authentik-outpost.tls.certresolver=dynu-resolver"
-      - "traefik.http.services.authentik-outpost.loadbalancer.server.port=9000"
-      - "traefik.http.services.authentik-outpost.loadbalancer.healthcheck.path=/outpost.goauthentik.io/ping"
-      - "traefik.http.services.authentik-outpost.loadbalancer.healthcheck.port=9300"
-
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       postgresql:
         condition: service_healthy
     networks:
       - frontend-network
       - backend-network
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=frontend-network"
+
+      # Main authentik UI/API
+      - "traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_DOMAIN}`)"
+      - "traefik.http.routers.authentik.entrypoints=websecure"
+      - "traefik.http.routers.authentik.tls=true"
+      - "traefik.http.routers.authentik.tls.certresolver=dynu-resolver"
+      - "traefik.http.routers.authentik.service=authentik"
+      - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+
+      # Embedded outpost path on the authentik host
+      - "traefik.http.routers.authentik-outpost.rule=Host(`${AUTHENTIK_DOMAIN}`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      - "traefik.http.routers.authentik-outpost.entrypoints=websecure"
+      - "traefik.http.routers.authentik-outpost.tls=true"
+      - "traefik.http.routers.authentik-outpost.tls.certresolver=dynu-resolver"
+      - "traefik.http.routers.authentik-outpost.service=authentik-outpost"
+      - "traefik.http.services.authentik-outpost.loadbalancer.server.port=9000"
+
+      # Optional healthcheck for embedded outpost endpoint
+      - "traefik.http.services.authentik-outpost.loadbalancer.healthcheck.path=/outpost.goauthentik.io/ping"
+      - "traefik.http.services.authentik-outpost.loadbalancer.healthcheck.port=9000"
+
+      # Optional LAN allowlist middleware
+      - "traefik.http.middlewares.authentik-lan-allowlist.ipallowlist.sourcerange=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
   worker:
     image: ghcr.io/goauthentik/server:2025.12.4
