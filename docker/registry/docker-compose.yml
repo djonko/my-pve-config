@@ -11,9 +11,9 @@ services:
       REGISTRY_AUTH_HTPASSWD_REALM: "Registry"
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
-      REGISTRY_HTTP_SECRET:
+      OTEL_TRACES_EXPORTER: "none"
     volumes:
       - "/opt/data-docker/docker-registry/data:/var/lib/registry"
       - "/opt/data-docker/docker-registry/auth:/auth:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/timezone:/etcp/timezone:ro"
