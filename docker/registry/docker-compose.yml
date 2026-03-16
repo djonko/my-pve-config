@@ -12,6 +12,7 @@ services:
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
       OTEL_TRACES_EXPORTER: "none"
+      REGISTRY_LOG_LEVEL: info
     volumes:
       - "/opt/data-docker/docker-registry/data:/var/lib/registry"
       - "/opt/data-docker/docker-registry/auth:/auth:ro"
@@ -30,6 +31,9 @@ services:
       # required when registry uses basic auth
       SINGLE_REGISTRY: "true"
       DELETE_IMAGES: "true"
-
+      NGINX_PROXY_PASS_URL: "http://registry:5000"
+      NGINX_RESOLVER: "127.0.0.11"
+      REGISTRY_SECURED: "false"
+      CATALOG_ELEMENTS_LIMIT: "1000"
     depends_on:
       - registry
