@@ -4,7 +4,7 @@ services:
     container_name: docker-registry
     restart: unless-stopped
     ports:
-      - "8105:5001"
+      - "8105:5000"
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
       REGISTRY_AUTH: htpasswd
