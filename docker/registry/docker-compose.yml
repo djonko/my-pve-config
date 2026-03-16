@@ -13,6 +13,9 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
       OTEL_TRACES_EXPORTER: "none"
       REGISTRY_LOG_LEVEL: info
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin: '["*"]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: '["HEAD","GET","OPTIONS","DELETE"]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: '["Authorization","Accept","Cache-Control"]'
     volumes:
       - "/opt/data-docker/docker-registry/data:/var/lib/registry"
       - "/opt/data-docker/docker-registry/auth:/auth:ro"
