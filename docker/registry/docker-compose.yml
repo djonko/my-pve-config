@@ -17,3 +17,19 @@ services:
       - "/opt/data-docker/docker-registry/auth:/auth:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etcp/timezone:ro"
+  registry-ui:
+    image: joxit/docker-registry-ui:latest
+    container_name: docker-registry-ui
+    restart: unless-stopped
+    ports:
+      - "8106:80"
+    environment:
+      REGISTRY_URL: http://registry:5000
+      REGISTRY_TITLE: "Private Docker Registry"
+
+      # required when registry uses basic auth
+      SINGLE_REGISTRY: "true"
+      DELETE_IMAGES: "true"
+
+    depends_on:
+      - registry
