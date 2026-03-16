@@ -13,30 +13,8 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
       OTEL_TRACES_EXPORTER: "none"
       REGISTRY_LOG_LEVEL: info
-      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin: '["http://192.168.20.33:8106"]'
-      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: '["HEAD","GET","OPTIONS","DELETE"]'
-      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: '["Authorization","Accept","Cache-Control"]'
     volumes:
       - "/opt/data-docker/docker-registry/data:/var/lib/registry"
       - "/opt/data-docker/docker-registry/auth:/auth:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etcp/timezone:ro"
-  registry-ui:
-    image: joxit/docker-registry-ui:latest
-    container_name: docker-registry-ui
-    restart: unless-stopped
-    ports:
-      - "8106:80"
-    environment:
-      REGISTRY_URL: http://registry:5000
-      REGISTRY_TITLE: "Private Docker Registry"
-
-      # required when registry uses basic auth
-      SINGLE_REGISTRY: "true"
-      DELETE_IMAGES: "true"
-      NGINX_PROXY_PASS_URL: "http://registry:5000"
-      NGINX_RESOLVER: "127.0.0.11"
-      REGISTRY_SECURED: "false"
-      CATALOG_ELEMENTS_LIMIT: "1000"
-    depends_on:
-      - registry
