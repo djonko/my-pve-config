@@ -18,3 +18,10 @@ services:
       - "/opt/data-docker/docker-registry/auth:/auth:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etcp/timezone:ro"
+  registry-ui:
+    image: ghcr.io/eznix86/docker-registry-ui:latest
+    ports:
+      - "8106:80"
+    environment:
+      - REGISTRY_URL=http://docker-registry:5000
+      - REGISTRY_AUTH=dGVzdHVzZXI6dGVzVDEyMzQ1
