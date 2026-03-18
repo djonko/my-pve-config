@@ -25,3 +25,5 @@ services:
     environment:
       - REGISTRY_URL=http://docker-registry:5000
       - REGISTRY_AUTH=dGVzdHVzZXI6dGVzVDEyMzQ1
+      - REGISTRY_TITLE="Ui24 Private Registry"
+
