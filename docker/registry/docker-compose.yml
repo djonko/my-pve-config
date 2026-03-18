@@ -23,7 +23,6 @@ services:
     ports:
       - "8106:80"
     environment:
-      - REGISTRY_URL=http://docker-registry:5000
+      - REGISTRY_URL=${REGISTRY_REMOTE_URL}
       - REGISTRY_AUTH=${REGISTRY_AUTH_BASE64}
-      - REGISTRY_TITLE="Ui24 Private Registry"
 
