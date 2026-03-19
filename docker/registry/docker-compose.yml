@@ -20,6 +20,7 @@ services:
       - "/etc/timezone:/etcp/timezone:ro"
   registry-ui:
     image: ghcr.io/eznix86/docker-registry-ui:latest
+    restart: unless-stopped
     ports:
       - "8106:80"
     environment:
