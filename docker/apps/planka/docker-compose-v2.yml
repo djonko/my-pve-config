@@ -37,7 +37,7 @@ services:
       - SMTP_PASSWORD=$SMTP_PASSWORD
       - SMTP_FROM=$SMTP_FROM
       - SMTP_TLS_REJECT_UNAUTHORIZED=$SMTP_TLS_REJECT_UNAUTHORIZED
-      - TRUST_PROXY=1
+      - TRUST_PROXY=false
     depends_on:
       db-planka:
         condition: service_healthy
