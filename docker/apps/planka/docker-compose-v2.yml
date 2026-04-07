@@ -11,8 +11,8 @@ services:
       - no-new-privileges:true
     volumes:
       - /opt/data-docker/planka/app/user-avatars:/app/public/user-avatars
-      - data:/app/data
-      #- /opt/data-docker/planka/app/data:/app/data
+      #- data:/app/data
+      - /opt/data-docker/planka/app/data:/app/data
       - /opt/data-docker/planka/app/background-images:/app/public/background-images
       - /opt/data-docker/planka/app/project-background-images:/app/public/project-background-images
       - /opt/data-docker/planka/app/attachments:/app/private/attachments
