@@ -17,8 +17,6 @@ services:
     restart: unless-stopped
     ports:
       - "8107:3000"
-    security_opt:
-      - no-new-privileges:true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
