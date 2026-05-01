@@ -23,4 +23,4 @@ services:
       - "/opt/data-docker/grafana-data:/var/lib/grafana"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=$GF_ROOT_PWD
-      - GF_INSTALL_PLUGINS=victoriametrics-metrics-datasource,grafana-assistant-app
+      - GF_INSTALL_PLUGINS=victoriametrics-metrics-datasource,grafana-assistant-app,grafana-elasticsearch-datasource
