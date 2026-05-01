@@ -12,7 +12,7 @@ services:
       - "-memory.allowedPercent=40"
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana-enterprise
     container_name: grafana
     restart: unless-stopped
     ports:
