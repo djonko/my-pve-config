@@ -16,7 +16,7 @@ services:
     container_name: grafana
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "8107:3000"
     security_opt:
       - no-new-privileges:true
     volumes:
