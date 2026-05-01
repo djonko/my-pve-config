@@ -39,6 +39,11 @@ services:
       - SMTP_FROM=$SMTP_FROM
       - SMTP_TLS_REJECT_UNAUTHORIZED=$SMTP_TLS_REJECT_UNAUTHORIZED
       - TRUST_PROXY=false
+      - OIDC_ISSUER=$PLK_OIDC_ISSUER
+      - OIDC_CLIENT_ID=$PLK_OIDC_CLIENT_ID
+      - OIDC_CLIENT_SECRET=$PLK_OIDC_CLIENT_SECRET
+      - OIDC_SCOPES=$PLK_OIDC_SCOPES
+      - OIDC_ADMIN_ROLES=$PLK_OIDC_ADMIN_ROLES
     depends_on:
       db-planka:
         condition: service_healthy
