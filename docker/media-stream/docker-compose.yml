@@ -229,6 +229,7 @@ services:
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
+    runtime: nvidia
     deploy:
       resources:
         reservations:
