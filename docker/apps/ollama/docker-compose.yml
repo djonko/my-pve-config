@@ -3,24 +3,21 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     volumes:
-      - ollama_data:/root/.ollama
+      - /opt/data-docker/ollama/data:/root/.ollama
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     ports:
       - 11434:11434
     environment:
-      # Network
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_ORIGINS=*
-      # GPU
       - NVIDIA_VISIBLE_DEVICES=all
-      # Performance
       - OLLAMA_FLASH_ATTENTION=1
-      - OLLAMA_CONTEXT_LENGTH=8192
-      # Memory control (important for 16GB VRAM)
-      - OLLAMA_MAX_LOADED_MODELS=2
-      - OLLAMA_NUM_PARALLEL=4
-      - OLLAMA_KV_CACHE_TYPE=q8_0
+
+      # Strict 16GB VRAM Optimization Guards
+      - OLLAMA_MAX_LOADED_MODELS=1     # Force strict VRAM isolation per active task
+      - OLLAMA_NUM_PARALLEL=1          # Dedicate 100% of compute pipelines to your immediate action
+      - OLLAMA_KV_CACHE_TYPE=q8_0      # Excellent choice - saves precious VRAM context space
     restart: unless-stopped
     runtime: nvidia
     deploy:
@@ -37,11 +34,9 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     volumes:
-      - open_webui_data:/app/backend/data
+      - /opt/data-docker/ollama/web-ui/data:/app/backend/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      # Optional but GOLD for architects: mount your real codebases for RAG
-      # - /home/youruser/projects:/app/backend/data/projects:ro
     ports:
       - 3000:8080
     environment:
@@ -50,32 +45,31 @@ services:
       - ENABLE_SIGNUP=${WEBUI_ENABLE_SIGNUP}
       - SCARF_ANALYTICS=false
 
-      # RAG (local & fast)
-      - ENABLE_RAG_WEB_SEARCH=true
-      - RAG_EMBEDDING_MODEL=nomic-embed-text:v1.5
+      # Offload RAG Embeddings cleanly to your GPU via Ollama
+      - RAG_EMBEDDING_ENGINE=ollama
+      - RAG_EMBEDDING_BASE_URL=http://ollama:11434
+      - RAG_EMBEDDING_MODEL=nomic-embed-text:latest
+
+      # Advanced GPU Reranking (Executes locally inside WebUI container via HuggingFace transformers)
+      - RAG_RERANKING_ENGINE=transformers
       - RAG_RERANKING_MODEL=hf.co/l-nmch/bge-reranker-v2-m3-Q8_0-GGUF:Q8_0
-      - RAG_TOP_K=15
+      - RAG_TOP_K=10                   # Reduced from 15 to lower token injection load on your 16GB ceiling
       - RAG_CHUNK_SIZE=1024
 
-      # Productivity turbo-chargers
+      # Interface Customization
       - WEBUI_NAME=Local Architect Brain
-      - ENABLE_RAG_WEB_SEARCH=true                     # Search your own docs + web when needed
-      - ENABLE_IMAGE_GENERATION=true                  # You don’t want Flux here – keep it clean
+      - ENABLE_RAG_WEB_SEARCH=true
+      - ENABLE_IMAGE_GENERATION=false  # Disabled to save system overhead
       - ENABLE_COMMUNITY_MODEL_SHARING=false
       - ENABLE_MODEL_FILTER=true
       - ENABLE_OPENAPI=true
     extra_hosts:
-      - "host.docker.internal:host-gateway"            # Allows WebUI to reach your host services if needed
+      - "host.docker.internal:host-gateway"
     depends_on:
       - ollama
     restart: unless-stopped
     networks:
       - ai_network
-
-volumes:
-  ollama_data:
-  open_webui_data:
-  code_server_data:
 
 networks:
   ai_network:
