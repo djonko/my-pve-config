@@ -12,7 +12,6 @@ services:
       - code_server_data:/config
       - ollama_data:/root/.ollama:ro
       - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
     ports:
       - "8443:8443"
     restart: unless-stopped
