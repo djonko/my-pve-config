@@ -5,10 +5,10 @@ services:
     volumes:
       - /opt/data-docker/ollama/data:/root/.ollama
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     ports:
       - 11434:11434
     environment:
+      - TZ=America/Montreal
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_ORIGINS=*
       - NVIDIA_VISIBLE_DEVICES=all
@@ -36,7 +36,6 @@ services:
     volumes:
       - /opt/data-docker/ollama/web-ui/data:/app/backend/data
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     ports:
       - 3000:8080
     environment:
@@ -44,6 +43,7 @@ services:
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
       - ENABLE_SIGNUP=${WEBUI_ENABLE_SIGNUP}
       - SCARF_ANALYTICS=false
+      - TZ=America/Montreal
 
       # Offload RAG Embeddings cleanly to your GPU via Ollama
       - RAG_EMBEDDING_ENGINE=ollama
