@@ -33,7 +33,7 @@ services:
       - TZ=America/Montreal
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_ORIGINS=*
-      - OLLAMA_CONTEXT_LENGTH=8192
+      - OLLAMA_CONTEXT_LENGTH=16384
 
       # ── GPU ─────────────────────────────────────────────────────────────────
       - NVIDIA_VISIBLE_DEVICES=all
@@ -136,7 +136,7 @@ services:
       # CRITIQUE : Ollama défaut à 2048 tokens si non spécifié.
       # À 2048, le RAG et le web search sont largement tronqués.
       # 8192 = fenêtre fiable sans OOM sur votre setup 16 Go.
-      - OLLAMA_CONTEXT_LENGTH=8192
+      - OLLAMA_CONTEXT_LENGTH=16384
 
       # ── Modèle de tâche léger (titres auto, tags, résumés de conversation) ──
       # Délègue les micro-tâches WebUI au modèle 1.5b pour ne pas
