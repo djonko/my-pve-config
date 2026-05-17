@@ -1,25 +1,63 @@
+# =============================================================================
+# docker-compose.yml — Stack IA locale optimisée
+# Profil : Développeur Full-Stack (React, Java, .NET, Docker, Terraform, Ansible)
+# GPU     : RTX 5060 Ti 16 Go VRAM | LXC Proxmox | 10 Go RAM système
+#
+# Modèles en co-résidence :
+#   qwen2.5-coder:1.5b-base        → ~1.5 Go  (autocomplétion IntelliJ/Continue)
+#   danielsheep/Qwen3-Coder-30B-A3B-Instruct-1M-Unsloth:UD-IQ3_XXS
+#                                  → ~13 Go   (agent autonome OpenCode)
+#   nomic-embed-text:latest        → ~0.3 Go  (embeddings RAG via Ollama)
+#   ─────────────────────────────────────────
+#   Total estimé                   → ~14.8 Go / 16 Go  ✓
+# =============================================================================
+
 services:
+
+  # ===========================================================================
+  # SERVICE 1 — OLLAMA
+  # ===========================================================================
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
+    restart: unless-stopped
+
     volumes:
-      - /opt/data-docker/ollama/data:/root/.ollama
-      - /etc/localtime:/etc/localtime:ro
+      - /opt/data-docker/ollama/data:/root/.ollama   # Modèles persistants sur hôte
+      - /etc/localtime:/etc/localtime:ro             # Sync timezone hôte
+
     ports:
-      - 11434:11434
+      - "11434:11434"                                # API REST Ollama
+
     environment:
       - TZ=America/Montreal
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_ORIGINS=*
-      - NVIDIA_VISIBLE_DEVICES=all
-      - OLLAMA_FLASH_ATTENTION=1
 
-      # Strict 16GB VRAM Optimization Guards
+      # ── GPU ─────────────────────────────────────────────────────────────────
+      - NVIDIA_VISIBLE_DEVICES=all
+
+      # ── Optimisations VRAM critiques ────────────────────────────────────────
+      # Flash Attention : réduit le KV-cache VRAM d'environ 20 % (Ampere+ ✓)
+      - OLLAMA_FLASH_ATTENTION=1
+      # Type de KV-cache : q8_0 économise ~30 % VRAM vs f16, qualité intacte
+      - OLLAMA_KV_CACHE_TYPE=q8_0
+
+      # ── Co-résidence stricte de modèles ─────────────────────────────────────
+      # 2 = autocomplete + agent restent chargés simultanément sans déchargement
       - OLLAMA_MAX_LOADED_MODELS=2
-      - OLLAMA_NUM_PARALLEL=2        # 2 suffisent (pas 4) car IQ3_XXS est plus gourmand
+      # 2 slots parallèles : suffisant pour l'usage séquentiel autocomplétion/agent
+      # (IQ3_XXS est plus gourmand en KV-cache — ne pas dépasser 2)
+      - OLLAMA_NUM_PARALLEL=2
+      # -1 = résidence permanente, jamais déchargé automatiquement
       - OLLAMA_KEEP_ALIVE=-1
-      - OLLAMA_KV_CACHE_TYPE=q8_0      # Excellent choice - saves precious VRAM context space
-    restart: unless-stopped
+
+      # ── Contexte par défaut des requêtes Ollama ──────────────────────────────
+      # 8192 = bon équilibre pour l'agentique sans saturer la VRAM
+      # OpenCode peut surcharger ce défaut par requête jusqu'à 16384 si besoin
+      - OLLAMA_NUM_CTX=8192
+
+    # ── Support GPU NVIDIA (NVIDIA Container Toolkit requis dans le LXC) ──────
     runtime: nvidia
     deploy:
       resources:
@@ -27,52 +65,149 @@ services:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [ gpu ]
+              capabilities: [gpu]
+
+    # ── Limite RAM système (LXC = 10 Go, laisser ~1 Go au système) ────────────
+    mem_limit: 9g
+    memswap_limit: 9g              # memswap == mem_limit = swap désactivé
+
     networks:
       - ai_network
 
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
+  # ===========================================================================
+  # SERVICE 2 — OPEN WEBUI
+  # ===========================================================================
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
+    restart: unless-stopped
+
     volumes:
       - /opt/data-docker/ollama/web-ui/data:/app/backend/data
       - /etc/localtime:/etc/localtime:ro
+
     ports:
-      - 3000:8080
+      - "3000:8080"
+
+    depends_on:
+      ollama:
+        condition: service_healthy        # Attend que l'API Ollama réponde
+
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
-      - ENABLE_SIGNUP=${WEBUI_ENABLE_SIGNUP}
-      - SCARF_ANALYTICS=false
       - TZ=America/Montreal
 
-      # Offload RAG Embeddings cleanly to your GPU via Ollama
+      # ── Connexion Ollama ─────────────────────────────────────────────────────
+      - OLLAMA_BASE_URL=http://ollama:11434
+
+      # ── Sécurité et accès ────────────────────────────────────────────────────
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+      - ENABLE_SIGNUP=${WEBUI_ENABLE_SIGNUP:-false}
+
+      # Force Open WebUI à lire les env vars à chaque redémarrage.
+      # CRITIQUE : sans ça, les vars RAG/modèles ci-dessous sont ignorées
+      # après le premier démarrage (comportement PersistentConfig d'Open WebUI).
+      - ENABLE_PERSISTENT_CONFIG=false
+
+      # ── Interface ────────────────────────────────────────────────────────────
+      - WEBUI_NAME=Local Architect Brain
+      - SCARF_ANALYTICS=false
+      - ENABLE_COMMUNITY_MODEL_SHARING=false
+      - ENABLE_IMAGE_GENERATION=false    # Économie overhead système
+
+      # ── Modèle par défaut au lancement ──────────────────────────────────────
+      # Pointe vers le modèle agent. L'autocomplétion est gérée par Continue/IntelliJ.
+      - DEFAULT_MODELS=danielsheep/Qwen3-Coder-30B-A3B-Instruct-1M-Unsloth:UD-IQ3_XXS
+
+      # ── Paramètres d'inférence par défaut (recommandés officiellement par Qwen) ─
+      - DEFAULT_MODEL_PARAMS={"temperature":0.7,"top_p":0.8,"top_k":20,"repeat_penalty":1.05}
+
+      # ── Contexte Ollama forcé à 8192 pour toutes les requêtes WebUI ─────────
+      # CRITIQUE : Ollama défaut à 2048 tokens si non spécifié.
+      # À 2048, le RAG et le web search sont largement tronqués.
+      # 8192 = fenêtre fiable sans OOM sur votre setup 16 Go.
+      - OLLAMA_CONTEXT_LENGTH=8192
+
+      # ── Modèle de tâche léger (titres auto, tags, résumés de conversation) ──
+      # Délègue les micro-tâches WebUI au modèle 1.5b pour ne pas
+      # consommer le contexte du modèle agent sur des appels triviaux.
+      - TASK_MODEL=qwen2.5-coder:1.5b-base
+
+      # ────────────────────────────────────────────────────────────────────────
+      # PIPELINE RAG — Optimisé documentation technique (votre profil dev)
+      # ────────────────────────────────────────────────────────────────────────
+
+      # ── Embeddings : délégués à Ollama (GPU) ────────────────────────────────
+      # nomic-embed-text : 768 dims, ctx 8192, ~0.3 Go VRAM, très rapide.
+      # GPU-accéléré via Ollama = bien plus rapide que sentence-transformers CPU.
       - RAG_EMBEDDING_ENGINE=ollama
       - RAG_EMBEDDING_BASE_URL=http://ollama:11434
       - RAG_EMBEDDING_MODEL=nomic-embed-text:latest
 
-      # Advanced GPU Reranking (Executes locally inside WebUI container via HuggingFace transformers)
-      - RAG_RERANKING_ENGINE=transformers
-      - RAG_RERANKING_MODEL=hf.co/l-nmch/bge-reranker-v2-m3-Q8_0-GGUF:Q8_0
-      - RAG_TOP_K=10                   # Reduced from 15 to lower token injection load on your 16GB ceiling
-      - RAG_CHUNK_SIZE=1024
+      # ── Hybrid Search : sémantique (dense) + BM25 keyword (sparse) ──────────
+      # ESSENTIEL pour la doc technique : BM25 retrouve les identifiants exacts
+      # (noms de classes Java, directives Terraform, options docker-compose)
+      # que la recherche sémantique seule rate systématiquement.
+      - ENABLE_RAG_HYBRID_SEARCH=true
 
-      # Interface Customization
-      - WEBUI_NAME=Local Architect Brain
+      # ── Reranking : CPU via HuggingFace transformers ─────────────────────────
+      # Tourne dans le conteneur WebUI (CPU) → zéro impact sur la VRAM GPU.
+      # bge-reranker-v2-m3 = meilleur cross-encoder public pour le code & l'anglais.
+      # Remplace l'ancien "hf.co/l-nmch/bge-reranker-v2-m3-Q8_0-GGUF:Q8_0"
+      # qui n'est pas un format supporté nativement par le moteur transformers.
+      - RAG_RERANKING_ENGINE=transformers
+      - RAG_RERANKING_MODEL=BAAI/bge-reranker-v2-m3
+
+      # ── Chunking : optimisé documentation technique et code ──────────────────
+      # 1200 tokens : préserve un bloc de code ou une méthode Java/C# entière.
+      # Votre ancien 1024 était correct ; 1200 évite la coupure des fonctions longues.
+      - RAG_CHUNK_SIZE=1200
+      # Overlap 200 = ~16 % → garantit que les signatures de méthodes et les
+      # imports qui straddlent deux chunks sont toujours présents dans l'un des deux.
+      - RAG_CHUNK_OVERLAP=200
+      # Token splitter : plus précis que character pour respecter les limites
+      # réelles des modèles d'embeddings (nomic = 8192 tokens max).
+      - RAG_TEXT_SPLITTER=token
+
+      # ── Récupération et pertinence ───────────────────────────────────────────
+      # Top K = 6 : chunks 1200 tokens × 6 = 7200 tokens injectés max.
+      # Avec contexte 8192, ~800 tokens restent pour la conversation. Calibré.
+      - RAG_TOP_K=6
+      # Seuil 0.0 = pas de filtre de pertinence minimum (le reranker gère déjà
+      # le classement ; filtrer avant le reranker perd des résultats pertinents).
+      - RAG_RELEVANCE_THRESHOLD=0.0
+
+      # ── KV-cache RAG : injection dans le system message ──────────────────────
+      # CRITIQUE performance : par défaut, le contexte RAG est injecté dans le
+      # message utilisateur, ce qui invalide le KV-cache Ollama à chaque tour.
+      # Avec RAG_SYSTEM_CONTEXT=true, le contexte reste en position fixe →
+      # les follow-up questions sont quasi-instantanées même sur gros documents.
+      - RAG_SYSTEM_CONTEXT=true
+
+      # ── Web Search ───────────────────────────────────────────────────────────
       - ENABLE_RAG_WEB_SEARCH=true
-      - ENABLE_IMAGE_GENERATION=false  # Disabled to save system overhead
-      - ENABLE_COMMUNITY_MODEL_SHARING=false
-      - ENABLE_MODEL_FILTER=true
+      # 3 résultats web max : chaque page = 4000-8000 tokens.
+      # 3 pages × ~2500 tokens moyens = 7500 tokens → juste dans le budget 8192.
+      - RAG_WEB_SEARCH_RESULT_COUNT=3
+
+      # ── OpenAPI ──────────────────────────────────────────────────────────────
       - ENABLE_OPENAPI=true
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    depends_on:
-      - ollama
-    restart: unless-stopped
+
     networks:
       - ai_network
 
+# =============================================================================
+# Réseau isolé (bridge privé pour Ollama ↔ WebUI)
+# =============================================================================
 networks:
   ai_network:
     driver: bridge
