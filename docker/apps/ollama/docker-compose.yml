@@ -102,6 +102,8 @@ services:
 
     environment:
       - TZ=America/Montreal
+      - OLLAMA_NOPRUNE=1           # Désactive la maintenance cloud au démarrage
+      - OLLAMA_MODELS_PATH=/root/.ollama/models  # Optionnel, explicite
 
       # ── Connexion Ollama ─────────────────────────────────────────────────────
       - OLLAMA_BASE_URL=http://ollama:11434
