@@ -75,12 +75,13 @@ services:
       - ai_network
 
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:11434/api/tags"]
+      # L'image Ollama n'inclut pas curl — on utilise le binaire ollama lui-même.
+      # "ollama list" appelle l'API locale et retourne 0 si le serveur répond.
+      test: [ "CMD", "ollama", "list" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
-
   # ===========================================================================
   # SERVICE 2 — OPEN WEBUI
   # ===========================================================================
