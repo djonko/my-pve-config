@@ -16,6 +16,7 @@ services:
       # custom configurations
       - /opt/data-docker/affine/app/storage:/root/.affine/storage
       - /opt/data-docker/affine/app/config:/root/.affine/config
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - /opt/data-etc/affine/config.env
     environment:
@@ -31,6 +32,7 @@ services:
       # custom configurations
       - /opt/data-docker/affine/app/storage:/root/.affine/storage
       - /opt/data-docker/affine/app/config:/root/.affine/config
+      - /etc/localtime:/etc/localtime:ro
     command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
     env_file:
       - /opt/data-etc/affine/config.env
@@ -61,6 +63,7 @@ services:
       - /opt/data-etc/affine/config.env
     volumes:
       - /opt/data-docker/affine/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
     environment:
       POSTGRES_USER: ${AFFINE_DB_USERNAME}
       POSTGRES_PASSWORD: ${AFFINE_DB_PASSWORD}
@@ -71,7 +74,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
       test:
-        ['CMD', 'pg_isready', '-U', "${DB_USERNAME}", '-d', "${DB_DATABASE:-affine}"]
+        ['CMD', 'pg_isready', '-U', "${AFFINE_DB_USERNAME}", '-d', "${AFFINE_DB_DATABASE:-affine}"]
       interval: 10s
       timeout: 5s
       retries: 5
