@@ -24,6 +24,8 @@ services:
       - DATABASE_URL=postgresql://${AFFINE_DB_USERNAME}:${AFFINE_DB_PASSWORD}@postgres:5432/${AFFINE_DB_DATABASE:-affine}
       - AFFINE_INDEXER_ENABLED=false
       - selfhosted=true
+      - OPENAI_API_KEY=ollama
+      - OPENAI_BASE_URL=http://192.168.20.31:11434/v1
     restart: unless-stopped
 
   affine_migration:
