@@ -23,6 +23,7 @@ services:
       - REDIS_SERVER_HOST=redis
       - DATABASE_URL=postgresql://${AFFINE_DB_USERNAME}:${AFFINE_DB_PASSWORD}@postgres:5432/${AFFINE_DB_DATABASE:-affine}
       - AFFINE_INDEXER_ENABLED=false
+      - selfhosted=true
     restart: unless-stopped
 
   affine_migration:
