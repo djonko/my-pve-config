@@ -29,6 +29,7 @@ services:
       - AFFINE_SERVER_ALLOWED_ORIGINS=*
       - AFFINE_SERVER_EXTERNAL_URL=${AFFINE_SERVER_EXTERNAL_URL}
       - AFFINE_SERVER_HOST=${AFFINE_SERVER_HOST}
+      - AFFINE_SERVER_HTTPS=true
     restart: unless-stopped
 
   affine_migration:
