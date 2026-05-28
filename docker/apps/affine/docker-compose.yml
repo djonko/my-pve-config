@@ -86,3 +86,22 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+
+  affine-copilot-fix:
+    container_name: affine-copilot-fix
+    user: "1000:1000"
+    build:
+      context: ./affine-copilot-fix-main
+      dockerfile: Dockerfile
+    volumes:
+      - /opt/data-docker/affine/logs:/app/src/logs
+    environment:
+      - CREATE_LOG=True
+      - OPENAI_API_KEY=ollama
+      - OPENAI_BASE_URL=http://192.168.20.31:11434/v1/
+      - OPENAI_MODEL=gemini-2.5-flash:latest  # Or any openrouter model
+    ports:
+      - 5000:5000
+    image: affine-copilot-fix:latest
+    networks:
+      - affine-net
