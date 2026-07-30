@@ -1,0 +1,16 @@
+{
+  "$schema": "https://github.com/toeverything/affine/releases/latest/download/config.schema.json",
+  "server": {
+    "name": "My AFFiNE server"
+  },
+  "copilot": {
+    "enabled": true,
+    "providers.openai": {
+      "apiKey": "my-not-exist-api-key",
+      "baseUrl": "http://affine-copilot-fix:5000"
+    },
+    "providers.gemini": {
+      "apiKey": ""
+    }
+  }
+}
