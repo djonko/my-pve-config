@@ -33,7 +33,7 @@ services:
     networks:
       - backend-network
   server:
-    image: ghcr.io/goauthentik/server:2026.2.2
+    image: ghcr.io/goauthentik/server:2026.2.6
     container_name: authentik-proxy
     restart: unless-stopped
     shm_size: 512mb
@@ -96,7 +96,7 @@ services:
       - "traefik.http.middlewares.authentik-lan-allowlist.ipallowlist.sourcerange=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
   worker:
-    image: ghcr.io/goauthentik/server:2026.2.2
+    image: ghcr.io/goauthentik/server:2026.2.6
     restart: unless-stopped
     shm_size: 512mb
     command: worker
