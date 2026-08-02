@@ -14,25 +14,28 @@ services:
       - "no"
       - --loglevel
       - warning
-      - --protected-mode
-      - "yes"
 
     networks:
       - searxng-internal
 
     tmpfs:
-      - /data:size=128m,mode=0700
+      - /data:size=128m,mode=1777
 
     cap_drop:
       - ALL
+
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
 
     security_opt:
       - no-new-privileges:true
 
     healthcheck:
-      test: ["CMD", "valkey-cli", "ping"]
+      test: [ "CMD-SHELL", "valkey-cli ping | grep -q PONG" ]
       interval: 10s
-      timeout: 3s
+      timeout: 5s
       retries: 5
       start_period: 10s
 
