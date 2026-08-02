@@ -1,0 +1,121 @@
+name: searxng
+
+services:
+  valkey:
+    container_name: searxng-valkey
+    image: docker.io/valkey/valkey:9-alpine
+    restart: unless-stopped
+
+    command:
+      - valkey-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --loglevel
+      - warning
+      - --protected-mode
+      - "yes"
+
+    networks:
+      - searxng-internal
+
+    tmpfs:
+      - /data:size=128m,mode=0700
+
+    cap_drop:
+      - ALL
+
+    security_opt:
+      - no-new-privileges:true
+
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+
+    depends_on:
+      valkey:
+        condition: service_healthy
+
+    networks:
+      - searxng-internal
+      - traefik
+
+    # Optional direct LAN access.
+    # Remove this block if Traefik connects directly through Docker networking.
+    #
+    # ports:
+    #   - "127.0.0.1:8201:8080"
+
+    volumes:
+      - /opt/data-docker/searxng/config:/etc/searxng
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+    environment:
+      TZ: America/Toronto
+
+      SEARXNG_BASE_URL: "https://${SEARXNG_HOSTNAME}/"
+      SEARXNG_SECRET: "${SEARXNG_SECRET}"
+      SEARXNG_VALKEY_URL: "valkey://searxng-valkey:6379/0"
+      SEARXNG_LIMITER: "true"
+      SEARXNG_PUBLIC_INSTANCE: "false"
+      SEARXNG_IMAGE_PROXY: "true"
+
+    cap_drop:
+      - ALL
+
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+
+    security_opt:
+      - no-new-privileges:true
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --quiet --tries=1 --spider http://127.0.0.1:8080/healthz || exit 1"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+    labels:
+      - "com.centurylinklabs.watchtower.scope=toUpdateScope"
+      - "docker-volume-backup.stop-during-backup=true"
+
+networks:
+  searxng-internal:
+    name: searxng-internal
+    internal: true
+
+  traefik:
+    external: true
+    name: traefik
