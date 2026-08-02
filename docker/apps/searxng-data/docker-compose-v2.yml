@@ -15,8 +15,6 @@ services:
       - --loglevel
       - warning
 
-    networks:
-      - searxng-internal
 
     tmpfs:
       - /data:size=128m,mode=1777
@@ -58,8 +56,6 @@ services:
       valkey:
         condition: service_healthy
 
-    networks:
-      - searxng-internal
 
     # Optional direct LAN access.
     # Remove this block if Traefik connects directly through Docker networking.
@@ -117,7 +113,3 @@ services:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
       - "docker-volume-backup.stop-during-backup=true"
 
-networks:
-  searxng-internal:
-    name: searxng-internal
-    internal: true
