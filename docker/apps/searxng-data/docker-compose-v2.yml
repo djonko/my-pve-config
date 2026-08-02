@@ -69,8 +69,10 @@ services:
 
     volumes:
       - /opt/data-docker/searxng/config:/etc/searxng
+      - /opt/data-docker/searxng/cache:/var/cache/searxng
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
+
 
     environment:
       TZ: America/Toronto
