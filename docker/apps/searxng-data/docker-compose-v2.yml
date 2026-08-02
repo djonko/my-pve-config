@@ -25,6 +25,7 @@ services:
       - ALL
 
     cap_add:
+      - CHOWN
       - SETGID
       - SETUID
       - DAC_OVERRIDE
@@ -33,7 +34,7 @@ services:
       - no-new-privileges:true
 
     healthcheck:
-      test: [ "CMD-SHELL", "valkey-cli ping | grep -q PONG" ]
+      test: [ "CMD-SHELL", "valkey-cli ping | grep -q '^PONG$'" ]
       interval: 10s
       timeout: 5s
       retries: 5
