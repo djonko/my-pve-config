@@ -56,7 +56,6 @@ services:
 
     networks:
       - searxng-internal
-      - traefik
 
     # Optional direct LAN access.
     # Remove this block if Traefik connects directly through Docker networking.
