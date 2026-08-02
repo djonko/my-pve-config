@@ -61,8 +61,8 @@ services:
     # Optional direct LAN access.
     # Remove this block if Traefik connects directly through Docker networking.
     #
-    # ports:
-    #   - "127.0.0.1:8201:8080"
+    ports:
+      - "8201:8080"
 
     volumes:
       - /opt/data-docker/searxng/config:/etc/searxng
@@ -78,6 +78,7 @@ services:
       SEARXNG_LIMITER: "true"
       SEARXNG_PUBLIC_INSTANCE: "false"
       SEARXNG_IMAGE_PROXY: "true"
+      SEARXNG_HOSTNAME: ""
 
     cap_drop:
       - ALL
@@ -115,7 +116,3 @@ networks:
   searxng-internal:
     name: searxng-internal
     internal: true
-
-  traefik:
-    external: true
-    name: traefik
