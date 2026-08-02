@@ -9,7 +9,7 @@ general:
 
 brand:
   issue_url: false
-  docs_url: false
+  docs_url: "https://docs.searxng.org/"
   public_instances: false
   wiki_url: false
 
