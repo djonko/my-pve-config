@@ -1,0 +1,116 @@
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "Home Search"
+  donation_url: false
+  contact_url: false
+  enable_metrics: false
+
+brand:
+  issue_url: false
+  docs_url: false
+  public_instances: false
+  wiki_url: false
+
+search:
+  safe_search: 0
+  autocomplete: duckduckgo
+  autocomplete_min: 3
+  default_lang: auto
+
+  languages:
+    - all
+    - en
+    - en-CA
+    - fr
+    - fr-CA
+
+  formats:
+    - html
+    - json
+
+server:
+  secret_key: "change-me"
+  base_url: false
+
+  limiter: true
+  public_instance: false
+  image_proxy: true
+
+  method: GET
+  http_protocol_version: "1.1"
+
+  default_http_headers:
+    X-Content-Type-Options: nosniff
+    X-Download-Options: noopen
+    X-Robots-Tag: "noindex, nofollow"
+    Referrer-Policy: no-referrer
+
+valkey:
+  url: valkey://searxng-valkey:6379/0
+
+ui:
+  default_theme: simple
+  default_locale: ""
+  query_in_title: false
+  infinite_scroll: false
+  center_alignment: false
+  results_on_new_tab: false
+
+  theme_args:
+    simple_style: auto
+
+outgoing:
+  request_timeout: 5.0
+  max_request_timeout: 15.0
+
+  pool_connections: 100
+  pool_maxsize: 20
+
+  enable_http2: true
+  retries: 1
+
+  retry_on_http_error:
+    - 429
+    - 502
+    - 503
+    - 504
+
+enabled_plugins:
+  - Basic Calculator
+  - Hash plugin
+  - Hostnames plugin
+  - Open Access DOI rewrite
+  - Self Information
+  - Tracker URL remover
+  - Unit converter plugin
+
+engines:
+  - name: brave
+    disabled: false
+    weight: 1.5
+
+  - name: duckduckgo
+    disabled: false
+    weight: 1.2
+
+  - name: google
+    disabled: false
+    weight: 1.0
+
+  - name: bing
+    disabled: false
+    weight: 0.8
+
+  - name: wikipedia
+    disabled: false
+
+  - name: github
+    disabled: false
+
+  - name: stackoverflow
+    disabled: false
+
+  - name: arxiv
+    disabled: false
