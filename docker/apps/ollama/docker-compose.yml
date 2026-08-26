@@ -33,7 +33,7 @@ services:
       - TZ=America/Montreal
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_ORIGINS=*
-      - OLLAMA_CONTEXT_LENGTH=32768
+      - OLLAMA_CONTEXT_LENGTH=49152
 
       # ── GPU ─────────────────────────────────────────────────────────────────
       - NVIDIA_VISIBLE_DEVICES=all
