@@ -51,7 +51,7 @@ services:
       # (IQ3_XXS est plus gourmand en KV-cache — ne pas dépasser 2)
       - OLLAMA_NUM_PARALLEL=2
       # -1 = résidence permanente, jamais déchargé automatiquement
-      - OLLAMA_KEEP_ALIVE=-1
+      - OLLAMA_KEEP_ALIVE=30m
 
       # ── Contexte par défaut des requêtes Ollama ──────────────────────────────
       # 8192 = bon équilibre pour l'agentique sans saturer la VRAM
