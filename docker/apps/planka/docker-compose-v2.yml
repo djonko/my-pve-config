@@ -44,7 +44,7 @@ services:
       - OIDC_CLIENT_SECRET=$PLK_OIDC_CLIENT_SECRET
       - OIDC_SCOPES=$PLK_OIDC_SCOPES
       - OIDC_ADMIN_ROLES=$PLK_OIDC_ADMIN_ROLES
-      - OIDC_ENFORCED=true
+      - OIDC_ENFORCED=$PLK_OIDC_ENFORCED
     depends_on:
       db-planka:
         condition: service_healthy
