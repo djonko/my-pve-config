@@ -61,7 +61,7 @@ services:
       - "8890:8090" #torrserver
       - "8488:1080" #socks5 proxy
       - "8280:8080" #qbittorrents
-      - "8201:8080" #searxng
+      - "8201:8080/tcp" #searxng
     env_file: /opt/data-etc/media_stream/.gluetun.env
     environment:
       - TZ=America/Montreal
