@@ -33,7 +33,7 @@ services:
       - TZ=America/Montreal
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_ORIGINS=*
-      - OLLAMA_CONTEXT_LENGTH=57344
+      - OLLAMA_CONTEXT_LENGTH=65536
 
       # ── GPU ─────────────────────────────────────────────────────────────────
       - NVIDIA_VISIBLE_DEVICES=all
@@ -127,7 +127,7 @@ services:
 
       # ── Modèle par défaut au lancement ──────────────────────────────────────
       # Pointe vers le modèle agent. L'autocomplétion est gérée par Continue/IntelliJ.
-      - DEFAULT_MODELS=danielsheep/Qwen3-Coder-30B-A3B-Instruct-1M-Unsloth:UD-IQ3_XXS
+      #- DEFAULT_MODELS=danielsheep/Qwen3-Coder-30B-A3B-Instruct-1M-Unsloth:UD-IQ3_XXS
 
       # ── Paramètres d'inférence par défaut (recommandés officiellement par Qwen) ─
       - DEFAULT_MODEL_PARAMS={"temperature":0.7,"top_p":0.8,"top_k":20,"repeat_penalty":1.05}
@@ -136,7 +136,7 @@ services:
       # CRITIQUE : Ollama défaut à 2048 tokens si non spécifié.
       # À 2048, le RAG et le web search sont largement tronqués.
       # 8192 = fenêtre fiable sans OOM sur votre setup 16 Go.
-      - OLLAMA_CONTEXT_LENGTH=16384
+      #- OLLAMA_CONTEXT_LENGTH=16384
 
       # ── Modèle de tâche léger (titres auto, tags, résumés de conversation) ──
       # Délègue les micro-tâches WebUI au modèle 1.5b pour ne pas
