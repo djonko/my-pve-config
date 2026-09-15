@@ -1,1 +1,1 @@
-wget -O nvidia_latest.run https://us.download.nvidia.com/XFree86/Linux-x86_64/580.142/NVIDIA-Linux-x86_64-580.142.run &&  chmod +x nvidia_latest.run && ./nvidia_latest.run --dkms  --no-nouveau-check --no-cc-version-check --no-x-check --ui=none
+wget -O nvidia_latest.run https://us.download.nvidia.com/XFree86/Linux-x86_64/595.99.02/NVIDIA-Linux-x86_64-595.99.02.run &&  chmod +x nvidia_latest.run && ./nvidia_latest.run --dkms  --no-nouveau-check --no-cc-version-check --no-x-check --ui=none
