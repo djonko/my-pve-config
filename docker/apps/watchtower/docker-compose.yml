@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: nickfedor/watchtower
     container_name: watchtower
     environment:
       - TZ=America/Toronto
