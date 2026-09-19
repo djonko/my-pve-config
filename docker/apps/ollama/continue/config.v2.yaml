@@ -1,0 +1,101 @@
+name: Local Homelab Assistant (2026)
+version: 1.1.0
+schema: v1
+
+models:
+  # Main coding model
+  - name: Qwen3.8 27B
+    provider: ollama
+    model: hf.co/ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF:IQ3_S
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - chat
+      - edit
+      - apply
+
+  # Alternative chat and sysadmin model
+  - name: Gemma 4 E4B
+    provider: ollama
+    model: gemma4:e4b
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - chat
+      - edit
+      - apply
+
+  # Code autocomplete
+  - name: Qwen2.5-Coder 3B
+    provider: ollama
+    model: qwen2.5-coder:3b
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - autocomplete
+    autocompleteOptions:
+      debounceDelay: 300
+      maxPromptTokens: 1024
+
+  # Codebase embeddings
+  - name: Nomic Embed Text v2 MoE
+    provider: ollama
+    model: nomic-embed-text-v2-moe:latest
+    apiBase: http://192.168.20.31:11434
+    roles:
+      - embed
+
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: codebase
+    params:
+      nRetrieve: 25
+      nFinal: 8
+      useReranking: false
+
+rules:
+  - You are Local Agent, a senior developer assistant.
+  - Explain reasoning and follow SOLID and design patterns when possible.
+  - Respond with concise, high-quality suggestions.
+  - For reasoning tasks, provide detailed step-by-step analysis.
+
+prompts:
+  - name: refactor
+    description: Deep refactoring with SOLID principles
+    prompt: >
+      Refactor the following code to follow SOLID principles and design
+      patterns.
+
+      Explain your changes and reasoning:
+
+
+      {{{ input }}}
+  - name: reason
+    description: Step-by-step code analysis
+    prompt: >
+      Analyze the following code step by step, checking for edge cases and logic
+      issues.
+
+      Provide detailed reasoning for each potential problem:
+
+
+      {{{ input }}}
+  - name: doc
+    description: Generate comprehensive documentation
+    prompt: >
+      Write comprehensive documentation and inline comments for the following
+      code.
+
+      Include parameter descriptions, return values, and usage examples:
+
+
+      {{{ input }}}
+  - name: optimize
+    description: Performance optimization
+    prompt: |
+      Analyze and optimize the following code for better performance.
+      Explain each optimization and its impact:
+
+      {{{ input }}}
