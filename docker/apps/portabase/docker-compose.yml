@@ -6,7 +6,7 @@ services:
     image: portabase/portabase:latest
     restart: unless-stopped
     env_file:
-      - .env
+      - /opt/data-etc/portabase/config.env
     security_opt:
       - no-new-privileges:true
     environment:
