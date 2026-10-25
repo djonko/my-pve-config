@@ -17,7 +17,7 @@ services:
       #MINIO_SERVER_URL: ${MINIO_SERVER_URL}
     command: server /data --console-address ":9001"
     volumes:
-      - "${S3_DISK_PATH}:/data"
+      - "${S3_DISK_PATH_SILO}:/data"
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
