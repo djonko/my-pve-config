@@ -5,6 +5,8 @@ services:
     container_name: portabase-app
     image: portabase/portabase:latest
     restart: unless-stopped
+    networks:
+      - portabase-net
     env_file:
       - /opt/data-etc/portabase/config.env
     security_opt:
@@ -32,6 +34,9 @@ services:
     container_name: portabase-pg
     image: postgres:17-alpine
     restart: unless-stopped
+    networks:
+      - portabase-net
+      - portabase
     env_file:
       - /opt/data-etc/portabase/config.env
     security_opt:
@@ -53,3 +58,10 @@ services:
 volumes:
   postgres-data:
   portabase-data:
+
+networks:
+  portabase:
+    name: portabase_network
+    external: true
+  portabase-net:
+    internal: true
