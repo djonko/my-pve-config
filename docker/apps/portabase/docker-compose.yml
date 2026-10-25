@@ -3,7 +3,7 @@ name: portabase-dashboard
 services:
   portabase:
     container_name: portabase-app
-    image: portabase/portabase:latest
+    image: portabase/portabase:1
     restart: unless-stopped
     networks:
       - portabase-net

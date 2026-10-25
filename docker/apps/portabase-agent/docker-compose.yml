@@ -2,7 +2,7 @@ name: portabase-agent
 services:
   app:
     container_name: portabase-agent
-    image: portabase/agent:latest
+    image: portabase/agent:1
     restart: always
     volumes:
       - /opt/data-docker/portabase-agent/databases.json:/config/config.json
