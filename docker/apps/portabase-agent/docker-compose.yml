@@ -6,8 +6,6 @@ services:
     restart: always
     volumes:
       - /opt/data-docker/portabase-agent/databases.json:/config/config.json
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
     extra_hosts:
       # Allows the agent to contact the host's 'localhost'
       - "localhost:host-gateway"
