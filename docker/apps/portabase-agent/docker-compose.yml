@@ -1,0 +1,26 @@
+name: portabase-agent
+services:
+  app:
+    container_name: portabase-agent
+    image: portabase/agent:latest
+    restart: always
+    volumes:
+      - /opt/data-docker/portabase-agent/databases.json:/config/config.json
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    extra_hosts:
+      # Allows the agent to contact the host's 'localhost'
+      - "localhost:host-gateway"
+    environment:
+      TZ: "America/Toronto"
+      POLLING: 5
+      APP_ENV: production
+      LOG: info
+      EDGE_KEY: "${EDGE_KEY}"
+    networks:
+      - portabase
+
+networks:
+  portabase:
+    name: portabase_network
+    external: true
