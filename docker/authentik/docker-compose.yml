@@ -33,7 +33,7 @@ services:
     networks:
       - backend-network
   server:
-    image: ghcr.io/goauthentik/server:2026.2.6
+    image: ghcr.io/goauthentik/server:2026.2
     container_name: authentik-proxy
     restart: unless-stopped
     shm_size: 512mb
