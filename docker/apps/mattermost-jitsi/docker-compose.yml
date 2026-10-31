@@ -87,7 +87,11 @@ services:
     volumes:
       - /opt/data-docker/mattermost-jitsi/jitsi/prosody:/config
     networks:
-      - internal
+      internal:
+        aliases:
+          # docker-jitsi-meet's nginx template reverse-proxies /xmpp-websocket
+          # to the "xmpp.meet.jitsi" alias by default
+          - xmpp.meet.jitsi
 
   jicofo:
     image: jitsi/jicofo:stable
