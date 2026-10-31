@@ -1,0 +1,121 @@
+name: mattermost-jitsi
+
+services:
+  mm-db:
+    image: postgres:17-alpine
+    container_name: mm-db
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_USER: ${MM_DB_USER}
+      POSTGRES_PASSWORD: ${MM_DB_PASSWORD}
+      POSTGRES_DB: ${MM_DB_NAME}
+    volumes:
+      - /opt/data-docker/mattermost-jitsi/postgres:/var/lib/postgresql/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  mm-app:
+    image: mattermost/mattermost-team-edition:latest
+    container_name: mm-app
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      MM_USERNAME: sysadmin
+      MM_PASSWORD: ${MM_SERVICE_PASSWORD}
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: "postgres://${MM_DB_USER}:${MM_DB_PASSWORD}@mm-db:5432/${MM_DB_NAME}?sslmode=disable&connect_timeout=10"
+      MM_SERVICESETTINGS_SITEURL: https://${DOMAIN_MM}/
+      MM_SERVICESETTINGS_ENABLEMOBILESERVER: "true"
+      MM_SERVICESETTINGS_ENABLELINKMETHOD: "true"
+    volumes:
+      - /opt/data-docker/mattermost-jitsi/mattermost/data:/mattermost/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      mm-db:
+        condition: service_healthy
+    networks:
+      - frontend-network
+      - internal
+
+  prosody:
+    image: jitsi/prosody:latest
+    container_name: jitsi-prosody
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      AUTH_TYPE: jwt
+      JWT_APP_ID: ${JWT_APP_ID}
+      JWT_APP_SECRET: ${JITSI_JWT_SECRET}
+      JWT_ACCEPTED_ISSUERS: mattermost
+      JWT_ACCEPTED_AUDIENCES: jitsi
+      PROSODY__BASE_URL: https://${DOMAIN_JITSI}/
+    volumes:
+      - /opt/data-docker/mattermost-jitsi/jitsi/prosody:/var/lib/prosody
+    networks:
+      - internal
+
+  jicofo:
+    image: jitsi/jicofo:latest
+    container_name: jitsi-jicofo
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      JICOFO_AUTH_URL: https://${DOMAIN_JITSI}/
+    networks:
+      - internal
+
+  jvb:
+    image: jitsi/jvb:latest
+    container_name: jitsi-jvb
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      JVB_ADVERTISE_IPS: ${PUBLIC_SERVER_IP}
+      JVB_EXTERNAL_IP: ${PUBLIC_SERVER_IP}
+      JVB_HOST: jvb
+      JVB_PORT: 10000
+      JVB_TCP_PORT: 4443
+    volumes:
+      - /opt/data-docker/mattermost-jitsi/jitsi/jvb:/var/lib/jitsi
+    ports:
+      - "10000/udp"
+      - "4443/tcp"
+    networks:
+      - internal
+
+  jitsi-web:
+    image: jitsi/web:latest
+    container_name: jitsi-web
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      JITI_API_DOMAIN: ${DOMAIN_JITSI}
+      PUBLIC_URL: https://${DOMAIN_JITSI}/
+      AUTH_TYPE: jwt
+      JWT_APP_ID: ${JWT_APP_ID}
+      JWT_APP_SECRET: ${JITSI_JWT_SECRET}
+    networks:
+      - frontend-network
+      - internal
+
+networks:
+  frontend-network:
+    driver: bridge
+    external: true
+  internal:
+    driver: bridge
