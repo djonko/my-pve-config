@@ -81,7 +81,8 @@ services:
       JWT_APP_ID: ${JWT_APP_ID}
       JWT_APP_SECRET: ${JITSI_JWT_SECRET}
       JWT_ACCEPTED_ISSUERS: mattermost
-      JWT_ACCEPTED_AUDIENCES: jitsi
+      # mattermost-plugin-jitsi issues tokens with aud=[appID]
+      JWT_ACCEPTED_AUDIENCES: mattermost
       PROSODY_BASE_URL: https://${DOMAIN_JITSI}/
       JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
       JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
