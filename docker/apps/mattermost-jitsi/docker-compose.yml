@@ -2,7 +2,7 @@ name: mattermost-jitsi
 
 services:
   mm-db:
-    image: postgres:17-alpine
+    image: postgres:latest
     container_name: mm-db
     restart: unless-stopped
     security_opt:
@@ -24,7 +24,7 @@ services:
       - internal
 
   mm-app:
-    image: mattermost/mattermost-team-edition:latest
+    image: mattermost/mattermost-team-edition:release-11
     container_name: mm-app
     restart: unless-stopped
     security_opt:
@@ -61,6 +61,10 @@ services:
       JWT_ACCEPTED_ISSUERS: mattermost
       JWT_ACCEPTED_AUDIENCES: jitsi
       PROSODY__BASE_URL: https://${DOMAIN_JITSI}/
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
+      XMPP_AUTH_DOMAIN: ${XMPP_AUTH_DOMAIN}
+      XMPP_DOMAIN: meet.jitsi
     volumes:
       - /opt/data-docker/mattermost-jitsi/jitsi/prosody:/var/lib/prosody
     networks:
@@ -74,6 +78,8 @@ services:
       - no-new-privileges:true
     environment:
       JICOFO_AUTH_URL: https://${DOMAIN_JITSI}/
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
     networks:
       - internal
 
@@ -89,6 +95,8 @@ services:
       JVB_HOST: jvb
       JVB_PORT: 10000
       JVB_TCP_PORT: 4443
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
     volumes:
       - /opt/data-docker/mattermost-jitsi/jitsi/jvb:/var/lib/jitsi
     ports:
