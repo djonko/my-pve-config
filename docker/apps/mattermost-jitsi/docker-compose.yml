@@ -57,6 +57,11 @@ services:
       MM_SERVICESETTINGS_ALLOWSAVEEMAILPREFERENCES: "true"
     volumes:
       - /opt/data-docker/mattermost-jitsi/mattermost/data:/mattermost/data
+      # Persist config, plugins and client files so custom plugins survive
+      # container recreation.
+      - /opt/data-docker/mattermost-jitsi/mattermost/config:/mattermost/config
+      - /opt/data-docker/mattermost-jitsi/mattermost/plugins:/mattermost/plugins
+      - /opt/data-docker/mattermost-jitsi/mattermost/client/plugins:/mattermost/client/plugins
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
