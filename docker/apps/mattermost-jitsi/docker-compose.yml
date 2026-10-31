@@ -2,7 +2,7 @@ name: mattermost-jitsi
 
 services:
   mm-db:
-    image: postgres:latest
+    image: postgres:15-alpine
     container_name: mm-db
     restart: unless-stopped
     security_opt:
@@ -24,7 +24,7 @@ services:
       - internal
 
   mm-app:
-    image: mattermost/mattermost-team-edition:release-11
+    image: mattermost/mattermost-team-edition:9.9
     container_name: mm-app
     restart: unless-stopped
     security_opt:
@@ -49,7 +49,7 @@ services:
       - internal
 
   prosody:
-    image: jitsi/prosody:latest
+    image: jitsi/prosody:stable
     container_name: jitsi-prosody
     restart: unless-stopped
     security_opt:
@@ -63,15 +63,14 @@ services:
       PROSODY__BASE_URL: https://${DOMAIN_JITSI}/
       JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
       JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
-      XMPP_AUTH_DOMAIN: ${XMPP_AUTH_DOMAIN}
-      XMPP_DOMAIN: meet.jitsi
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET}
     volumes:
       - /opt/data-docker/mattermost-jitsi/jitsi/prosody:/var/lib/prosody
     networks:
       - internal
 
   jicofo:
-    image: jitsi/jicofo:latest
+    image: jitsi/jicofo:stable
     container_name: jitsi-jicofo
     restart: unless-stopped
     security_opt:
@@ -80,11 +79,14 @@ services:
       JICOFO_AUTH_URL: https://${DOMAIN_JITSI}/
       JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
       JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET}
+      JICOFO_AUTH_USER: focus
+      JVB_AUTH_USER: jvb
     networks:
       - internal
 
   jvb:
-    image: jitsi/jvb:latest
+    image: jitsi/jvb:stable
     container_name: jitsi-jvb
     restart: unless-stopped
     security_opt:
@@ -97,6 +99,9 @@ services:
       JVB_TCP_PORT: 4443
       JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD}
       JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET}
+      JVB_AUTH_USER: jvb
+      JICOFO_AUTH_USER: focus
     volumes:
       - /opt/data-docker/mattermost-jitsi/jitsi/jvb:/var/lib/jitsi
     ports:
@@ -106,7 +111,7 @@ services:
       - internal
 
   jitsi-web:
-    image: jitsi/web:latest
+    image: jitsi/web:stable
     container_name: jitsi-web
     restart: unless-stopped
     security_opt:
