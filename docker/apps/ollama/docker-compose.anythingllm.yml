@@ -1,0 +1,67 @@
+# =============================================================================
+# docker-compose.anythingllm.yml — AnythingLLM addition to the IA stack
+# Profil : intègre AnythingLLM sur le même réseau isolé ai_network
+# Stockage persistant sur hôte : /opt/data-docker/ollama/anythingllm
+# Port exposé : 3001:3001
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # SERVICE — ANYTHINGLLM
+  # ===========================================================================
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: anythingllm
+    restart: unless-stopped
+
+    volumes:
+      - /opt/data-docker/ollama/anythingllm/storage:/app/server/storage
+      # Persist env file if you want explicit .env overrides; optional
+      # - /opt/data-docker/ollama/anythingllm/.env:/app/server/.env:ro
+
+    ports:
+      - "3001:3001"
+
+    cap_add:
+      - SYS_ADMIN              # Requis pour certaines opérations AnythingLLM
+
+    environment:
+      - STORAGE_DIR=/app/server/storage
+      - TZ=America/Montreal
+      # JWT secret should be generated; keep empty to let AnythingLLM create one,
+      # or set a strong random value via env file.
+      - JWT_SECRET=${ANYTHINGLLM_JWT_SECRET:-}
+      # Ollama est sur le réseau ai_network, accessible via hostname ollama
+      - LLM_PROVIDER=ollama
+      - OLLAMA_BASE_PATH=http://ollama:11434
+      - OLLAMA_MODEL_PREF=danielsheep/Qwen3-Coder-30B-A3B-Instruct-1M-Unsloth:UD-IQ3_XXS
+      - OLLAMA_MODEL_TOKEN_LIMIT=8192
+      - EMBEDDING_ENGINE=ollama
+      - EMBEDDING_BASE_PATH=http://ollama:11434
+      - EMBEDDING_MODEL_PREF=nomic-embed-text:latest
+      - EMBEDDING_MODEL_MAX_CHUNK_LENGTH=8192
+      - VECTOR_DB=lancedb
+      - DISABLE_TELEMETRY=true
+      # Host access for services that may be exposed on host network
+      # (ex: Chroma/LocalAI on host) – extra_hosts matches Open WebUI config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    depends_on:
+      ollama:
+        condition: service_healthy
+      open-webui:
+        condition: service_started
+
+    networks:
+      - ai_network
+
+# ===========================================================================
+
+# Note de réseau : le réseau ai_network est défini dans docker-compose.yml.
+# Pour lancer AnythingLLM avec les deux services existants :
+#
+#   docker compose -f docker-compose.yml -f docker-compose.anythingllm.yml up -d
+#
+# Le port 3001 sera disponible sur l'hôte, et AnythingLLM peut accéder à Ollama
+# via http://ollama:11434 grâce au réseau bridge isolé.
