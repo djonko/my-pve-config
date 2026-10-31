@@ -75,6 +75,7 @@ services:
       - no-new-privileges:true
     environment:
       XMPP_SERVER: prosody
+      ENABLE_WEBSOCKET: "1"
       ENABLE_AUTH: "1"
       AUTH_TYPE: jwt
       JWT_APP_ID: ${JWT_APP_ID}
@@ -143,6 +144,7 @@ services:
       - no-new-privileges:true
     environment:
       XMPP_SERVER: prosody
+      ENABLE_WEBSOCKET: "1"
       ENABLE_AUTH: "1"
       AUTH_TYPE: jwt
       JWT_APP_ID: ${JWT_APP_ID}
