@@ -42,6 +42,7 @@ services:
       MM_SERVICESETTINGS_SITEURL: https://${DOMAIN_MM}/
       MM_SERVICESETTINGS_ENABLEMOBILESERVER: "true"
       MM_SERVICESETTINGS_ENABLELINKMETHOD: "true"
+      MM_PLUGINSETTINGS_ENABLEUPLOADS: "true"
       MM_SERVICESETTINGS_ALLOWSAVEEMAILPREFERENCES: "true"
     volumes:
       - /opt/data-docker/mattermost-jitsi/mattermost/data:/mattermost/data
