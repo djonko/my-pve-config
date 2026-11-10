@@ -65,7 +65,12 @@ services:
       - GITEA__mailer__USER=${GITEA__mailer__USER}
       - GITEA__mailer__PASSWD="${GITEA__mailer__PASSWD}"
       - GITEA__service__ENABLE_NOTIFY_MAIL=true
-      - GITEA__service__REGISTER_EMAIL_CONFIRM=true
+      - GITEA__service__REGISTER_EMAIL_CONFIRM=false
+      # New signups stay inactive until an admin confirms them:
+      # Site Administration -> Identity & Access -> User Accounts -> set "Active"
+      #- GITEA__service__REGISTER_MANUAL_CONFIRM=true
+      # Uncomment to disable self-registration entirely (only admins can create accounts):
+      - GITEA__service__DISABLE_REGISTRATION=true
       - GITEA__service__NO_REPLY_ADDRESS=no-reply
       - GITEA__server__LFS_START_SERVER=true
       #- GITEA__indexer__REPO_INDEXER_ENABLED=true
