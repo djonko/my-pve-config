@@ -33,7 +33,6 @@ my-pve-config/
 | **Lidarr** | Music management |
 | **Prowlarr** | Indexer management |
 | **Bazarr** | Subtitle management |
-| **Whisparr** | Adult content management |
 | **Jackett** | Torrent indexer proxy |
 | **TorrServer** | Torrent streaming |
 | **FlareSolverr** | Cloudflare challenge solver |
