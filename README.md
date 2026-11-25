@@ -28,14 +28,7 @@ my-pve-config/
 | Service | Description |
 |---------|-------------|
 | **Jellyfin** | Media server with NVIDIA GPU transcoding |
-| **Radarr** | Movie management |
-| **Sonarr** | TV series management |
-| **Lidarr** | Music management |
-| **Prowlarr** | Indexer management |
-| **Bazarr** | Subtitle management |
-| **Jackett** | Torrent indexer proxy |
-| **TorrServer** | Torrent streaming |
-| **FlareSolverr** | Cloudflare challenge solver |
+
 
 ### Self-Hosted Apps (selected)
 - **AI/LLM**: Ollama, AnythingLLM
