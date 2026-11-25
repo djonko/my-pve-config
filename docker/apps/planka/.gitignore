@@ -1,0 +1,18 @@
+# Credentials and secrets - NEVER commit these file types
+.env
+.env.*
+*.pem
+*.key
+
+# Environment variables with potential sensitive values
+*.log
+*.secret.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker volumes and data
+/data/**/*
+*.db
+*.sqlite*

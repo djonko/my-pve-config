@@ -1,0 +1,20 @@
+services:
+  proxmox-mcp-server:
+    image: ghcr.io/ry-ops/proxmox-mcp-server:latest
+    # Define the command to run inside the container
+    command: proxmox-mcp-server-http
+    ports:
+      - "8811:8811"
+    # Explicitly set required environment variables
+    environment:
+      # This explicitly sets the host to 0.0.0.0
+      MCP_HTTP_HOST: '0.0.0.0'
+      # MCP_AUTH_TOKEN will also be available here from the .env file
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN}
+      PROXMOX_HOST: ${PROXMOX_HOST}
+      PROXMOX_PORT: ${PROXMOX_PORT}
+      PROXMOX_TOKEN_NAME: ${PROXMOX_TOKEN_NAME}
+      PROXMOX_TOKEN_VALUE: ${PROXMOX_TOKEN_VALUE}
+      PROXMOX_VERIFY_SSL: false
+      PROXMOX_READ_ONLY: true
+      LOG_LEVEL: INFO

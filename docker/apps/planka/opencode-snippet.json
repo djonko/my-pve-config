@@ -1,0 +1,14 @@
+{
+  "servers": [
+    {
+      "name": "planka",
+      "type": "remote",
+      "command": "http://10.0.0.1:3001/sse",
+      "enabled": true,
+      "mcpServerOptions": {
+        "headers": {},
+        "authenticationType": "none"
+      }
+    }
+  ]
+}
