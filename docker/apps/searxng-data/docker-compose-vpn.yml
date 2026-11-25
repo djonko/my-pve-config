@@ -1,0 +1,70 @@
+services:
+  gluetun:
+    container_name: searxng-gluetun
+    image: qmcgaw/gluetun:latest
+    restart: unless-stopped
+
+    cap_add:
+      - NET_ADMIN
+
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+    ports:
+      - "8201:8080"
+
+    environment:
+      TZ: America/Toronto
+
+      VPN_SERVICE_PROVIDER: protonvpn
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      SERVER_COUNTRIES: Canada
+
+
+  valkey:
+    container_name: searxng-valkey
+    image: docker.io/valkey/valkey:9-alpine
+    restart: unless-stopped
+
+    network_mode: "service:gluetun"
+
+    command:
+      - valkey-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --loglevel
+      - warning
+
+    tmpfs:
+      - /data:size=128m,mode=1777
+
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+
+    network_mode: "service:gluetun"
+
+    depends_on:
+      - gluetun
+      - valkey
+
+    volumes:
+      - /opt/data-docker/searxng/config:/etc/searxng
+      - /opt/data-docker/searxng/cache:/var/cache/searxng
+
+    environment:
+      TZ: America/Toronto
+
+      SEARXNG_BASE_URL: "https://${SEARXNG_HOSTNAME}/"
+      SEARXNG_SECRET: "${SEARXNG_SECRET}"
+
+      SEARXNG_VALKEY_URL: "valkey://127.0.0.1:6379/0"
+
+      SEARXNG_LIMITER: "true"
+      SEARXNG_PUBLIC_INSTANCE: "false"
+      SEARXNG_IMAGE_PROXY: "true"
