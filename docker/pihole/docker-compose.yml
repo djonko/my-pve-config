@@ -53,7 +53,7 @@ services:
 
   stubby:
     container_name: stubby
-    image: carterfields/stubby
+    image: watchdg/stubby:latest
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.scope=toUpdateScope"
